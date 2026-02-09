@@ -8,7 +8,7 @@ DATABASE_URL = "postgresql://postgres:wRjChVvNnvfBccRjKzGkCqOPlQbLTVmK@roundhous
 
 def clean_database():
     try:
-        conn = psycopg2.connect(DATABASE_URL)
+        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
         cur = conn.cursor()
         
         print("Connected to PostgreSQL Database on Railway...")

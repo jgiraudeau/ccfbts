@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import StudentSubmission, User
 from pydantic import BaseModel
-from typing import List, Optional
 from datetime import date
 
 router = APIRouter()
@@ -11,56 +10,76 @@ router = APIRouter()
 class SubmissionCreate(BaseModel):
     student_id: int
     title: str
-    content: Optional[str] = None
-    file_url: Optional[str] = None
-    submission_type: str = "AUTRE" # E4_SITUATION, E6_CR, AUTRE
-    date: str # YYYY-MM-DD
-
-class SubmissionRead(BaseModel):
-    id: int
-    student_id: int
-    title: str
-    content: Optional[str]
-    file_url: Optional[str]
+    content: str
     submission_type: str
-    date: date
+    date: str
 
-    class Config:
-        orm_mode = True
-
-@router.post("/submissions", response_model=SubmissionRead)
+@router.post("/submissions")
 def create_submission(submission: SubmissionCreate, db: Session = Depends(get_db)):
-    # Check if student exists
+    """Créer une nouvelle soumission (fiche E4/E6)"""
+    # Vérifier que l'étudiant existe
     student = db.query(User).filter(User.id == submission.student_id).first()
     if not student:
-        raise HTTPException(status_code=404, detail="Student not found")
-
+        raise HTTPException(status_code=404, detail="Étudiant introuvable")
+    
     new_submission = StudentSubmission(
         student_id=submission.student_id,
         title=submission.title,
         content=submission.content,
-        file_url=submission.file_url,
         submission_type=submission.submission_type,
-        date=date.fromisoformat(submission.date)
+        date=submission.date
     )
     db.add(new_submission)
     db.commit()
     db.refresh(new_submission)
-    return new_submission
+    
+    return {
+        "id": new_submission.id,
+        "student_id": new_submission.student_id,
+        "title": new_submission.title,
+        "content": new_submission.content,
+        "submission_type": new_submission.submission_type,
+        "date": str(new_submission.date)
+    }
 
-@router.get("/submissions/{student_id}", response_model=List[SubmissionRead])
-def get_student_submissions(student_id: int, type: Optional[str] = None, db: Session = Depends(get_db)):
-    query = db.query(StudentSubmission).filter(StudentSubmission.student_id == student_id)
-    if type:
-        query = query.filter(StudentSubmission.submission_type == type)
-    return query.all()
+@router.get("/submissions/{student_id}")
+def get_student_submissions(student_id: int, db: Session = Depends(get_db)):
+    """Récupérer toutes les soumissions d'un étudiant"""
+    submissions = db.query(StudentSubmission).filter(
+        StudentSubmission.student_id == student_id
+    ).all()
+    
+    return [{
+        "id": s.id,
+        "student_id": s.student_id,
+        "title": s.title,
+        "content": s.content,
+        "submission_type": s.submission_type,
+        "date": str(s.date)
+    } for s in submissions]
+
+@router.get("/submissions")
+def get_all_submissions(db: Session = Depends(get_db)):
+    """Récupérer toutes les soumissions (pour le prof)"""
+    submissions = db.query(StudentSubmission).all()
+    
+    return [{
+        "id": s.id,
+        "student_id": s.student_id,
+        "title": s.title,
+        "content": s.content,
+        "submission_type": s.submission_type,
+        "date": str(s.date)
+    } for s in submissions]
 
 @router.delete("/submissions/{submission_id}")
 def delete_submission(submission_id: int, db: Session = Depends(get_db)):
-    sub = db.query(StudentSubmission).filter(StudentSubmission.id == submission_id).first()
-    if not sub:
-        raise HTTPException(status_code=404, detail="Submission not found")
+    """Supprimer une soumission"""
+    submission = db.query(StudentSubmission).filter(StudentSubmission.id == submission_id).first()
+    if not submission:
+        raise HTTPException(status_code=404, detail="Soumission introuvable")
     
-    db.delete(sub)
+    db.delete(submission)
     db.commit()
-    return {"status": "deleted"}
+    
+    return {"status": "success", "message": "Soumission supprimée"}
