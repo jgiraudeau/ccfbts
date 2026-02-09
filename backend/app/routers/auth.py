@@ -106,7 +106,10 @@ def purge_class_students(class_code: str, db: Session = Depends(get_db)):
     # Mais SQLite/Postgres avec FK cascade le ferait si configuré.
     # Sinon on le fait manuellement ici pour être sûr.
     
-    students = db.query(User).filter(User.role == "student", User.teacher_id == teacher.id).all()
+    students = db.query(User).filter(
+        User.role == "student", 
+        (User.teacher_id == teacher.id) | (User.teacher_id == None)
+    ).all()
     student_ids = [s.id for s in students]
     
     if student_ids:
