@@ -23,7 +23,8 @@ export default function ScenarioGenerator({ onBack, blockType }: ScenarioGenerat
         setGeneratedContent('');
 
         try {
-            const response = await fetch('http://localhost:8000/api/course', {
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+            const response = await fetch(`${API_URL}/api/course`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -55,7 +56,8 @@ export default function ScenarioGenerator({ onBack, blockType }: ScenarioGenerat
         setError('');
 
         try {
-            const response = await fetch('http://localhost:8000/api/refine', {
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+            const response = await fetch(`${API_URL}/api/refine`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
