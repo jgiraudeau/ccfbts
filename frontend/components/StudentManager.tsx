@@ -30,42 +30,101 @@ export default function StudentManager({ students, onAdd, onRemove, onBack, onCl
             const data = e.target?.result;
             if (!data) return;
 
-            let names: string[] = [];
-
             try {
-                // Determine file type simply by extension or try both
+                let rows: any[][] = [];
+
                 if (file.name.endsWith('.csv')) {
-                    // Simple CSV Parse
                     const text = data as string;
-                    const lines = text.split(/\r\n|\n/);
-                    names = lines.map(line => line.split(',')[0].trim()).filter(n => n && n.length > 1 && !n.toLowerCase().includes('nom'));
+                    rows = text.split(/\r\n|\n/).map(line => line.split(/[;,]/).map(c => c.trim())); // Support ; or , separator
                 } else {
-                    // Excel (xlsx)
-                    // Need to read as array buffer for modern xlsx usage usually, but binary string works with 'binary' type
                     const workbook = xlsx.read(data, { type: 'binary' });
                     const sheetName = workbook.SheetNames[0];
                     const sheet = workbook.Sheets[sheetName];
-                    const json: any[][] = xlsx.utils.sheet_to_json(sheet, { header: 1 });
-
-                    names = json
-                        .map(row => row[0]) // Assumes name is in first column
-                        .filter((name: any) => name && typeof name === 'string' && name.trim().length > 0 && name.toLowerCase() !== 'nom');
+                    rows = xlsx.utils.sheet_to_json(sheet, { header: 1 });
                 }
 
-                if (names.length > 0) {
-                    const parsedData = names.map(name => ({
-                        id: Date.now() + Math.random(),
-                        name: name.trim().toUpperCase()
-                    }));
+                // Analyze Header (First Row)
+                let nameIdx = -1;
+                let surnameIdx = -1;
+                let startRow = 0;
+
+                if (rows.length > 0) {
+                    const header = rows[0].map(c => String(c).toLowerCase().trim());
+                    // Try to find 'nom' and 'prenom'
+                    surnameIdx = header.findIndex(h => h === 'nom' || h === 'noms');
+                    nameIdx = header.findIndex(h => h.includes('prénom') || h.includes('prenom'));
+
+                    // If we found headers, start from row 1
+                    if (surnameIdx !== -1 || nameIdx !== -1) {
+                        startRow = 1;
+                    }
+                }
+
+                const parsedData = [];
+
+                for (let i = startRow; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (!row || row.length === 0) continue;
+
+                    let fullName = "";
+
+                    if (surnameIdx !== -1 && nameIdx !== -1) {
+                        // We have both columns identified
+                        const nom = row[surnameIdx];
+                        const prenom = row[nameIdx];
+                        if (nom) fullName = `${nom} ${prenom || ''}`;
+                    } else if (surnameIdx !== -1) {
+                        // Only Nom found
+                        fullName = row[surnameIdx];
+                    } else if (nameIdx !== -1) {
+                        // Only Prenom found?? Unlikely alone, but usually assumes full name if single col found
+                        fullName = row[nameIdx];
+                    } else {
+                        // No headers detected, falling back to heuristics
+
+                        // Check if row matches the literal header "prénom" "nom" etc to skip it if it wasn't caught
+                        const rowStr = row.join(' ').toLowerCase();
+                        if (rowStr.includes('prénom') && rowStr.includes('nom')) continue;
+
+                        if (row.length >= 2) {
+                            // Assume Col 1 is Nom, Col 0 is Prénom? Or just combine them.
+                            // Based on user screenshot: Prénom (0) | Nom (1).
+                            // Let's combine 1 + 0 to have "NOM Prénom"
+                            const p1 = row[0] || ""; // Prénom
+                            const p2 = row[1] || ""; // Nom
+                            // Heuristic: usually Name is all caps? Not always.
+                            // Let's just output "NOM Prénom" assuming Col 1 is Nom if Col 0 is Prénom
+                            // User example: Camille (0) Moreau (1).
+                            // We want "MOREAU Camille".
+                            fullName = `${p2} ${p1}`;
+                        } else if (row.length === 1) {
+                            fullName = row[0];
+                        }
+                    }
+
+                    if (fullName && typeof fullName === 'string' && fullName.trim().length > 1) {
+                        // Cleanup
+                        const cleanName = fullName.replace(/\s+/g, ' ').trim().toUpperCase();
+                        // Avoid adding header line if it slipped through
+                        if (!cleanName.includes('NOM') || !cleanName.includes('PRENOM')) {
+                            parsedData.push({
+                                id: Date.now() + Math.random(),
+                                name: cleanName
+                            });
+                        }
+                    }
+                }
+
+                if (parsedData.length > 0) {
                     onAdd(parsedData);
                     alert(`${parsedData.length} étudiants importés avec succès !`);
                 } else {
-                    alert("Aucun nom trouvé. Vérifiez que les noms sont dans la première colonne.");
+                    alert("Aucun étudiant trouvé. Vérifiez le format (Colonnes: Nom, Prénom)");
                 }
 
             } catch (error) {
                 console.error("Import Error:", error);
-                alert("Erreur lors de la lecture du fichier. Vérifiez le format.");
+                alert("Erreur lecture fichier.");
             }
         };
 
