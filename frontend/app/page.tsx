@@ -89,10 +89,16 @@ export default function Home() {
             try {
                 // Students (Backend API) - Use auth endpoint with class code
                 const classCode = user.class_code || '1234';
+                console.log('🔍 Fetching students with class code:', classCode);
+                console.log('🔍 API URL:', `${API_URL}/api/auth/students/${classCode}`);
                 const resStudents = await fetch(`${API_URL}/api/auth/students/${classCode}`);
+                console.log('📡 Response status:', resStudents.status);
                 if (resStudents.ok) {
                     const data = await resStudents.json();
+                    console.log('✅ Students loaded:', data.length, 'students');
                     setStudents(data);
+                } else {
+                    console.error('❌ Failed to load students:', resStudents.statusText);
                 }
 
                 // Evals (LocalStorage for now + future Mock Sync)
