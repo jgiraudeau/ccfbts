@@ -72,6 +72,30 @@ export default function StudentPortal({ students, onBack, currentUser }: Student
         } catch (e) { console.error("Failed to delete", e); }
     };
 
+    const handleChangePassword = async () => {
+        const oldPass = prompt("Entrez votre code actuel :");
+        if (!oldPass) return;
+        const newPass = prompt("Entrez votre NOUVEAU code (4 chiffres) :");
+        if (!newPass) return;
+        if (newPass.length !== 4) { alert("Le code doit faire 4 caractères !"); return; }
+
+        try {
+            const res = await fetch(`${API_URL}/api/auth/student/password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    student_id: currentUser.id,
+                    old_password: oldPass,
+                    new_password: newPass
+                })
+            });
+
+            if (res.ok) alert("Code modifié avec succès !");
+            else alert("Erreur : Ancien code incorrect.");
+        } catch (e) { alert("Erreur connexion"); }
+    };
+
+
     if (!selectedStudentId) {
         return (
             <div className="max-w-2xl mx-auto p-6 animate-fade-in">
@@ -204,6 +228,25 @@ export default function StudentPortal({ students, onBack, currentUser }: Student
                                 </div>
                             ))
                         )}
+                    </div>
+                </section>
+
+                {/* Section Compte */}
+                <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2 mb-4">
+                        <User className="text-purple-600" /> Mon Compte
+                    </h2>
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="font-medium text-gray-900">Code Personnel de Connexion</p>
+                            <p className="text-sm text-gray-500">Utilisez ce code pour vous connecter à votre espace.</p>
+                        </div>
+                        <button
+                            onClick={handleChangePassword}
+                            className="text-purple-600 font-bold border border-purple-100 bg-purple-50 px-4 py-2 rounded-lg hover:bg-purple-100 transition-colors text-sm"
+                        >
+                            Modifier mon code
+                        </button>
                     </div>
                 </section>
             </div>

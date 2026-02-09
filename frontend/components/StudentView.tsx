@@ -218,6 +218,7 @@ export default function StudentView({ student, evaluations, finalEvaluation, cla
                     <History className="text-gray-400" />
                     <h3 className="font-bold text-gray-900">Historique Détaillé des Évaluations</h3>
                 </div>
+                {/* ... (Existing Table) ... */}
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm">
                         <thead className="bg-gray-50 text-gray-500 uppercase font-medium">
@@ -225,7 +226,7 @@ export default function StudentView({ student, evaluations, finalEvaluation, cla
                                 <th className="px-6 py-4">Date</th>
                                 <th className="px-6 py-4">Type</th>
                                 <th className="px-6 py-4">Intitulé</th>
-                                <th className="px-6 py-4">Note</th>
+                                <th className="px-6 py-4 text-center">Note</th>
                                 <th className="px-6 py-4 text-right">Actions</th>
                             </tr>
                         </thead>
@@ -244,7 +245,7 @@ export default function StudentView({ student, evaluations, finalEvaluation, cla
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 font-medium text-gray-800">{item.title}</td>
-                                            <td className="px-6 py-4">
+                                            <td className="px-6 py-4 text-center">
                                                 <span className={`px-2 py-1 rounded font-bold ${parseFloat(grade || "0") >= 10 ? 'text-green-600' : 'text-red-600'}`}>
                                                     {grade}/20
                                                 </span>
@@ -276,6 +277,45 @@ export default function StudentView({ student, evaluations, finalEvaluation, cla
                         </tbody>
                     </table>
                 </div>
+            </div>
+
+            {/* Submissions Section (Teacher View) */}
+            <StudentSubmissionsList studentId={student.id} />
+        </div>
+    );
+}
+
+function StudentSubmissionsList({ studentId }: { studentId: number }) {
+    const [submissions, setSubmissions] = React.useState<any[]>([]);
+
+    React.useEffect(() => {
+        fetch(`${API_URL}/api/submissions/${studentId}`)
+            .then(res => res.json())
+            .then(data => setSubmissions(data))
+            .catch(e => console.error(e));
+    }, [studentId]);
+
+    return (
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="p-6 border-b border-gray-50 flex items-center gap-2">
+                <FileText className="text-gray-400" />
+                <h3 className="font-bold text-gray-900">Documents remis par l'étudiant</h3>
+            </div>
+            <div className="p-6 grid gap-4 md:grid-cols-2">
+                {submissions.length === 0 ? (
+                    <p className="text-gray-400 italic">Aucun document remis.</p>
+                ) : (
+                    submissions.map(sub => (
+                        <div key={sub.id} className="p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors">
+                            <div className="flex justify-between items-start mb-2">
+                                <h4 className="font-bold text-gray-800">{sub.title}</h4>
+                                <span className="text-xs bg-gray-100 px-2 py-0.5 rounded text-gray-500">{sub.date}</span>
+                            </div>
+                            <p className="text-sm text-gray-500 line-clamp-2 mb-2">{sub.content}</p>
+                            <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">{sub.submission_type}</span>
+                        </div>
+                    ))
+                )}
             </div>
         </div>
     );
