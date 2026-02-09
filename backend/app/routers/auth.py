@@ -115,10 +115,29 @@ def purge_class_students(class_code: str, db: Session = Depends(get_db)):
         # Let's assume database cascade or just delete users for now (MVP)
         
         # Bulk delete users
+        from app.models import Evaluation, StudentSubmission
+        
+        # 1. Delete associated Submissions
+        db.query(StudentSubmission).filter(StudentSubmission.student_id.in_(student_ids)).delete(synchronize_session=False)
+        
+        # 2. Delete associated Evaluations (received)
+        # Note: Evaluations also have scores and attachments, which should be deleted too if no cascade.
+        # Ideally we should select eval IDs first.
+        student_evals = db.query(Evaluation).filter(Evaluation.student_id.in_(student_ids)).all()
+        eval_ids = [e.id for e in student_evals]
+        
+        if eval_ids:
+            from app.models import EvaluationScore, EvaluationAttachment
+            db.query(EvaluationScore).filter(EvaluationScore.evaluation_id.in_(eval_ids)).delete(synchronize_session=False)
+            db.query(EvaluationAttachment).filter(EvaluationAttachment.evaluation_id.in_(eval_ids)).delete(synchronize_session=False)
+            db.query(Evaluation).filter(Evaluation.id.in_(eval_ids)).delete(synchronize_session=False)
+
+        # 3. Finally delete the Users
         db.query(User).filter(
             User.role == "student", 
             (User.teacher_id == teacher.id) | (User.teacher_id == None)
         ).delete(synchronize_session=False)
+        
         db.commit()
         
     return {"status": "success", "deleted_count": len(student_ids)}
