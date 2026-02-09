@@ -10,3 +10,4 @@ passlib
 bcrypt
 python-docx
 psycopg2-binary
+reportlab

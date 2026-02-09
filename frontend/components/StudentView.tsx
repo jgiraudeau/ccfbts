@@ -1,10 +1,12 @@
 import React, { useMemo } from 'react';
 import {
     ArrowLeft, GraduationCap, Activity, Crosshair, History, Pencil, Trash2,
-    Monitor, Users, Handshake
+    Monitor, Users, Handshake, FileText
 } from "lucide-react";
 import { calculateGrade, Domain } from '../app/types';
 import { Line, Radar } from 'react-chartjs-2';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const DOMAINS: Record<string, Domain> = {
     E6_DISTRIBUTION: { id: 'distrib', title: "", subtitle: "Distributeur", color: "", gradient: "", icon: Monitor, skills: [] },
@@ -34,7 +36,41 @@ const getAvatarColor = (id: number) => {
 
 export default function StudentView({ student, evaluations, finalEvaluation, classAverages, onBack, onEdit, onDelete }: StudentViewProps) {
 
+    const handleExport = async (format: 'pdf' | 'docx') => {
+        try {
+            const response = await fetch(`${API_URL}/api/export/${format}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    student_id: student.id,
+                    exam_type: 'E4', // Default for now
+                    evaluations: evaluations
+                })
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Bilan_${student.name.replace(' ', '_')}.${format === 'docx' ? 'docx' : 'pdf'}`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            } else {
+                alert("Erreur lors de l'export.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Erreur de connexion.");
+        }
+    };
+
+    const handleExportPDF = () => handleExport('pdf');
+    const handleExportWord = () => handleExport('docx');
+
     const allHistory = useMemo(() => {
+
         const continuous = evaluations.map(e => ({
             ...e,
             type: 'continuous',
@@ -127,6 +163,20 @@ export default function StudentView({ student, evaluations, finalEvaluation, cla
                         <p className="text-gray-500 flex items-center gap-2 mt-1">
                             <GraduationCap size={16} /> BTS NDRC 2ème année
                         </p>
+                        <div className="flex gap-2 mt-3">
+                            <button
+                                onClick={handleExportPDF}
+                                className="text-xs bg-red-50 text-red-600 px-3 py-1.5 rounded-lg border border-red-100 font-bold hover:bg-red-100 flex items-center gap-1 transition-colors"
+                            >
+                                <FileText size={14} /> PDF
+                            </button>
+                            <button
+                                onClick={handleExportWord}
+                                className="text-xs bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg border border-blue-100 font-bold hover:bg-blue-100 flex items-center gap-1 transition-colors"
+                            >
+                                <FileText size={14} /> Word
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div className="flex items-center gap-8 z-10">
