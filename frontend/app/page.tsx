@@ -110,7 +110,7 @@ export default function Home() {
             }
         };
         fetchData();
-    }, []);
+    }, [user]);
 
     // --- Sync Logic (Background) ---
     useEffect(() => {
