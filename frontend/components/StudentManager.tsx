@@ -25,32 +25,55 @@ export default function StudentManager({ students, onAdd, onRemove, onBack, onCl
 
     const processFile = (file: File) => {
         const reader = new FileReader();
+
         reader.onload = (e) => {
             const data = e.target?.result;
-            if (typeof data !== 'string') {
-                const workbook = xlsx.read(data, { type: 'binary' });
-                const sheetName = workbook.SheetNames[0];
-                const sheet = workbook.Sheets[sheetName];
-                const json: any[][] = xlsx.utils.sheet_to_json(sheet, { header: 1 });
+            if (!data) return;
 
-                const names = json
-                    .map(row => row[0])
-                    .filter((name: any) => name && typeof name === 'string' && name.trim().length > 0 && name.toLowerCase() !== 'nom' && name.toLowerCase() !== 'noms');
+            let names: string[] = [];
 
-                const parsedData = names.map(name => ({
-                    id: Date.now() + Math.random(),
-                    name: name.trim().toUpperCase()
-                }));
+            try {
+                // Determine file type simply by extension or try both
+                if (file.name.endsWith('.csv')) {
+                    // Simple CSV Parse
+                    const text = data as string;
+                    const lines = text.split(/\r\n|\n/);
+                    names = lines.map(line => line.split(',')[0].trim()).filter(n => n && n.length > 1 && !n.toLowerCase().includes('nom'));
+                } else {
+                    // Excel (xlsx)
+                    // Need to read as array buffer for modern xlsx usage usually, but binary string works with 'binary' type
+                    const workbook = xlsx.read(data, { type: 'binary' });
+                    const sheetName = workbook.SheetNames[0];
+                    const sheet = workbook.Sheets[sheetName];
+                    const json: any[][] = xlsx.utils.sheet_to_json(sheet, { header: 1 });
 
-                if (parsedData.length > 0) {
+                    names = json
+                        .map(row => row[0]) // Assumes name is in first column
+                        .filter((name: any) => name && typeof name === 'string' && name.trim().length > 0 && name.toLowerCase() !== 'nom');
+                }
+
+                if (names.length > 0) {
+                    const parsedData = names.map(name => ({
+                        id: Date.now() + Math.random(),
+                        name: name.trim().toUpperCase()
+                    }));
                     onAdd(parsedData);
                     alert(`${parsedData.length} étudiants importés avec succès !`);
                 } else {
-                    alert("Aucun nom valide trouvé dans la première colonne.");
+                    alert("Aucun nom trouvé. Vérifiez que les noms sont dans la première colonne.");
                 }
+
+            } catch (error) {
+                console.error("Import Error:", error);
+                alert("Erreur lors de la lecture du fichier. Vérifiez le format.");
             }
         };
-        reader.readAsBinaryString(file);
+
+        if (file.name.endsWith('.csv')) {
+            reader.readAsText(file);
+        } else {
+            reader.readAsBinaryString(file);
+        }
     };
 
     const handleDrop = (e: React.DragEvent) => {
@@ -58,6 +81,12 @@ export default function StudentManager({ students, onAdd, onRemove, onBack, onCl
         setIsDragging(false);
         const file = e.dataTransfer.files[0];
         if (file) processFile(file);
+    };
+
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            processFile(e.target.files[0]);
+        }
     };
 
     return (
@@ -107,7 +136,7 @@ export default function StudentManager({ students, onAdd, onRemove, onBack, onCl
                                 type="file"
                                 accept=".xlsx,.xls,.csv"
                                 className="hidden"
-                                onChange={(e) => e.target.files && e.target.files[0] && processFile(e.target.files[0])}
+                                onChange={handleFileSelect}
                             />
                         </div>
                     </div>
