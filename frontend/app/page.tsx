@@ -203,13 +203,12 @@ export default function Home() {
     };
 
     const resetApp = async () => {
-        if (!confirm("ATTENTION : Cela va supprimer DÉFINITIVEMENT TOUS les étudiants et toutes les données de la base. Êtes-vous sûr ?")) return;
+        if (!confirm("ATTENTION : Cela va supprimer TOUS les étudiants de TOUTES les classes de la base de données (OPTION NUCLÉAIRE). Êtes-vous ABSOLUMENT sûr ?")) return;
 
-        // Use the new bulk delete endpoint for reliability
-        const classCode = user?.class_code || '1234'; // Fallback to default class code
+        // Use the NUCLEAR cleanup endpoint
         try {
-            await fetch(`${API_URL}/api/auth/students/${classCode}`, { method: 'DELETE' });
-        } catch (e) { console.error("Bulk delete failed", e); }
+            await fetch(`${API_URL}/api/auth/nuclear-cleanup`, { method: 'DELETE' });
+        } catch (e) { console.error("Nuclear cleanup failed", e); }
 
         setStudents([]);
         setEvaluations([]);

@@ -144,3 +144,33 @@ def purge_class_students(class_code: str, db: Session = Depends(get_db)):
         db.commit()
         
     return {"status": "success", "deleted_count": len(student_ids)}
+
+@router.delete("/auth/nuclear-cleanup")
+def nuclear_cleanup(db: Session = Depends(get_db)):
+    """
+    OPTION NUCLÉAIRE : Supprime TOUS les étudiants de la base, sans exception.
+    """
+    # 1. Get ALL students
+    students = db.query(User).filter(User.role == "student").all()
+    student_ids = [s.id for s in students]
+    
+    if not student_ids:
+        return {"status": "empty", "message": "Aucun étudiant trouvé"}
+
+    # 2. Delete Submissions
+    from app.models import Evaluation, StudentSubmission, EvaluationScore, EvaluationAttachment
+    db.query(StudentSubmission).filter(StudentSubmission.student_id.in_(student_ids)).delete(synchronize_session=False)
+
+    # 3. Delete Evaluations & Linked Data
+    student_evals = db.query(Evaluation).filter(Evaluation.student_id.in_(student_ids)).all()
+    if student_evals:
+        eval_ids = [e.id for e in student_evals]
+        db.query(EvaluationScore).filter(EvaluationScore.evaluation_id.in_(eval_ids)).delete(synchronize_session=False)
+        db.query(EvaluationAttachment).filter(EvaluationAttachment.evaluation_id.in_(eval_ids)).delete(synchronize_session=False)
+        db.query(Evaluation).filter(Evaluation.id.in_(eval_ids)).delete(synchronize_session=False)
+
+    # 4. Delete Students
+    db.query(User).filter(User.role == "student").delete(synchronize_session=False)
+    db.commit()
+
+    return {"status": "success", "deleted_count": len(student_ids), "message": "TOUS les étudiants ont été supprimés"}
