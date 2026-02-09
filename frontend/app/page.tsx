@@ -27,6 +27,7 @@ import StudentView from '../components/StudentView';
 import ComparisonView from '../components/ComparisonView';
 import E4EvaluationForm from '../components/E4EvaluationForm';
 import ScenarioGenerator from '../components/ScenarioGenerator';
+import StudentPortal from '../components/StudentPortal';
 
 // Register Chart.js
 ChartJS.register(
@@ -287,24 +288,38 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <div className="bg-gray-100 p-1 rounded-xl flex font-medium text-sm">
+                    <div className="flex items-center gap-4">
                         <button
-                            onClick={() => setSelectedBlock('E4')}
-                            className={`px-4 py-2 rounded-lg transition-all ${selectedBlock === 'E4' ? 'bg-white text-purple-700 shadow-sm font-bold' : 'text-gray-500 hover:text-gray-900'}`}
+                            onClick={() => setView('student_portal')}
+                            className="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-lg font-bold border border-emerald-100 hover:bg-emerald-100 transition-colors flex items-center gap-2"
                         >
-                            Épreuve E4
+                            <Users size={18} /> Espace Élève
                         </button>
-                        <button
-                            onClick={() => setSelectedBlock('E6')}
-                            className={`px-4 py-2 rounded-lg transition-all ${selectedBlock === 'E6' ? 'bg-white text-indigo-700 shadow-sm font-bold' : 'text-gray-500 hover:text-gray-900'}`}
-                        >
-                            Épreuve E6
-                        </button>
+                        <div className="bg-gray-100 p-1 rounded-xl flex font-medium text-sm">
+                            <button
+                                onClick={() => setSelectedBlock('E4')}
+                                className={`px-4 py-2 rounded-lg transition-all ${selectedBlock === 'E4' ? 'bg-white text-purple-700 shadow-sm font-bold' : 'text-gray-500 hover:text-gray-900'}`}
+                            >
+                                Épreuve E4
+                            </button>
+                            <button
+                                onClick={() => setSelectedBlock('E6')}
+                                className={`px-4 py-2 rounded-lg transition-all ${selectedBlock === 'E6' ? 'bg-white text-indigo-700 shadow-sm font-bold' : 'text-gray-500 hover:text-gray-900'}`}
+                            >
+                                Épreuve E6
+                            </button>
+                        </div>
                     </div>
                 </div>
             </nav>
 
             <main className="max-w-7xl mx-auto px-6">
+                {view === 'student_portal' && (
+                    <StudentPortal
+                        students={students}
+                        onBack={() => setView('dashboard')}
+                    />
+                )}
                 {/* VUE: DASHBOARD */}
                 {view === 'dashboard' && (
                     <div className="space-y-8 animate-fade-in">
@@ -478,6 +493,7 @@ export default function Home() {
                 {view === 'scenario' && <ScenarioGenerator
                     onBack={() => setView('dashboard')}
                     blockType={selectedBlock}
+                    students={students}
                 />}
 
                 {view === 'student' && activeStudentId && <StudentView

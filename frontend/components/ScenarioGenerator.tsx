@@ -1,13 +1,14 @@
 
-import React, { useState } from 'react';
-import { ArrowLeft, Sparkles, Wand2, Copy, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, Sparkles, Wand2, Copy, AlertCircle, Download } from 'lucide-react';
 
 interface ScenarioGeneratorProps {
     onBack: () => void;
     blockType: 'E4' | 'E6';
+    students?: any[];
 }
 
-export default function ScenarioGenerator({ onBack, blockType }: ScenarioGeneratorProps) {
+export default function ScenarioGenerator({ onBack, blockType, students = [] }: ScenarioGeneratorProps) {
     const [topic, setTopic] = useState('');
     const [scenarioType, setScenarioType] = useState('jeu_de_role_evenement'); // Default to Event
     const [generatedContent, setGeneratedContent] = useState('');
@@ -15,6 +16,27 @@ export default function ScenarioGenerator({ onBack, blockType }: ScenarioGenerat
     const [error, setError] = useState('');
     const [refineInstruction, setRefineInstruction] = useState('');
     const [refining, setRefining] = useState(false);
+
+    // New state for student loader
+    const [selectedStudentId, setSelectedStudentId] = useState<number | null>(null);
+    const [studentSubmissions, setStudentSubmissions] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (selectedStudentId) {
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+            fetch(`${API_URL}/api/submissions/${selectedStudentId}?type=E4_SITUATION`)
+                .then(res => res.json())
+                .then(data => setStudentSubmissions(data))
+                .catch(err => console.error(err));
+        } else {
+            setStudentSubmissions([]);
+        }
+    }, [selectedStudentId]);
+
+    const loadSubmission = (content: string) => {
+        setTopic(content);
+        alert("Contenu chargé !");
+    };
 
     const handleGenerate = async () => {
         if (!topic) return;
@@ -121,6 +143,38 @@ export default function ScenarioGenerator({ onBack, blockType }: ScenarioGenerat
                             </select>
                         </div>
                         <div className="md:col-span-2">
+                            {/* Student Submission Loader */}
+                            {students && students.length > 0 && (
+                                <div className="mb-4 bg-purple-50 p-4 rounded-xl border border-purple-100">
+                                    <h4 className="font-bold text-purple-900 mb-2 flex items-center gap-2">
+                                        <Download size={16} /> Charger depuis une fiche étudiante
+                                    </h4>
+                                    <div className="flex gap-4">
+                                        <select
+                                            className="flex-1 p-2 border border-purple-200 rounded-lg text-sm"
+                                            onChange={(e) => setSelectedStudentId(parseInt(e.target.value))}
+                                            value={selectedStudentId || ''}
+                                        >
+                                            <option value="">-- Sélectionner un étudiant --</option>
+                                            {students.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                                        </select>
+
+                                        {selectedStudentId && (
+                                            <select
+                                                className="flex-1 p-2 border border-purple-200 rounded-lg text-sm"
+                                                onChange={(e) => {
+                                                    const sub = studentSubmissions.find(s => s.id === parseInt(e.target.value));
+                                                    if (sub) loadSubmission(sub.content);
+                                                }}
+                                            >
+                                                <option value="">-- Choisir une fiche --</option>
+                                                {studentSubmissions.map(s => <option key={s.id} value={s.id}>{s.title} ({s.date})</option>)}
+                                            </select>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
                             <label className="block text-sm font-bold text-gray-700 mb-2">Contenu de la Fiche Situation Étudiant / Contexte</label>
                             <textarea
                                 placeholder="Copiez-collez ici le contenu de la fiche situation de l'étudiant (Contexte, Produit, Cible, Objectifs...)"

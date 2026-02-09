@@ -32,6 +32,20 @@ class User(Base):
     # Relations
     evaluations_received = relationship("Evaluation", back_populates="student", foreign_keys="Evaluation.student_id")
     evaluations_given = relationship("Evaluation", back_populates="evaluator", foreign_keys="Evaluation.evaluator_id")
+    submissions = relationship("StudentSubmission", back_populates="student")
+
+class StudentSubmission(Base):
+    """Soumissions des étudiants (Fiches E4, Dossiers E6, Preuves)"""
+    __tablename__ = "student_submissions"
+    id = Column(Integer, primary_key=True, index=True)
+    student_id = Column(Integer, ForeignKey("users.id"))
+    title = Column(String)
+    content = Column(Text) # Contenu texte (ex: copié-collé fiche situation)
+    file_url = Column(String, nullable=True) # Lien fichier (si upload)
+    submission_type = Column(String) # 'E4_SITUATION', 'E6_CR', 'AUTRE'
+    date = Column(Date)
+
+    student = relationship("User", back_populates="submissions")
 
 class Competency(Base):
     __tablename__ = "competencies"
