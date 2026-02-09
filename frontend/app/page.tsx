@@ -203,14 +203,13 @@ export default function Home() {
     };
 
     const resetApp = async () => {
-        if (!confirm("ATTENTION : Cela va supprimer TOUS les étudiants et leurs données. Êtes-vous sûr ?")) return;
+        if (!confirm("ATTENTION : Cela va supprimer DÉFINITIVEMENT TOUS les étudiants et toutes les données de la base. Êtes-vous sûr ?")) return;
 
-        // Delete all students one by one (MVP way) or add a purge endpoint
-        for (const s of students) {
-            try {
-                await fetch(`${API_URL}/students/${s.id}`, { method: 'DELETE' });
-            } catch (e) { console.error("Del failed", s.id); }
-        }
+        // Use the new bulk delete endpoint for reliability
+        const classCode = user?.class_code || '1234'; // Fallback to default class code
+        try {
+            await fetch(`${API_URL}/api/auth/students/${classCode}`, { method: 'DELETE' });
+        } catch (e) { console.error("Bulk delete failed", e); }
 
         setStudents([]);
         setEvaluations([]);
