@@ -42,3 +42,18 @@ def load_ref(db: Session, filename: str, block_enum: ExamBlock):
 def init_db(db: Session):
     load_ref(db, "referentiel_e6.json", ExamBlock.E6)
     load_ref(db, "referentiel_e4.json", ExamBlock.E4)
+
+    # Création Professeur par défaut
+    from .models import User
+    prof = db.query(User).filter(User.email == "prof@ccfbts.fr").first()
+    if not prof:
+        prof = User(
+            name="Professeur Principal",
+            email="prof@ccfbts.fr", 
+            hashed_password="admin", # Pour login simple
+            role="teacher",
+            class_code="1234" # Code par défaut
+        )
+        db.add(prof)
+        db.commit()
+        print("Default Teacher Created: Code 1234")

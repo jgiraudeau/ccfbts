@@ -12,13 +12,14 @@ from datetime import date, datetime
 # Init DB models
 Base.metadata.create_all(bind=engine)
 
-from app.routers import generate, export, submissions
+from app.routers import generate, export, submissions, auth
 
 app = FastAPI(title="ProfVirtuel V2 - E6 & CCF")
 
 app.include_router(generate.router, prefix="/api", tags=["Generate"])
 app.include_router(submissions.router, prefix="/api", tags=["Submissions"])
 app.include_router(export.router, prefix="/api", tags=["Export"])
+app.include_router(auth.router, prefix="/api", tags=["Auth"])
 
 # --- Schemas Pydantic (Entrée/Sortie API) ---
 
@@ -91,7 +92,9 @@ def create_student(student: StudentCreate, db: Session = Depends(get_db)):
     new_user = User(
         name=student.name,
         email=email_gen,
-        role="student"
+        role="student",
+        teacher_id=1, # Lié au prof par défaut pour le MVP
+        student_password="0000"
     )
     db.add(new_user)
     db.commit()

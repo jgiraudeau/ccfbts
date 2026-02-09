@@ -8,19 +8,22 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 interface StudentPortalProps {
     students: any[];
     onBack: () => void;
+    currentUser: any; // { id, name, role }
 }
 
-export default function StudentPortal({ students, onBack }: StudentPortalProps) {
-    const [selectedStudentId, setSelectedStudentId] = useState<number | null>(null);
+export default function StudentPortal({ students, onBack, currentUser }: StudentPortalProps) {
+    const [selectedStudentId, setSelectedStudentId] = useState<number | null>(currentUser.id);
     const [submissions, setSubmissions] = useState<any[]>([]);
     const [newSubmission, setNewSubmission] = useState({ title: '', content: '', type: 'E4_SITUATION' });
     const [showForm, setShowForm] = useState(false);
 
     useEffect(() => {
-        if (selectedStudentId) {
-            fetchSubmissions(selectedStudentId);
+        // Auto select current user
+        if (currentUser && currentUser.id) {
+            setSelectedStudentId(currentUser.id);
+            fetchSubmissions(currentUser.id);
         }
-    }, [selectedStudentId]);
+    }, [currentUser]);
 
     const fetchSubmissions = async (id: number) => {
         try {

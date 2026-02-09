@@ -28,6 +28,7 @@ import ComparisonView from '../components/ComparisonView';
 import E4EvaluationForm from '../components/E4EvaluationForm';
 import ScenarioGenerator from '../components/ScenarioGenerator';
 import StudentPortal from '../components/StudentPortal';
+import LoginPage from '../components/LoginPage';
 
 // Register Chart.js
 ChartJS.register(
@@ -56,6 +57,9 @@ const getAvatarColor = (index: number) => {
 };
 
 export default function Home() {
+    // Auth State
+    const [user, setUser] = useState<any>(null); // { name, role, class_code? }
+
     const [view, setView] = useState('dashboard');
     const [selectedBlock, setSelectedBlock] = useState<'E6' | 'E4'>('E4');
     const [students, setStudents] = useState<any[]>([]);
@@ -64,6 +68,8 @@ export default function Home() {
     const [reflexiveData, setReflexiveData] = useState<any>({});
     const [activeStudentId, setActiveStudentId] = useState<number | null>(null);
     const [editingItem, setEditingItem] = useState<any>(null);
+
+    // Initial Load Check (Mock Auth persistence could go here)
 
     // Filter evaluations based on block
     const filteredEvaluations = useMemo(() => {
@@ -76,6 +82,8 @@ export default function Home() {
 
     // --- Data Fetching ---
     useEffect(() => {
+        if (!user) return; // Fetch only if logged in
+
         const fetchData = async () => {
             try {
                 // Students (Backend API)
@@ -269,7 +277,26 @@ export default function Home() {
         };
     }, [evaluations]);
 
-    // --- Rendu ---
+    // --- Login Handlers ---
+    if (!user) {
+        return <LoginPage
+            onTeacherLogin={(u) => { setUser(u); setView('dashboard'); }}
+            onStudentLogin={(u) => { setUser({ ...u, role: 'student' }); setView('student_portal'); }}
+        />;
+    }
+
+    if (view === 'student_portal' || user.role === 'student') {
+        return (
+            <StudentPortal
+                students={students} // For now pass all, but ideally just currentUser context
+                // In real app, StudentPortal would use user.id directly
+                onBack={() => { setUser(null); setView('dashboard'); }} // Logout
+                currentUser={user} // Pass logged user
+            />
+        );
+    }
+
+    // --- Rendu Professeur ---
     return (
         <div className="min-h-screen bg-slate-50 pb-20 font-sans text-gray-800">
             <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200 px-6 py-4 mb-8">
@@ -289,12 +316,16 @@ export default function Home() {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <button
-                            onClick={() => setView('student_portal')}
-                            className="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-lg font-bold border border-emerald-100 hover:bg-emerald-100 transition-colors flex items-center gap-2"
-                        >
-                            <Users size={18} /> Espace Élève
+                        <div className="text-right mr-2 hidden md:block">
+                            <p className="text-sm font-bold text-gray-900">{user.name}</p>
+                            <p className="text-xs text-gray-500">Code Classe: {user.class_code || '1234'}</p>
+                        </div>
+                        <button onClick={() => setUser(null)} className="text-xs text-red-500 hover:text-red-700 font-bold border border-red-100 px-3 py-1 bg-red-50 rounded-lg">
+                            Déconnexion
                         </button>
+
+                        <div className="w-px h-8 bg-gray-200 mx-2"></div>
+
                         <div className="bg-gray-100 p-1 rounded-xl flex font-medium text-sm">
                             <button
                                 onClick={() => setSelectedBlock('E4')}
@@ -318,6 +349,7 @@ export default function Home() {
                     <StudentPortal
                         students={students}
                         onBack={() => setView('dashboard')}
+                        currentUser={user}
                     />
                 )}
                 {/* VUE: DASHBOARD */}

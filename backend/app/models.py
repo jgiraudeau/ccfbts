@@ -29,7 +29,15 @@ class User(Base):
     hashed_password = Column(String)
     role = Column(String, default="student") # admin, teacher, student
     
+    # Auth fields
+    class_code = Column(String, nullable=True) # For teachers (PIN shared with students)
+    student_password = Column(String, default="0000") # For students
+    teacher_id = Column(Integer, ForeignKey("users.id"), nullable=True) # Link student to teacher
+
     # Relations
+    teacher = relationship("User", remote_side=[id], back_populates="students")
+    students = relationship("User", remote_side=[teacher_id], back_populates="teacher")
+    
     evaluations_received = relationship("Evaluation", back_populates="student", foreign_keys="Evaluation.student_id")
     evaluations_given = relationship("Evaluation", back_populates="evaluator", foreign_keys="Evaluation.evaluator_id")
     submissions = relationship("StudentSubmission", back_populates="student")
