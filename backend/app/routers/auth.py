@@ -84,6 +84,13 @@ def get_students_by_class_code(class_code: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Code classe introuvable")
         
     # Get students for this teacher
-    # Or getAllStudents if teacher_id is null (legacy support)
-    students = db.query(User).filter(User.role == "student", (User.teacher_id == teacher.id) | (User.teacher_id == None)).all()
+    # Ensure we get fresh list from DB.
+    # We include students with matching teacher_id OR null teacher_id (legacy import)
+    # BUT if we just wiped everything, we should only see new ones.
+    
+    students = db.query(User).filter(
+        User.role == "student", 
+        (User.teacher_id == teacher.id) | (User.teacher_id == None)
+    ).all()
+    
     return [{"id": s.id, "name": s.name} for s in students]
