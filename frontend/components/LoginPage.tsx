@@ -43,22 +43,40 @@ export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageP
         }
 
         try {
-            // Mock fetch for now as backend might not have data linked yet
-            // In real app: fetch(`${API_URL}/api/auth/students/${sClassCode}`)
-            const res = await fetch(`${API_URL}/students`); // Fetch all for MVP
+            // Fetch students linked to this teacher (class code)
+            const res = await fetch(`${API_URL}/api/auth/students/${sClassCode}`);
+            if (!res.ok) throw new Error("Classe introuvable");
+
             const data = await res.json();
+            if (data.length === 0) {
+                alert("Aucun élève trouvé dans cette classe.");
+                return;
+            }
             setSStudentsList(data);
             setSStep(2);
-        } catch (err) { alert("Erreur récupération liste élèves"); }
+        } catch (err) { alert("Erreur : Code classe invalide ou problème connexion"); }
     };
 
     const handleStudentLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (sPassword === '0000') { // Default check
-            onStudentLogin(sSelectedStudent);
-        } else {
-            alert("Code incorrect (Par défaut: 0000)");
-        }
+        try {
+            const res = await fetch(`${API_URL}/api/auth/student`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    class_code: sClassCode,
+                    student_id: sSelectedStudent.id,
+                    password: sPassword
+                })
+            });
+
+            if (res.ok) {
+                const userData = await res.json();
+                onStudentLogin(userData); // {id, name, role}
+            } else {
+                alert("Code personnel incorrect !");
+            }
+        } catch (err) { alert("Erreur d'authentification"); }
     };
 
     return (
