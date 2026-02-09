@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import {
     FileCheck, LayoutDashboard, Settings, Award, Plus, Sparkles,
-    TrendingUp, Users, UserX, BarChart2
+    TrendingUp, Users, UserX, BarChart2, FileText
 } from "lucide-react";
 import {
     Chart as ChartJS,
@@ -28,6 +28,7 @@ import ComparisonView from '../components/ComparisonView';
 import E4EvaluationForm from '../components/E4EvaluationForm';
 import ScenarioGenerator from '../components/ScenarioGenerator';
 import StudentPortal from '../components/StudentPortal';
+import SubmissionsView from '../components/SubmissionsView';
 import LoginPage from '../components/LoginPage';
 
 // Register Chart.js
@@ -450,6 +451,9 @@ export default function Home() {
                                     <button onClick={() => { setEditingItem(null); setView('final_evaluate'); }} className="bg-gray-800 hover:bg-black text-white px-4 py-2 rounded-xl shadow-md transition-all flex items-center gap-2 font-medium text-sm">
                                         <Award size={16} /> Évaluation {selectedBlock}
                                     </button>
+                                    <button onClick={() => setView('submissions')} className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-xl shadow-md transition-all flex items-center gap-2 font-medium text-sm">
+                                        <FileText size={16} /> Documents Déposés
+                                    </button>
                                     <button onClick={() => setView('evaluate')} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl shadow-md transition-all flex items-center gap-2 font-medium text-sm">
                                         <Plus size={16} /> Évaluation Continue
                                     </button>
@@ -589,6 +593,11 @@ export default function Home() {
                     finalEvaluation={finalEvaluations.find(e => e.studentId === activeStudentId)}
                     reflexiveData={reflexiveData[activeStudentId]}
                     onSaveReflexive={saveReflexive}
+                    onBack={() => setView('dashboard')}
+                />}
+
+                {view === 'submissions' && <SubmissionsView
+                    students={students}
                     onBack={() => setView('dashboard')}
                 />}
             </main>
