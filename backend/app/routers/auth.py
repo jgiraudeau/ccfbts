@@ -115,7 +115,10 @@ def purge_class_students(class_code: str, db: Session = Depends(get_db)):
         # Let's assume database cascade or just delete users for now (MVP)
         
         # Bulk delete users
-        db.query(User).filter(User.role == "student", User.teacher_id == teacher.id).delete(synchronize_session=False)
+        db.query(User).filter(
+            User.role == "student", 
+            (User.teacher_id == teacher.id) | (User.teacher_id == None)
+        ).delete(synchronize_session=False)
         db.commit()
         
     return {"status": "success", "deleted_count": len(student_ids)}
