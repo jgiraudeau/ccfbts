@@ -30,6 +30,7 @@ import ScenarioGenerator from '../components/ScenarioGenerator';
 import StudentPortal from '../components/StudentPortal';
 import SubmissionsView from '../components/SubmissionsView';
 import LoginPage from '../components/LoginPage';
+import TrackingSystem from '../components/TrackingSystem';
 
 // Register Chart.js
 ChartJS.register(
@@ -60,6 +61,9 @@ const getAvatarColor = (index: number) => {
 export default function Home() {
     // Auth State
     const [user, setUser] = useState<any>(null); // { name, role, class_code? }
+
+    // App Mode: 'evaluation' (old E4/E6 system) or 'tracking' (new tracking system)
+    const [appMode, setAppMode] = useState<'evaluation' | 'tracking'>('tracking');
 
     const [view, setView] = useState('dashboard');
     const [selectedBlock, setSelectedBlock] = useState<'E6' | 'E4'>('E4');
@@ -338,6 +342,11 @@ export default function Home() {
         />;
     }
 
+    // If tracking mode is enabled, show the new tracking system
+    if (appMode === 'tracking') {
+        return <TrackingSystem user={user} onLogout={() => setUser(null)} />;
+    }
+
     if (view === 'student_portal' || user.role === 'student') {
         return (
             <StudentPortal
@@ -376,6 +385,24 @@ export default function Home() {
                         <button onClick={() => setUser(null)} className="text-xs text-red-500 hover:text-red-700 font-bold border border-red-100 px-3 py-1 bg-red-50 rounded-lg">
                             Déconnexion
                         </button>
+
+                        <div className="w-px h-8 bg-gray-200 mx-2"></div>
+
+                        {/* Mode Switcher */}
+                        <div className="bg-gray-100 p-1 rounded-xl flex font-medium text-sm">
+                            <button
+                                onClick={() => setAppMode('evaluation')}
+                                className={`px-4 py-2 rounded-lg transition-all ${appMode === 'evaluation' ? 'bg-white text-purple-700 shadow-sm font-bold' : 'text-gray-500 hover:text-gray-900'}`}
+                            >
+                                Évaluations
+                            </button>
+                            <button
+                                onClick={() => setAppMode('tracking')}
+                                className={`px-4 py-2 rounded-lg transition-all ${appMode === 'tracking' ? 'bg-white text-emerald-700 shadow-sm font-bold' : 'text-gray-500 hover:text-gray-900'}`}
+                            >
+                                Suivi Élèves
+                            </button>
+                        </div>
 
                         <div className="w-px h-8 bg-gray-200 mx-2"></div>
 
