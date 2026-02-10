@@ -34,6 +34,12 @@ class User(Base):
     student_password = Column(String, default="0000") # For students
     teacher_id = Column(Integer, ForeignKey("users.id"), nullable=True) # Link student to teacher
 
+    # Stage tracking fields (for students)
+    stage_start_date = Column(Date, nullable=True)
+    stage_end_date = Column(Date, nullable=True)
+    stage_company = Column(String(200), nullable=True)
+    stage_tutor = Column(String(100), nullable=True)
+
     # Relations
     teacher = relationship("User", remote_side=[id], back_populates="students")
     students = relationship("User", remote_side=[teacher_id], back_populates="teacher")
@@ -41,6 +47,7 @@ class User(Base):
     evaluations_received = relationship("Evaluation", back_populates="student", foreign_keys="Evaluation.student_id")
     evaluations_given = relationship("Evaluation", back_populates="evaluator", foreign_keys="Evaluation.evaluator_id")
     submissions = relationship("StudentSubmission", back_populates="student")
+    tracking_submissions = relationship("Submission", back_populates="student", foreign_keys="Submission.student_id")
 
 class StudentSubmission(Base):
     """Soumissions des étudiants (Fiches E4, Dossiers E6, Preuves)"""
@@ -130,3 +137,6 @@ class EvaluationAttachment(Base):
     description = Column(String)
 
     evaluation = relationship("Evaluation", back_populates="attachments")
+
+# Import tracking models (deadlines, submissions)
+from .models_tracking import Deadline, Submission
