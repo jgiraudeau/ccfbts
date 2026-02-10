@@ -13,7 +13,7 @@ from datetime import date, datetime
 Base.metadata.create_all(bind=engine)
 
 from app.routers import generate, export, submissions, auth, scenario_export
-from app.routers import classes, deadlines, tracking_submissions, admin
+from app.routers import classes, deadlines, tracking_submissions, admin, students
 
 app = FastAPI(title="ProfVirtuel V2 - E6 & CCF")
 
@@ -28,6 +28,7 @@ app.include_router(classes.router, tags=["Classes"])
 app.include_router(deadlines.router, tags=["Deadlines"])
 app.include_router(tracking_submissions.router, tags=["Tracking Submissions"])
 app.include_router(admin.router, tags=["Admin"])
+app.include_router(students.router, tags=["Students"])
 
 # --- Schemas Pydantic (Entrée/Sortie API) ---
 
