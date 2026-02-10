@@ -113,6 +113,11 @@ export default function ScenarioGenerator({ onBack, blockType, students = [] }: 
     const handleExport = async (format: 'pdf' | 'docx') => {
         try {
             const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+            // Get student name if a student is selected
+            const selectedStudent = students?.find(s => s.id === selectedStudentId);
+            const studentName = selectedStudent?.name || "";
+
             const response = await fetch(`${API_URL}/api/export-scenario/${format}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -120,7 +125,8 @@ export default function ScenarioGenerator({ onBack, blockType, students = [] }: 
                     title: topic || "Scénario E4",
                     scenario_type: scenarioType,
                     content: generatedContent,
-                    exam_type: blockType
+                    exam_type: blockType,
+                    student_name: studentName
                 })
             });
 
@@ -129,7 +135,7 @@ export default function ScenarioGenerator({ onBack, blockType, students = [] }: 
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `Sujet_${blockType}.${format === 'docx' ? 'docx' : 'pdf'}`;
+                a.download = `Sujet_${blockType}${studentName ? '_' + studentName.replace(' ', '_') : ''}.${format === 'docx' ? 'docx' : 'pdf'}`;
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
