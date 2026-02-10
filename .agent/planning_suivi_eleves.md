@@ -3,9 +3,38 @@
 ## 📋 Vue d'ensemble
 
 Créer un système complet de suivi des élèves permettant :
-- Au **professeur** : Définir un planning annuel de remises de documents et suivre les soumissions
+- Au **super-admin** : Gérer les comptes professeurs (activer/désactiver, créer manuellement)
+- Aux **professeurs** : S'auto-inscrire OU être créés par l'admin, créer leurs classes, gérer leurs élèves
 - Aux **élèves** : Voir leurs échéances et soumettre leurs documents
 - Suivi des **notes** et **corrections** pour chaque document
+
+## 👥 Gestion des Rôles (Solution Hybride)
+
+### Super-Admin
+- **Accès** : Interface d'administration
+- **Permissions** :
+  - Voir tous les professeurs inscrits
+  - Activer/Désactiver des comptes professeurs
+  - Créer manuellement des comptes professeurs
+  - Voir les statistiques globales de l'application
+  - **NE PEUT PAS** : Voir/modifier les classes et élèves des profs (isolation)
+
+### Professeur
+- **Inscription** : Auto-inscription activée (validation email) OU création par admin
+- **Permissions** :
+  - Créer/gérer ses propres classes
+  - Créer/importer ses élèves
+  - Assigner élèves à ses classes
+  - Définir échéances pour ses classes
+  - Noter et commenter les soumissions de ses élèves
+  - **NE PEUT PAS** : Voir les classes/élèves d'autres profs
+
+### Élève
+- **Création** : Par son professeur
+- **Permissions** :
+  - Voir ses échéances
+  - Soumettre des documents
+  - Voir ses notes et feedbacks
 
 ---
 

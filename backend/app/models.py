@@ -1,5 +1,6 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, Enum, Date, Float
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, Enum, Date, Float, DateTime
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 import enum
 from .database import Base
 
@@ -28,6 +29,8 @@ class User(Base):
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     role = Column(String, default="student") # admin, teacher, student
+    is_active = Column(Boolean, default=True)  # Pour activer/désactiver les comptes
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
     
     # Auth fields
     class_code = Column(String, nullable=True) # For teachers (PIN shared with students)
