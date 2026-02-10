@@ -1,24 +1,20 @@
 import React, { useMemo } from 'react';
 import {
     ArrowLeft, GraduationCap, Activity, Crosshair, History, Pencil, Trash2,
-    Monitor, Users, Handshake, FileText
+    Monitor, Users, Handshake, FileText, Briefcase
 } from "lucide-react";
 import { calculateGrade, Domain } from '../app/types';
 import { Line, Radar } from 'react-chartjs-2';
+import { DOMAINS as ALL_DOMAINS } from '../app/constants';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
-const DOMAINS: Record<string, Domain> = {
-    E6_DISTRIBUTION: { id: 'distrib', title: "", subtitle: "Distributeur", color: "", gradient: "", icon: Monitor, skills: [] },
-    E6_PARTENARIAT: { id: 'partenariat', title: "", subtitle: "Partenariat", color: "", gradient: "", icon: Handshake, skills: [] },
-    E6_VD: { id: 'vd', title: "", subtitle: "Vente Directe", color: "", gradient: "", icon: Users, skills: [] }
-};
 
 interface StudentViewProps {
     student: any;
     evaluations: any[];
     finalEvaluation: any;
     classAverages: any;
+    selectedBlock?: 'E4' | 'E6';
     onBack: () => void;
     onEdit: (item: any, type: string) => void;
     onDelete: (id: number, type: string) => void;
@@ -34,7 +30,19 @@ const getAvatarColor = (id: number) => {
     return colors[id % colors.length];
 };
 
-export default function StudentView({ student, evaluations, finalEvaluation, classAverages, onBack, onEdit, onDelete }: StudentViewProps) {
+export default function StudentView({ student, evaluations, finalEvaluation, classAverages, selectedBlock = 'E6', onBack, onEdit, onDelete }: StudentViewProps) {
+
+    // Filter domains based on selected block
+    const DOMAINS = useMemo(() => {
+        const filtered: Record<string, any> = {};
+        Object.keys(ALL_DOMAINS).forEach(key => {
+            const domain = ALL_DOMAINS[key];
+            if (domain.exam === selectedBlock) {
+                filtered[key] = domain;
+            }
+        });
+        return filtered;
+    }, [selectedBlock]);
 
     const handleExport = async (format: 'pdf' | 'docx') => {
         try {
@@ -43,7 +51,7 @@ export default function StudentView({ student, evaluations, finalEvaluation, cla
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     student_id: student.id,
-                    exam_type: 'E4', // Default for now
+                    exam_type: selectedBlock,
                     evaluations: evaluations
                 })
             });

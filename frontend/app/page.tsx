@@ -589,6 +589,7 @@ export default function Home() {
                     evaluations={evaluations.filter(e => e.studentId === activeStudentId)}
                     finalEvaluation={filteredEvaluations.find(e => e.studentId === activeStudentId)}
                     classAverages={classAverages}
+                    selectedBlock={selectedBlock}
                     onBack={() => setView('dashboard')}
                     onEdit={handleEdit}
                     onDelete={handleDeleteEval}
