@@ -48,6 +48,11 @@ class User(Base):
     evaluations_given = relationship("Evaluation", back_populates="evaluator", foreign_keys="Evaluation.evaluator_id")
     submissions = relationship("StudentSubmission", back_populates="student")
     tracking_submissions = relationship("Submission", back_populates="student", foreign_keys="Submission.student_id")
+    
+    # Class management (for teachers)
+    classes = relationship("Class", back_populates="teacher")
+    # Class enrollment (for students)
+    enrolled_classes = relationship("Class", secondary="class_students", back_populates="students")
 
 class StudentSubmission(Base):
     """Soumissions des étudiants (Fiches E4, Dossiers E6, Preuves)"""
@@ -140,3 +145,5 @@ class EvaluationAttachment(Base):
 
 # Import tracking models (deadlines, submissions)
 from .models_tracking import Deadline, Submission
+# Import class models
+from .models_classes import Class, ClassStudent
