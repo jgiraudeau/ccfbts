@@ -30,103 +30,114 @@ def add_checkbox(paragraph, checked=False):
 async def export_scenario_docx(request: ScenarioExportRequest):
     """Export scenario as Word using official template"""
     
-    # Load template
-    template_path = os.path.join(os.path.dirname(__file__), '..', '..', 'templates', 'PARAMETRES MODIFIES 2024 vierge- Copie copie.docx')
+    # Create new document with official formatting
+    doc = Document()
     
-    if os.path.exists(template_path):
-        doc = Document(template_path)
-    else:
-        # Fallback: create from scratch with same styling
-        doc = Document()
-        
-        # Set margins
-        sections = doc.sections
-        for section in sections:
-            section.top_margin = Inches(0.98)
-            section.bottom_margin = Inches(0.98)
-            section.left_margin = Inches(0.98)
-            section.right_margin = Inches(0.98)
-        
-        # Header
-        p1 = doc.add_paragraph()
-        p1.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        run = p1.add_run('BTS Négociation et Digitalisation de la Relation Client')
-        run.font.name = 'Calibri Light'
-        run.font.size = Pt(10)
-        run.font.bold = True
-        
-        p2 = doc.add_paragraph()
-        p2.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        run = p2.add_run('Session 2024')
-        run.font.name = 'Calibri Light'
-        run.font.size = Pt(10)
-        run.font.bold = True
-        
-        p3 = doc.add_paragraph()
-        p3.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        run = p3.add_run(f'E{request.exam_type[-1]} – RELATION CLIENT et NEGOCIATION VENTE')
-        run.font.name = 'Calibri Light'
-        run.font.size = Pt(10)
-        run.font.bold = True
-        
-        doc.add_paragraph()  # Empty line
-        
-        p4 = doc.add_paragraph()
-        p4.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        run = p4.add_run(f'FICHE SUJET – {request.student_name or "CANDIDAT"}')
-        run.font.name = 'Calibri Light'
-        run.font.size = Pt(10)
-        run.font.bold = True
-        
-        doc.add_paragraph()  # Empty line
-        
-        # Checkboxes for scenario type
-        p5 = doc.add_paragraph()
-        p5.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-        add_checkbox(p5, checked=(request.scenario_type == 'jeu_de_role_negociation'))
-        run = p5.add_run(' Négociation Vente et Accompagnement de la Relation Client')
-        run.font.name = 'Calibri Light'
-        run.font.size = Pt(10)
-        
-        p6 = doc.add_paragraph()
-        p6.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-        add_checkbox(p6, checked=(request.scenario_type == 'jeu_de_role_evenement'))
-        run = p6.add_run(' Organisation et Animation d\'un Evènement commercial')
-        run.font.name = 'Calibri Light'
-        run.font.size = Pt(10)
-        
-        doc.add_paragraph()  # Empty line
-        doc.add_paragraph()  # Empty line
-        
-        # Title
-        p_title = doc.add_paragraph()
-        p_title.alignment = WD_ALIGN_PARAGRAPH.LEFT
-        run = p_title.add_run(request.title)
-        run.font.name = 'Calibri Light'
-        run.font.size = Pt(12)
-        run.font.bold = True
-        
-        doc.add_paragraph()  # Empty line
-        
-        # Content
-        for line in request.content.split('\n'):
-            if line.strip():
-                if line.startswith('#'):
-                    # Section header
-                    clean_line = line.replace('#', '').strip()
-                    p = doc.add_paragraph()
-                    run = p.add_run(clean_line)
-                    run.font.name = 'Calibri Light'
-                    run.font.size = Pt(11)
-                    run.font.bold = True
-                else:
-                    p = doc.add_paragraph(line)
-                    p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                    for run in p.runs:
-                        run.font.name = 'Calibri Light'
-                        run.font.size = Pt(10)
+    # Set margins
+    sections = doc.sections
+    for section in sections:
+        section.top_margin = Inches(0.98)
+        section.bottom_margin = Inches(0.98)
+        section.left_margin = Inches(0.98)
+        section.right_margin = Inches(0.98)
+    
+    # Header - Line 1
+    p1 = doc.add_paragraph()
+    p1.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p1.add_run('BTS Négociation et Digitalisation de la Relation Client')
+    run.font.name = 'Calibri Light'
+    run.font.size = Pt(10)
+    run.font.bold = True
+    
+    # Header - Line 2
+    p2 = doc.add_paragraph()
+    p2.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p2.add_run('Session 2024')
+    run.font.name = 'Calibri Light'
+    run.font.size = Pt(10)
+    run.font.bold = True
+    
+    # Header - Line 3
+    p3 = doc.add_paragraph()
+    p3.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    exam_num = request.exam_type[-1] if request.exam_type else '4'
+    run = p3.add_run(f'E{exam_num} – RELATION CLIENT et NEGOCIATION VENTE')
+    run.font.name = 'Calibri Light'
+    run.font.size = Pt(10)
+    run.font.bold = True
+    
+    doc.add_paragraph()  # Empty line
+    
+    # Fiche sujet
+    p4 = doc.add_paragraph()
+    p4.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    student_text = request.student_name if request.student_name else "CANDIDAT"
+    run = p4.add_run(f'FICHE SUJET – {student_text}')
+    run.font.name = 'Calibri Light'
+    run.font.size = Pt(10)
+    run.font.bold = True
+    
+    doc.add_paragraph()  # Empty line
+    
+    # Checkboxes for scenario type
+    p5 = doc.add_paragraph()
+    p5.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+    # Add checkbox
+    run_check = p5.add_run()
+    run_check.font.name = 'Wingdings'
+    run_check.font.size = Pt(10)
+    is_negociation = 'negociation' in request.scenario_type.lower()
+    run_check.text = 'þ' if is_negociation else 'o'
+    # Add text
+    run = p5.add_run(' Négociation Vente et Accompagnement de la Relation Client')
+    run.font.name = 'Calibri Light'
+    run.font.size = Pt(10)
+    
+    p6 = doc.add_paragraph()
+    p6.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+    # Add checkbox
+    run_check = p6.add_run()
+    run_check.font.name = 'Wingdings'
+    run_check.font.size = Pt(10)
+    is_event = 'evenement' in request.scenario_type.lower() or 'event' in request.scenario_type.lower()
+    run_check.text = 'þ' if is_event else 'o'
+    # Add text
+    run = p6.add_run(' Organisation et Animation d\'un Evènement commercial')
+    run.font.name = 'Calibri Light'
+    run.font.size = Pt(10)
+    
+    doc.add_paragraph()  # Empty line
+    doc.add_paragraph()  # Empty line
+    
+    # Title of the scenario
+    p_title = doc.add_paragraph()
+    p_title.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    run = p_title.add_run(request.title)
+    run.font.name = 'Calibri Light'
+    run.font.size = Pt(12)
+    run.font.bold = True
+    
+    doc.add_paragraph()  # Empty line
+    
+    # Content
+    for line in request.content.split('\n'):
+        if line.strip():
+            if line.startswith('#'):
+                # Section header
+                clean_line = line.replace('#', '').strip()
+                p = doc.add_paragraph()
+                run = p.add_run(clean_line)
+                run.font.name = 'Calibri Light'
+                run.font.size = Pt(11)
+                run.font.bold = True
             else:
-                doc.add_paragraph()  # Empty line
+                p = doc.add_paragraph(line)
+                p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                for run in p.runs:
+                    run.font.name = 'Calibri Light'
+                    run.font.size = Pt(10)
+        else:
+            doc.add_paragraph()  # Empty line
     
     # Save to buffer
     buffer = BytesIO()
