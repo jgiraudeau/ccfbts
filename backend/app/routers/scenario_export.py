@@ -26,20 +26,20 @@ def extract_table_from_markdown(content: str, table_index: int = 0) -> dict:
     if not matches:
         return {}
     
-    # Skip header and separator rows
-    data_rows = [m for m in matches if not m[0].strip().startswith(':') and not m[0].strip().startswith('**MODIFICATION')]
-    
     # Split into two tables (candidat and jury)
-    # First table is before "PAGE 2" or "FICHE SUJET – nom du JURY"
     split_marker = content.find('FICHE SUJET – nom du JURY')
     if split_marker == -1:
         split_marker = content.find('PAGE 2')
     
     result = {}
     
-    for row in data_rows:
+    for row in matches:
         field = row[0].strip().strip('*').strip()
         value = row[1].strip().strip('*').strip()
+        
+        # Skip header and separator rows
+        if field.startswith(':') or 'MODIFICATION DES' in field or 'PARAMÈTRES' in field:
+            continue
         
         # Clean up field names
         field_clean = field.lower()
@@ -51,22 +51,24 @@ def extract_table_from_markdown(content: str, table_index: int = 0) -> dict:
         if table_index == 1 and split_marker > 0 and row_pos < split_marker:
             continue  # Skip candidat table for jury
         
-        # Map to standardized keys
+        # Map to standardized keys with more variations
         if 'objet' in field_clean:
             result['objet'] = value
-        elif 'date' in field_clean and 'durée' in field_clean:
+        elif ('date' in field_clean and 'durée' in field_clean) or ('date' in field_clean and 'duree' in field_clean):
             result['date_duree'] = value
+        elif 'date' in field_clean and 'rencontre' in field_clean:
+            result['date_rencontre'] = value
         elif 'lieu' in field_clean:
             result['lieu'] = value
         elif 'délimitation' in field_clean or 'delimitation' in field_clean:
             result['delimitation'] = value
-        elif 'acteur' in field_clean:
+        elif ('acteur' in field_clean or 'acteurs' in field_clean) and 'concerné' in field_clean:
             result['acteurs'] = value
         elif 'historique' in field_clean:
             result['historique'] = value
-        elif 'objectif' in field_clean and 'simulation' in field_clean:
+        elif 'objectif' in field_clean and ('simulation' in field_clean or 'communication' in field_clean):
             result['objectifs'] = value
-        elif 'information' in field_clean:
+        elif 'information' in field_clean and 'exploiter' in field_clean:
             result['informations'] = value
         elif 'contrainte' in field_clean:
             result['contraintes'] = value
@@ -74,8 +76,6 @@ def extract_table_from_markdown(content: str, table_index: int = 0) -> dict:
             result['identite'] = value
         elif 'relation' in field_clean and 'entreprise' in field_clean:
             result['relation_entreprise'] = value
-        elif 'date' in field_clean and 'rencontre' in field_clean:
-            result['date_rencontre'] = value
         elif 'motivation' in field_clean:
             result['motivations'] = value
         elif 'frein' in field_clean:
@@ -84,6 +84,10 @@ def extract_table_from_markdown(content: str, table_index: int = 0) -> dict:
             result['objections'] = value
         elif 'contexte' in field_clean:
             result['contexte'] = value
+        elif 'consigne' in field_clean:
+            result['consignes'] = value
+        elif 'éléments de réponse' in field_clean or 'elements de reponse' in field_clean:
+            result['elements_reponse'] = value
     
     return result
 
@@ -125,45 +129,66 @@ async def export_scenario_docx(request: ScenarioExportRequest):
                     is_event = 'evenement' in request.scenario_type.lower() or 'event' in request.scenario_type.lower()
                     run.text = 'þ' if is_event else 'o'
     
-    # Fill Table 1 (Candidat) - 10 rows
+    # Fill Table 1 (Candidat) - 10 rows x 3 columns
     if len(doc.tables) >= 1:
         table = doc.tables[0]
         
-        # Row 2: Objet de l'activité
-        if len(table.rows) > 1 and len(table.rows[1].cells) > 1:
-            table.rows[1].cells[1].text = candidat_fields.get('objet', request.title)[:200]
+        # Row 2: Objet de l'activité (fill columns 2 AND 3 with same content)
+        if len(table.rows) > 1 and len(table.rows[1].cells) > 2:
+            content = candidat_fields.get('objet', request.title)[:200]
+            table.rows[1].cells[1].text = content
+            table.rows[1].cells[2].text = content
         
         # Row 3: Date(s) et durée
-        if len(table.rows) > 2 and len(table.rows[2].cells) > 1:
-            table.rows[2].cells[1].text = candidat_fields.get('date_duree', 'À définir')[:150]
+        if len(table.rows) > 2 and len(table.rows[2].cells) > 2:
+            content = candidat_fields.get('date_duree', 'À définir')[:150]
+            table.rows[2].cells[1].text = content
+            table.rows[2].cells[2].text = content
         
         # Row 4: Lieu
-        if len(table.rows) > 3 and len(table.rows[3].cells) > 1:
-            table.rows[3].cells[1].text = candidat_fields.get('lieu', 'À définir')[:150]
+        if len(table.rows) > 3 and len(table.rows[3].cells) > 2:
+            content = candidat_fields.get('lieu', 'À définir')[:250]
+            table.rows[3].cells[1].text = content
+            table.rows[3].cells[2].text = content
         
         # Row 5: Délimitation de Séquence(s)
-        if len(table.rows) > 4 and len(table.rows[4].cells) > 1:
-            table.rows[4].cells[1].text = candidat_fields.get('delimitation', 'Durée: 30-40 minutes')[:200]
+        if len(table.rows) > 4 and len(table.rows[4].cells) > 2:
+            content = candidat_fields.get('delimitation', 'Durée: 30-40 minutes')[:300]
+            table.rows[4].cells[1].text = content
+            table.rows[4].cells[2].text = content
         
-        # Row 6: Acteur(s) concernés
-        if len(table.rows) > 5 and len(table.rows[5].cells) > 1:
-            table.rows[5].cells[1].text = candidat_fields.get('acteurs', 'Client/Prospect')[:250]
+        # Row 6: Historique de la relation
+        if len(table.rows) > 5 and len(table.rows[5].cells) > 2:
+            content = candidat_fields.get('historique', 'Première prise de contact')[:400]
+            table.rows[5].cells[1].text = content
+            table.rows[5].cells[2].text = content
         
-        # Row 7: Historique de la relation
-        if len(table.rows) > 6 and len(table.rows[6].cells) > 1:
-            table.rows[6].cells[1].text = candidat_fields.get('historique', 'Première prise de contact')[:300]
+        # Row 7: Objectifs de la communication/simulation
+        if len(table.rows) > 6 and len(table.rows[6].cells) > 2:
+            content = candidat_fields.get('objectifs', 'Réaliser la simulation selon le scénario')[:350]
+            table.rows[6].cells[1].text = content
+            table.rows[6].cells[2].text = content
         
-        # Row 8: Objectifs de la simulation
-        if len(table.rows) > 7 and len(table.rows[7].cells) > 1:
-            table.rows[7].cells[1].text = candidat_fields.get('objectifs', 'Réaliser la simulation selon le scénario')[:300]
+        # Row 8: Informations à exploiter
+        if len(table.rows) > 7 and len(table.rows[7].cells) > 2:
+            content = candidat_fields.get('informations', 'Voir le scénario détaillé')[:400]
+            table.rows[7].cells[1].text = content
+            table.rows[7].cells[2].text = content
         
-        # Row 9: Informations à exploiter
-        if len(table.rows) > 8 and len(table.rows[8].cells) > 1:
-            table.rows[8].cells[1].text = candidat_fields.get('informations', 'Voir le scénario détaillé')[:400]
+        # Row 9: Contrainte(s)
+        if len(table.rows) > 8 and len(table.rows[8].cells) > 2:
+            content = candidat_fields.get('contraintes', 'Respecter le cadre professionnel')[:300]
+            table.rows[8].cells[1].text = content
+            table.rows[8].cells[2].text = content
         
-        # Row 10: Contrainte(s)
-        if len(table.rows) > 9 and len(table.rows[9].cells) > 1:
-            table.rows[9].cells[1].text = candidat_fields.get('contraintes', 'Respecter le cadre professionnel')[:250]
+        # Row 10: Acteur(s) concernés (statut/rôle)
+        if len(table.rows) > 9 and len(table.rows[9].cells) > 2:
+            # Column 2: Candidat role
+            candidat_role = candidat_fields.get('acteurs', 'Vous: Commercial')[:250]
+            table.rows[9].cells[1].text = candidat_role
+            # Column 3: Jury role
+            jury_role = jury_fields.get('identite', 'Jury: Client/Prospect')[:250]
+            table.rows[9].cells[2].text = jury_role
     
     # Fill Table 2 (Jury) - 13 rows
     if len(doc.tables) >= 2:
