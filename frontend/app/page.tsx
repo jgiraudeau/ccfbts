@@ -151,7 +151,7 @@ export default function Home() {
         }
 
         // Add to backend one by one and collect successful additions
-        const addedStudents = [];
+        const addedStudents: any[] = [];
         for (const s of uniqueNewStudents) {
             try {
                 const res = await fetch(`${API_URL}/students`, {
