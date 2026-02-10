@@ -84,6 +84,19 @@ export const DOMAINS: Record<string, any> = {
             { id: 301, name: "Concevoir une opération événementielle", criteria: ["Définition objectifs/cibles", "Budget prévisionnel (Seuil renta)", "Planification (Rétroplanning)"] },
             { id: 302, name: "Mettre en œuvre et évaluer", criteria: ["Coordination jour J", "Bilan quantitatif/qualitatif", "Pistes d'amélioration"] }
         ]
+    },
+    E4_INFO: {
+        id: 'e4_info',
+        exam: 'E4',
+        title: "E4 - Exploiter et Mutualiser l'Information",
+        subtitle: "Information",
+        color: "teal",
+        gradient: "from-teal-500 to-cyan-400",
+        icon: FileCheck,
+        skills: [
+            { id: 401, name: "Remonter et valoriser l'information", criteria: ["Pertinence informations collectées", "Sélection et hiérarchisation", "Partage avec équipe"] },
+            { id: 402, name: "Collaborer à l'interne", criteria: ["Qualité analyses commerciales", "Propositions d'amélioration", "Développement expertise"] }
+        ]
     }
 };
 
