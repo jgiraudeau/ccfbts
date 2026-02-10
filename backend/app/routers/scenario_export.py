@@ -157,93 +157,100 @@ async def export_scenario_docx(request: ScenarioExportRequest):
     if len(doc.tables) >= 1:
         table = doc.tables[0]
         
-        # Row 2: Objet de l'activité
+        # Row 2: Objet de l'activité - USE ONLY THE TITLE, NOT FULL CONTENT
         if len(table.rows) > 1 and len(table.rows[1].cells) > 1:
-            table.rows[1].cells[1].text = request.title or fields['objet']
+            # Use the title (which is the scenario name), not the full content
+            table.rows[1].cells[1].text = request.title[:150]  # Limit to 150 chars
         
         # Row 3: Date(s) et durée
         if len(table.rows) > 2 and len(table.rows[2].cells) > 1:
-            table.rows[2].cells[1].text = fields['date_duree'] or "À définir"
+            table.rows[2].cells[1].text = fields['date_duree'][:100] if fields['date_duree'] else "À définir"
         
         # Row 4: Lieu
         if len(table.rows) > 3 and len(table.rows[3].cells) > 1:
-            table.rows[3].cells[1].text = fields['lieu'] or "À définir"
+            table.rows[3].cells[1].text = fields['lieu'][:100] if fields['lieu'] else "À définir"
         
         # Row 5: Délimitation de Séquence(s)
         if len(table.rows) > 4 and len(table.rows[4].cells) > 1:
-            table.rows[4].cells[1].text = fields['delimitation'] or "Durée: 30-40 minutes"
+            table.rows[4].cells[1].text = fields['delimitation'][:150] if fields['delimitation'] else "Durée: 30-40 minutes"
         
         # Row 6: Acteur(s) concernés
         if len(table.rows) > 5 and len(table.rows[5].cells) > 1:
-            table.rows[5].cells[1].text = fields['acteurs'] or fields['identite_client']
+            acteurs_text = fields['acteurs'] or fields['identite_client']
+            table.rows[5].cells[1].text = acteurs_text[:200] if acteurs_text else "Client/Prospect"
         
         # Row 7: Historique de la relation
         if len(table.rows) > 6 and len(table.rows[6].cells) > 1:
-            table.rows[6].cells[1].text = fields['historique'] or fields['relation_entreprise']
+            historique_text = fields['historique'] or fields['relation_entreprise']
+            table.rows[6].cells[1].text = historique_text[:250] if historique_text else "Première prise de contact"
         
         # Row 8: Objectifs de la simulation
         if len(table.rows) > 7 and len(table.rows[7].cells) > 1:
-            table.rows[7].cells[1].text = fields['objectifs']
+            table.rows[7].cells[1].text = fields['objectifs'][:200] if fields['objectifs'] else "Réaliser la simulation selon le scénario"
         
         # Row 9: Informations à exploiter
         if len(table.rows) > 8 and len(table.rows[8].cells) > 1:
-            table.rows[8].cells[1].text = fields['informations'] or request.content[:300]
+            # Extract key information, not the full content
+            info_text = fields['informations'] if fields['informations'] else "Voir le scénario détaillé ci-dessous"
+            table.rows[8].cells[1].text = info_text[:300]
         
         # Row 10: Contrainte(s)
         if len(table.rows) > 9 and len(table.rows[9].cells) > 1:
-            table.rows[9].cells[1].text = fields['contraintes'] or "Respecter le cadre professionnel"
+            table.rows[9].cells[1].text = fields['contraintes'][:200] if fields['contraintes'] else "Respecter le cadre professionnel"
     
     # Fill Table 2 (Jury) - 13 rows
     if len(doc.tables) >= 2:
         table = doc.tables[1]
         
-        # Row 2: Objet de l'activité
+        # Row 2: Objet de l'activité - USE ONLY THE TITLE
         if len(table.rows) > 1 and len(table.rows[1].cells) > 1:
-            table.rows[1].cells[1].text = request.title or fields['objet']
+            table.rows[1].cells[1].text = request.title[:150]
         
         # Row 3: Identité
         if len(table.rows) > 2 and len(table.rows[2].cells) > 1:
-            table.rows[2].cells[1].text = fields['identite_client'] or fields['acteurs']
+            identite_text = fields['identite_client'] or fields['acteurs']
+            table.rows[2].cells[1].text = identite_text[:200] if identite_text else "Profil à définir"
         
         # Row 4: Relation à l'entreprise
         if len(table.rows) > 3 and len(table.rows[3].cells) > 1:
-            table.rows[3].cells[1].text = fields['relation_entreprise'] or "Client potentiel"
+            table.rows[3].cells[1].text = fields['relation_entreprise'][:150] if fields['relation_entreprise'] else "Client potentiel"
         
         # Row 5: Date de la rencontre
         if len(table.rows) > 4 and len(table.rows[4].cells) > 1:
-            table.rows[4].cells[1].text = fields['date_rencontre'] or fields['date_duree']
+            date_text = fields['date_rencontre'] or fields['date_duree']
+            table.rows[4].cells[1].text = date_text[:100] if date_text else "À définir"
         
         # Row 6: Lieu
         if len(table.rows) > 5 and len(table.rows[5].cells) > 1:
-            table.rows[5].cells[1].text = fields['lieu'] or "À définir"
+            table.rows[5].cells[1].text = fields['lieu'][:100] if fields['lieu'] else "À définir"
         
         # Row 7: Historique de la relation
         if len(table.rows) > 6 and len(table.rows[6].cells) > 1:
-            table.rows[6].cells[1].text = fields['historique']
+            table.rows[6].cells[1].text = fields['historique'][:250] if fields['historique'] else "Première prise de contact"
         
         # Row 8: Objectifs de la simulation
         if len(table.rows) > 7 and len(table.rows[7].cells) > 1:
-            table.rows[7].cells[1].text = fields['objectifs']
+            table.rows[7].cells[1].text = fields['objectifs'][:200] if fields['objectifs'] else "Jouer le rôle selon le profil défini"
         
         # Row 9: Délimitation de Séquence(s)
         if len(table.rows) > 8 and len(table.rows[8].cells) > 1:
-            table.rows[8].cells[1].text = fields['delimitation'] or "30-40 minutes"
+            table.rows[8].cells[1].text = fields['delimitation'][:150] if fields['delimitation'] else "30-40 minutes"
         
         # Row 10: Motivations
         if len(table.rows) > 9 and len(table.rows[9].cells) > 1:
-            table.rows[9].cells[1].text = fields['motivations'] or "À définir selon le profil"
+            table.rows[9].cells[1].text = fields['motivations'][:200] if fields['motivations'] else "À définir selon le profil"
         
         # Row 11: Freins
         if len(table.rows) > 10 and len(table.rows[10].cells) > 1:
-            table.rows[10].cells[1].text = fields['freins'] or "À définir selon le profil"
+            table.rows[10].cells[1].text = fields['freins'][:200] if fields['freins'] else "À définir selon le profil"
         
         # Row 12: Contrainte(s)
         if len(table.rows) > 11 and len(table.rows[11].cells) > 1:
-            table.rows[11].cells[1].text = fields['contraintes'] or "Respecter le cadre professionnel"
+            table.rows[11].cells[1].text = fields['contraintes'][:200] if fields['contraintes'] else "Respecter le cadre professionnel"
         
         # Row 13: Objections
         if len(table.rows) > 12 and len(table.rows[12].cells) > 1:
-            table.rows[12].cells[1].text = fields['objections'] or "À définir selon le contexte"
+            table.rows[12].cells[1].text = fields['objections'][:200] if fields['objections'] else "À définir selon le contexte"
     
     # Save to buffer
     buffer = BytesIO()
@@ -258,95 +265,163 @@ async def export_scenario_docx(request: ScenarioExportRequest):
 
 @router.post("/export-scenario/pdf")
 async def export_scenario_pdf(request: ScenarioExportRequest):
-    """Export scenario as PDF with official formatting"""
-    from reportlab.pdfgen import canvas
+    """Export scenario as PDF matching the Word template structure"""
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.units import cm
+    from reportlab.lib import colors
+    from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.enums import TA_CENTER, TA_LEFT
     
     buffer = BytesIO()
-    p = canvas.Canvas(buffer, pagesize=A4)
-    width, height = A4
+    doc = SimpleDocTemplate(buffer, pagesize=A4,
+                           rightMargin=2.5*cm, leftMargin=2.5*cm,
+                           topMargin=2.5*cm, bottomMargin=2.5*cm)
     
-    # Margins
-    left_margin = 2.5 * cm
-    right_margin = width - 2.5 * cm
-    top_margin = height - 2.5 * cm
+    story = []
+    styles = getSampleStyleSheet()
     
-    y = top_margin
+    # Custom styles
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=10,
+        alignment=TA_CENTER,
+        fontName='Helvetica-Bold',
+        spaceAfter=6
+    )
     
-    # Header (centered, bold)
-    p.setFont("Helvetica-Bold", 10)
-    p.drawCentredString(width/2, y, "BTS Négociation et Digitalisation de la Relation Client")
-    y -= 15
-    p.drawCentredString(width/2, y, "Session 2024")
-    y -= 15
+    header_style = ParagraphStyle(
+        'HeaderStyle',
+        fontSize=9,
+        fontName='Helvetica-Bold',
+        alignment=TA_LEFT
+    )
+    
+    cell_style = ParagraphStyle(
+        'CellStyle',
+        fontSize=9,
+        fontName='Helvetica',
+        alignment=TA_LEFT
+    )
+    
+    # Parse content
+    fields = parse_scenario_content(request.content)
+    
+    # Header
+    story.append(Paragraph("BTS Négociation et Digitalisation de la Relation Client", title_style))
+    story.append(Paragraph("Session 2024", title_style))
     exam_num = request.exam_type[-1] if request.exam_type else '4'
-    p.drawCentredString(width/2, y, f"E{exam_num} – RELATION CLIENT et NEGOCIATION VENTE")
-    y -= 30
+    story.append(Paragraph(f"E{exam_num} – RELATION CLIENT et NEGOCIATION VENTE", title_style))
+    story.append(Spacer(1, 0.5*cm))
     
-    p.drawCentredString(width/2, y, f"FICHE SUJET – {request.student_name or 'CANDIDAT'}")
-    y -= 30
+    # Fiche sujet
+    story.append(Paragraph(f"FICHE SUJET – {request.student_name or 'CANDIDAT'}", title_style))
+    story.append(Spacer(1, 0.3*cm))
     
     # Checkboxes
-    p.setFont("Helvetica", 10)
     is_negociation = 'negociation' in request.scenario_type.lower()
-    checkbox_checked = "☑" if is_negociation else "☐"
-    p.drawString(left_margin, y, f"{checkbox_checked} Négociation Vente et Accompagnement de la Relation Client")
-    y -= 15
-    
     is_event = 'evenement' in request.scenario_type.lower() or 'event' in request.scenario_type.lower()
-    checkbox_checked = "☑" if is_event else "☐"
-    p.drawString(left_margin, y, f"{checkbox_checked} Organisation et Animation d'un Evènement commercial")
-    y -= 30
+    checkbox_neg = "☑" if is_negociation else "☐"
+    checkbox_evt = "☑" if is_event else "☐"
     
-    # Title
-    p.setFont("Helvetica-Bold", 12)
-    p.drawString(left_margin, y, request.title)
-    y -= 25
+    story.append(Paragraph(f"{checkbox_neg} Négociation Vente et Accompagnement de la Relation Client", cell_style))
+    story.append(Paragraph(f"{checkbox_evt} Organisation et Animation d'un Evènement commercial", cell_style))
+    story.append(Spacer(1, 0.5*cm))
     
-    # Content
-    p.setFont("Helvetica", 10)
-    for line in request.content.split('\n'):
-        if y < 3 * cm:  # New page if too low
-            p.showPage()
-            y = top_margin
-            p.setFont("Helvetica", 10)
-        
-        if line.strip():
-            if line.startswith('#'):
-                # Section header
-                clean_line = line.replace('#', '').strip()
-                p.setFont("Helvetica-Bold", 11)
-                p.drawString(left_margin, y, clean_line)
-                p.setFont("Helvetica", 10)
-                y -= 18
-            else:
-                # Wrap long lines
-                max_width = right_margin - left_margin
-                words = line.split()
-                current_line = ""
-                
-                for word in words:
-                    test_line = current_line + " " + word if current_line else word
-                    if p.stringWidth(test_line, "Helvetica", 10) < max_width:
-                        current_line = test_line
-                    else:
-                        if current_line:
-                            p.drawString(left_margin, y, current_line)
-                            y -= 14
-                            if y < 3 * cm:
-                                p.showPage()
-                                y = top_margin
-                                p.setFont("Helvetica", 10)
-                        current_line = word
-                
-                if current_line:
-                    p.drawString(left_margin, y, current_line)
-                    y -= 14
-        else:
-            y -= 10  # Empty line spacing
+    # TABLE 1: FICHE CANDIDAT
+    story.append(Paragraph("FICHE CANDIDAT", title_style))
+    story.append(Spacer(1, 0.2*cm))
     
-    p.save()
+    table1_data = [
+        [Paragraph("Objet de l'activité", header_style), 
+         Paragraph(request.title[:150], cell_style)],
+        [Paragraph("Date(s) et durée", header_style), 
+         Paragraph(fields['date_duree'][:100] if fields['date_duree'] else "À définir", cell_style)],
+        [Paragraph("Lieu", header_style), 
+         Paragraph(fields['lieu'][:100] if fields['lieu'] else "À définir", cell_style)],
+        [Paragraph("Délimitation de Séquence(s)", header_style), 
+         Paragraph(fields['delimitation'][:150] if fields['delimitation'] else "Durée: 30-40 minutes", cell_style)],
+        [Paragraph("Acteur(s) concernés", header_style), 
+         Paragraph((fields['acteurs'] or fields['identite_client'] or "Client/Prospect")[:200], cell_style)],
+        [Paragraph("Historique de la relation", header_style), 
+         Paragraph((fields['historique'] or fields['relation_entreprise'] or "Première prise de contact")[:250], cell_style)],
+        [Paragraph("Objectifs de la simulation", header_style), 
+         Paragraph((fields['objectifs'] or "Réaliser la simulation selon le scénario")[:200], cell_style)],
+        [Paragraph("Informations à exploiter", header_style), 
+         Paragraph((fields['informations'] or "Voir le scénario détaillé")[:300], cell_style)],
+        [Paragraph("Contrainte(s)", header_style), 
+         Paragraph((fields['contraintes'] or "Respecter le cadre professionnel")[:200], cell_style)],
+    ]
+    
+    table1 = Table(table1_data, colWidths=[5*cm, 11*cm])
+    table1.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), colors.lightgrey),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 9),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+        ('LEFTPADDING', (0, 0), (-1, -1), 6),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 6),
+        ('TOPPADDING', (0, 0), (-1, -1), 6),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+    ]))
+    
+    story.append(table1)
+    story.append(PageBreak())
+    
+    # TABLE 2: FICHE JURY
+    story.append(Paragraph("FICHE JURY", title_style))
+    story.append(Spacer(1, 0.2*cm))
+    
+    table2_data = [
+        [Paragraph("Objet de l'activité", header_style), 
+         Paragraph(request.title[:150], cell_style)],
+        [Paragraph("Identité", header_style), 
+         Paragraph((fields['identite_client'] or fields['acteurs'] or "Profil à définir")[:200], cell_style)],
+        [Paragraph("Relation à l'entreprise", header_style), 
+         Paragraph((fields['relation_entreprise'] or "Client potentiel")[:150], cell_style)],
+        [Paragraph("Date de la rencontre", header_style), 
+         Paragraph((fields['date_rencontre'] or fields['date_duree'] or "À définir")[:100], cell_style)],
+        [Paragraph("Lieu", header_style), 
+         Paragraph((fields['lieu'] or "À définir")[:100], cell_style)],
+        [Paragraph("Historique de la relation", header_style), 
+         Paragraph((fields['historique'] or "Première prise de contact")[:250], cell_style)],
+        [Paragraph("Objectifs de la simulation", header_style), 
+         Paragraph((fields['objectifs'] or "Jouer le rôle selon le profil défini")[:200], cell_style)],
+        [Paragraph("Délimitation de Séquence(s)", header_style), 
+         Paragraph((fields['delimitation'] or "30-40 minutes")[:150], cell_style)],
+        [Paragraph("Motivations", header_style), 
+         Paragraph((fields['motivations'] or "À définir selon le profil")[:200], cell_style)],
+        [Paragraph("Freins", header_style), 
+         Paragraph((fields['freins'] or "À définir selon le profil")[:200], cell_style)],
+        [Paragraph("Contrainte(s)", header_style), 
+         Paragraph((fields['contraintes'] or "Respecter le cadre professionnel")[:200], cell_style)],
+        [Paragraph("Objections", header_style), 
+         Paragraph((fields['objections'] or "À définir selon le contexte")[:200], cell_style)],
+    ]
+    
+    table2 = Table(table2_data, colWidths=[5*cm, 11*cm])
+    table2.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), colors.lightgrey),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 9),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+        ('LEFTPADDING', (0, 0), (-1, -1), 6),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 6),
+        ('TOPPADDING', (0, 0), (-1, -1), 6),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+    ]))
+    
+    story.append(table2)
+    
+    # Build PDF
+    doc.build(story)
     buffer.seek(0)
     
     return Response(
