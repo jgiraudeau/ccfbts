@@ -110,6 +110,39 @@ export default function ScenarioGenerator({ onBack, blockType, students = [] }: 
         alert('Copié dans le presse-papier !');
     };
 
+    const handleExport = async (format: 'pdf' | 'docx') => {
+        try {
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+            const response = await fetch(`${API_URL}/api/export-scenario/${format}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: topic || "Scénario E4",
+                    scenario_type: scenarioType,
+                    content: generatedContent,
+                    exam_type: blockType
+                })
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Sujet_${blockType}.${format === 'docx' ? 'docx' : 'pdf'}`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } else {
+                alert("Erreur lors de l'export.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Erreur de connexion.");
+        }
+    };
+
     return (
         <div className="max-w-4xl mx-auto animate-fade-in pb-20">
             <button onClick={onBack} className="flex items-center gap-2 text-gray-500 hover:text-black mb-6 transition-colors">
@@ -213,9 +246,23 @@ export default function ScenarioGenerator({ onBack, blockType, students = [] }: 
                         <div className="mt-10 animate-slide-up space-y-6">
                             <div className="flex justify-between items-center">
                                 <h3 className="font-bold text-lg text-gray-800">Sujet Généré</h3>
-                                <button onClick={copyToClipboard} className="text-purple-600 hover:text-purple-800 font-medium text-sm flex items-center gap-1 bg-purple-50 px-3 py-1.5 rounded-lg border border-purple-100 hover:bg-purple-100 transition-colors">
-                                    <Copy size={16} /> Copier
-                                </button>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => handleExport('pdf')}
+                                        className="text-red-600 hover:text-red-800 font-medium text-sm flex items-center gap-1 bg-red-50 px-3 py-1.5 rounded-lg border border-red-100 hover:bg-red-100 transition-colors"
+                                    >
+                                        <Download size={16} /> PDF
+                                    </button>
+                                    <button
+                                        onClick={() => handleExport('docx')}
+                                        className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center gap-1 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 hover:bg-blue-100 transition-colors"
+                                    >
+                                        <Download size={16} /> Word
+                                    </button>
+                                    <button onClick={copyToClipboard} className="text-purple-600 hover:text-purple-800 font-medium text-sm flex items-center gap-1 bg-purple-50 px-3 py-1.5 rounded-lg border border-purple-100 hover:bg-purple-100 transition-colors">
+                                        <Copy size={16} /> Copier
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 font-mono text-sm whitespace-pre-wrap text-gray-800 shadow-inner max-h-[600px] overflow-y-auto">

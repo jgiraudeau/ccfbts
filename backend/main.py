@@ -12,7 +12,7 @@ from datetime import date, datetime
 # Init DB models
 Base.metadata.create_all(bind=engine)
 
-from app.routers import generate, export, submissions, auth
+from app.routers import generate, export, submissions, auth, scenario_export
 
 app = FastAPI(title="ProfVirtuel V2 - E6 & CCF")
 
@@ -20,6 +20,7 @@ app.include_router(generate.router, prefix="/api", tags=["Generate"])
 app.include_router(submissions.router, prefix="/api", tags=["Submissions"])
 app.include_router(export.router, prefix="/api", tags=["Export"])
 app.include_router(auth.router, prefix="/api", tags=["Auth"])
+app.include_router(scenario_export.router, prefix="/api", tags=["Scenario Export"])
 
 # --- Schemas Pydantic (Entrée/Sortie API) ---
 
