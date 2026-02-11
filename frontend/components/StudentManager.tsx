@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Users, Plus, UploadCloud, Trash2, AlertTriangle, Eraser, Trash } from "lucide-react";
+import { ArrowLeft, Users, Plus, UploadCloud, Trash2, AlertTriangle, Eraser, Trash, Info, Download } from "lucide-react";
 import * as xlsx from 'xlsx';
 
 interface StudentManagerProps {
@@ -153,6 +153,19 @@ export default function StudentManager({ students, onAdd, onRemove, onBack, onCl
         }
     };
 
+    const downloadTemplate = () => {
+        const data = [
+            ["Nom", "Prénom", "Classe"],
+            ["MOREAU", "Camille", "BTS NDRC 1A"],
+            ["DUCHAMP", "Julien", "BTS NDRC 1A"],
+            ["LEROY", "Sophie", "BTS NDRC 1B"]
+        ];
+        const ws = xlsx.utils.aoa_to_sheet(data);
+        const wb = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(wb, ws, "Modèle Import");
+        xlsx.writeFile(wb, "modele_import_etudiants.xlsx");
+    };
+
     return (
         <div className="animate-slide-up max-w-4xl mx-auto space-y-8">
             <button onClick={onBack} className="flex items-center gap-2 text-gray-500 hover:text-indigo-600 transition-colors font-medium">
@@ -184,7 +197,15 @@ export default function StudentManager({ students, onAdd, onRemove, onBack, onCl
 
                     {/* Import Excel */}
                     <div className="space-y-4">
-                        <h3 className="font-semibold text-gray-700">Import Excel / CSV</h3>
+                        <div className="flex justify-between items-center">
+                            <h3 className="font-semibold text-gray-700">Import Excel / CSV</h3>
+                            <button
+                                onClick={downloadTemplate}
+                                className="text-xs text-indigo-600 hover:text-indigo-800 flex items-center gap-1 font-medium transition-colors"
+                            >
+                                <Download size={14} /> Télécharger le modèle
+                            </button>
+                        </div>
                         <div
                             className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${isDragging ? 'border-indigo-500 bg-indigo-50' : 'border-gray-300 hover:border-indigo-400'}`}
                             onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
@@ -202,6 +223,12 @@ export default function StudentManager({ students, onAdd, onRemove, onBack, onCl
                                 className="hidden"
                                 onChange={handleFileSelect}
                             />
+                        </div>
+                        <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 flex gap-3 text-xs text-blue-700 leading-relaxed">
+                            <Info size={16} className="shrink-0 text-blue-500" />
+                            <p>
+                                <strong>Astuce :</strong> Le système détecte automatiquement les colonnes "Nom", "Prénom" et "Classe". Les nouvelles classes seront créées automatiquement.
+                            </p>
                         </div>
                     </div>
                 </div>
