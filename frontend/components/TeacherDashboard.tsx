@@ -7,6 +7,7 @@ interface Student {
     id: number;
     name: string;
     email: string;
+    class_name: string | null;
 }
 
 interface Submission {
@@ -267,41 +268,67 @@ export default function TeacherDashboard() {
 
                 {/* Vue par élève */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Liste des élèves */}
+                    {/* Liste des élèves groupés par classe */}
                     <div className="lg:col-span-1">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-4">Mes Élèves</h2>
-                        <div className="space-y-3">
-                            {students.map((student) => {
-                                const stats = getStudentStats(student.id);
-                                return (
-                                    <div
-                                        key={student.id}
-                                        onClick={() => setSelectedStudent(student)}
-                                        className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedStudent?.id === student.id
-                                            ? 'border-emerald-500 bg-emerald-50 shadow-md'
-                                            : 'border-gray-200 bg-white hover:border-emerald-300 hover:shadow'
-                                            }`}
-                                    >
-                                        <h3 className="font-semibold text-gray-900 mb-1">{student.name}</h3>
-                                        <p className="text-sm text-gray-500 mb-2">{student.email}</p>
-                                        <div className="flex gap-3 text-xs">
-                                            <span className="text-gray-600">
-                                                📄 {stats.total} doc{stats.total > 1 ? 's' : ''}
-                                            </span>
-                                            {stats.avgGrade !== null && (
-                                                <span className="text-gray-600">
-                                                    ⭐ {stats.avgGrade.toFixed(1)}/20
-                                                </span>
-                                            )}
-                                            {stats.pending > 0 && (
-                                                <span className="text-orange-600 font-medium">
-                                                    ⏳ {stats.pending}
-                                                </span>
-                                            )}
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-semibold text-gray-800">Mes Élèves</h2>
+                            <span className="bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full">{students.length}</span>
+                        </div>
+
+                        <div className="space-y-6 overflow-y-auto max-h-[calc(100vh-300px)] pr-2 custom-scrollbar">
+                            {Object.entries(
+                                students.reduce((acc, student) => {
+                                    const cName = student.class_name || "Sans classe";
+                                    if (!acc[cName]) acc[cName] = [];
+                                    acc[cName].push(student);
+                                    return acc;
+                                }, {} as Record<string, Student[]>)
+                            )
+                                .sort(([a], [b]) => a.localeCompare(b))
+                                .map(([className, classStudents]) => (
+                                    <div key={className} className="space-y-2">
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <div className="h-px flex-1 bg-gray-200"></div>
+                                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{className}</span>
+                                            <div className="h-px flex-1 bg-gray-200"></div>
                                         </div>
+                                        {classStudents.map((student) => {
+                                            const stats = getStudentStats(student.id);
+                                            return (
+                                                <div
+                                                    key={student.id}
+                                                    onClick={() => setSelectedStudent(student)}
+                                                    className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedStudent?.id === student.id
+                                                        ? 'border-emerald-500 bg-emerald-50 shadow-md transform scale-[1.02]'
+                                                        : 'border-gray-200 bg-white hover:border-emerald-300 hover:shadow'
+                                                        }`}
+                                                >
+                                                    <div className="flex justify-between items-start">
+                                                        <div>
+                                                            <h3 className="font-semibold text-gray-900 mb-1">{student.name}</h3>
+                                                            <p className="text-xs text-gray-500 mb-2 truncate max-w-[150px]">{student.email}</p>
+                                                        </div>
+                                                        {stats.pending > 0 && (
+                                                            <span className="bg-orange-100 text-orange-600 p-1 rounded-full">
+                                                                <Clock size={12} />
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex gap-3 text-xs mt-1">
+                                                        <span className="inline-flex items-center gap-1 text-gray-600 bg-gray-100 px-2 py-0.5 rounded">
+                                                            📄 {stats.total}
+                                                        </span>
+                                                        {stats.avgGrade !== null && (
+                                                            <span className="inline-flex items-center gap-1 text-yellow-700 bg-yellow-50 px-2 py-0.5 rounded font-medium">
+                                                                ⭐ {stats.avgGrade.toFixed(1)}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
-                                );
-                            })}
+                                ))}
                         </div>
                     </div>
 
