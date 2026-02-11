@@ -260,3 +260,76 @@ def list_class_students(
     ).all()
     
     return [{"id": s.id, "name": s.name, "email": s.email} for s in students]
+
+
+@router.post("/sync")
+def sync_classes_from_students(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Synchronise les classes à partir des noms de classe renseignés sur les étudiants.
+    Utile après un import massif d'élèves.
+    """
+    if current_user.role not in ["teacher", "admin"]:
+        raise HTTPException(status_code=403, detail="Non autorisé")
+
+    # 1. Trouver tous les noms de classe uniques parmi les élèves du prof
+    student_classes = db.query(User.class_name).filter(
+        User.role == "student",
+        User.teacher_id == current_user.id,
+        User.class_name != None,
+        User.class_name != ""
+    ).distinct().all()
+
+    class_names = [r[0] for r in student_classes]
+    
+    classes_created = 0
+    students_linked = 0
+
+    for name in class_names:
+        # 2. Vérifier si la classe existe déjà pour ce prof
+        cls = db.query(Class).filter(
+            Class.name == name,
+            Class.teacher_id == current_user.id
+        ).first()
+
+        if not cls:
+            cls = Class(
+                name=name,
+                teacher_id=current_user.id,
+                academic_year="2024-2025", # Valeur par défaut
+                description=f"Classe synchronisée depuis l'import des élèves"
+            )
+            db.add(cls)
+            db.commit()
+            db.refresh(cls)
+            classes_created += 1
+
+        # 3. Lier les élèves qui ont ce class_name mais ne sont pas encore dans ClassStudent
+        students_with_name = db.query(User).filter(
+            User.role == "student",
+            User.teacher_id == current_user.id,
+            User.class_name == name
+        ).all()
+
+        for student in students_with_name:
+            # Vérifier si déjà lié
+            link = db.query(ClassStudent).filter(
+                ClassStudent.class_id == cls.id,
+                ClassStudent.student_id == student.id
+            ).first()
+
+            if not link:
+                new_link = ClassStudent(class_id=cls.id, student_id=student.id)
+                db.add(new_link)
+                students_linked += 1
+    
+    db.commit()
+
+    return {
+        "status": "success",
+        "classes_created": classes_created,
+        "students_linked": students_linked,
+        "message": f"{classes_created} classes créées et {students_linked} élèves liés."
+    }

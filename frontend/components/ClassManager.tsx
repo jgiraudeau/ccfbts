@@ -27,6 +27,7 @@ export default function ClassManager() {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showAddStudentsModal, setShowAddStudentsModal] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [syncing, setSyncing] = useState(false);
 
     const [newClass, setNewClass] = useState({
         name: '',
@@ -86,6 +87,30 @@ export default function ClassManager() {
             }
         } catch (error) {
             console.error('Error fetching class students:', error);
+        }
+    };
+
+    const syncClasses = async () => {
+        setSyncing(true);
+        try {
+            const response = await fetch(`${API_URL}/api/classes/sync`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                if (result.classes_created > 0 || result.students_linked > 0) {
+                    alert(`${result.message}`);
+                }
+                fetchClasses();
+            }
+        } catch (error) {
+            console.error('Error syncing classes:', error);
+        } finally {
+            setSyncing(false);
         }
     };
 
@@ -196,13 +221,24 @@ export default function ClassManager() {
                         <h1 className="text-3xl font-bold text-gray-900">Gestion des Classes</h1>
                         <p className="text-gray-600 mt-2">Organisez vos élèves par classe</p>
                     </div>
-                    <button
-                        onClick={() => setShowCreateModal(true)}
-                        className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors shadow-lg"
-                    >
-                        <Plus size={20} />
-                        Nouvelle Classe
-                    </button>
+                    <div className="flex gap-3">
+                        <button
+                            onClick={syncClasses}
+                            disabled={syncing}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all border-2 border-indigo-200 text-indigo-700 hover:bg-indigo-50 font-medium ${syncing ? 'opacity-50' : ''}`}
+                            title="Créer les classes automatiquement à partir des noms des élèves"
+                        >
+                            <Users size={18} className={syncing ? 'animate-pulse' : ''} />
+                            {syncing ? 'Synchronisation...' : 'Synchroniser'}
+                        </button>
+                        <button
+                            onClick={() => setShowCreateModal(true)}
+                            className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors shadow-lg"
+                        >
+                            <Plus size={20} />
+                            Nouvelle Classe
+                        </button>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
