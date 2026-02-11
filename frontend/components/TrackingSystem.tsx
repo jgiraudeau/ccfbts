@@ -73,7 +73,13 @@ export default function TrackingSystem({ user, onLogout, onSwitchMode, appMode =
 
         // Teacher views
         if (user.role === 'teacher') {
-            if (activeView === 'welcome') return <WelcomeDashboard />;
+            if (activeView === 'welcome') return <WelcomeDashboard onNavigate={(id) => {
+                if (id === 'evaluation') {
+                    onSwitchMode();
+                } else {
+                    setActiveView(id);
+                }
+            }} />;
             if (activeView === 'dashboard') return <TeacherDashboard />;
             if (activeView === 'classes') return <ClassManager />;
             if (activeView === 'planning') return <PlanningManager />;

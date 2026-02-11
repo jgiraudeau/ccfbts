@@ -1,9 +1,14 @@
 import React from 'react';
 import { LayoutDashboard, Users, Calendar, GraduationCap, BookOpen, Sparkles } from 'lucide-react';
 
-export default function WelcomeDashboard() {
+interface WelcomeDashboardProps {
+    onNavigate: (viewId: string) => void;
+}
+
+export default function WelcomeDashboard({ onNavigate }: WelcomeDashboardProps) {
     const features = [
         {
+            id: 'dashboard',
             icon: LayoutDashboard,
             title: 'Tableau de Bord',
             description: 'Consultez un aperçu des soumissions de vos élèves et suivez leur progression en temps réel.',
@@ -12,6 +17,7 @@ export default function WelcomeDashboard() {
             textColor: 'text-blue-700'
         },
         {
+            id: 'classes',
             icon: Users,
             title: 'Mes Classes',
             description: 'Créez et organisez vos classes, ajoutez des élèves et gérez vos groupes facilement.',
@@ -20,6 +26,7 @@ export default function WelcomeDashboard() {
             textColor: 'text-purple-700'
         },
         {
+            id: 'planning',
             icon: Calendar,
             title: 'Planning Annuel',
             description: 'Définissez les échéances pour vos évaluations et suivez le calendrier pédagogique.',
@@ -31,18 +38,21 @@ export default function WelcomeDashboard() {
 
     const evaluationFeatures = [
         {
+            id: 'evaluation',
             icon: GraduationCap,
             title: 'Évaluations E4/E6',
             description: 'Accédez aux grilles d\'évaluation officielles et notez vos étudiants selon le référentiel BTS NDRC.',
             color: 'from-amber-500 to-orange-600'
         },
         {
+            id: 'scenario',
             icon: Sparkles,
             title: 'Générateur de Scénarios',
             description: 'Créez automatiquement des scénarios de mise en situation professionnelle pour les épreuves E4.',
             color: 'from-violet-500 to-purple-600'
         },
         {
+            id: 'documents',
             icon: BookOpen,
             title: 'Documents Déposés',
             description: 'Consultez et corrigez les documents déposés par vos élèves (fiches E4, dossiers E6, etc.).',
@@ -81,7 +91,8 @@ export default function WelcomeDashboard() {
                         return (
                             <div
                                 key={index}
-                                className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 group cursor-pointer"
+                                onClick={() => onNavigate(feature.id)}
+                                className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 group cursor-pointer active:scale-95"
                             >
                                 <div className={`p-4 ${feature.bgColor} rounded-xl inline-block mb-4 group-hover:scale-110 transition-transform`}>
                                     <Icon size={32} className={feature.textColor} />
@@ -106,7 +117,8 @@ export default function WelcomeDashboard() {
                         return (
                             <div
                                 key={index}
-                                className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 group cursor-pointer"
+                                onClick={() => onNavigate(feature.id)}
+                                className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 group cursor-pointer active:scale-95"
                             >
                                 <div className={`w-12 h-12 bg-gradient-to-br ${feature.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
                                     <Icon size={24} className="text-white" />
