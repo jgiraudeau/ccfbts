@@ -81,27 +81,31 @@ app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 # --- Startup Event ---
 @app.on_event("startup")
 def on_startup():
-    # Safety: Add class_name column if missing (avoids crash on login)
+    # Safety Migration: Add class_name column BEFORE anything else
+    from sqlalchemy import text
     try:
-        from sqlalchemy import text
-        with engine.connect() as conn:
-            # Check if column exists (Postgres approach or general)
-            # We use a TRY/EXCEPT block to handle different DB dialects
+        with engine.begin() as conn:
+            # Try Postgres style first
             try:
                 conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS class_name TEXT"))
-                conn.commit()
-            except Exception as e:
-                # If IF NOT EXISTS is not supported (SQLite), we try standard ALTER
+                print("✅ Migration: Column class_name added or already exists (Postgres)")
+            except Exception:
+                # Fallback for SQLite or standard SQL
                 try:
                     conn.execute(text("ALTER TABLE users ADD COLUMN class_name TEXT"))
-                    conn.commit()
-                except:
-                    pass # Probably exists
+                    print("✅ Migration: Column class_name added (Standard)")
+                except Exception:
+                    # Column likely already exists
+                    pass
     except Exception as e:
-        print(f"Migration warning: {e}")
+        print(f"❌ Migration failed: {e}")
 
-    db = next(get_db())
-    init_db.init_db(db)
+    # Standard init
+    try:
+        db = next(get_db())
+        init_db.init_db(db)
+    except Exception as e:
+        print(f"❌ Error during init_db: {e}")
 
 @app.get("/")
 def read_root():
