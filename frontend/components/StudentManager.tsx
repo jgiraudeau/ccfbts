@@ -46,16 +46,18 @@ export default function StudentManager({ students, onAdd, onRemove, onBack, onCl
                 // Analyze Header (First Row)
                 let nameIdx = -1;
                 let surnameIdx = -1;
+                let classIdx = -1;
                 let startRow = 0;
 
                 if (rows.length > 0) {
                     const header = rows[0].map(c => String(c).toLowerCase().trim());
-                    // Try to find 'nom' and 'prenom'
+                    // Try to find 'nom', 'prenom', and 'classe'
                     surnameIdx = header.findIndex(h => h === 'nom' || h === 'noms');
                     nameIdx = header.findIndex(h => h.includes('prénom') || h.includes('prenom'));
+                    classIdx = header.findIndex(h => h.includes('classe') || h.includes('groupe') || h.includes('section'));
 
                     // If we found headers, start from row 1
-                    if (surnameIdx !== -1 || nameIdx !== -1) {
+                    if (surnameIdx !== -1 || nameIdx !== -1 || classIdx !== -1) {
                         startRow = 1;
                     }
                 }
@@ -67,6 +69,7 @@ export default function StudentManager({ students, onAdd, onRemove, onBack, onCl
                     if (!row || row.length === 0) continue;
 
                     let fullName = "";
+                    let className = "";
 
                     if (surnameIdx !== -1 && nameIdx !== -1) {
                         // We have both columns identified
@@ -77,29 +80,30 @@ export default function StudentManager({ students, onAdd, onRemove, onBack, onCl
                         // Only Nom found
                         fullName = row[surnameIdx];
                     } else if (nameIdx !== -1) {
-                        // Only Prenom found?? Unlikely alone, but usually assumes full name if single col found
+                        // Only Prenom found
                         fullName = row[nameIdx];
                     } else {
                         // No headers detected, falling back to heuristics
-
-                        // Check if row matches the literal header "prénom" "nom" etc to skip it if it wasn't caught
                         const rowStr = row.join(' ').toLowerCase();
                         if (rowStr.includes('prénom') && rowStr.includes('nom')) continue;
 
                         if (row.length >= 2) {
-                            // Assume Col 1 is Nom, Col 0 is Prénom? Or just combine them.
-                            // Based on user screenshot: Prénom (0) | Nom (1).
-                            // Let's combine 1 + 0 to have "NOM Prénom"
                             const p1 = row[0] || ""; // Prénom
                             const p2 = row[1] || ""; // Nom
-                            // Heuristic: usually Name is all caps? Not always.
-                            // Let's just output "NOM Prénom" assuming Col 1 is Nom if Col 0 is Prénom
-                            // User example: Camille (0) Moreau (1).
-                            // We want "MOREAU Camille".
                             fullName = `${p2} ${p1}`;
+
+                            // If 3 columns and no header, maybe the 3rd is the class?
+                            if (row.length >= 3 && classIdx === -1) {
+                                className = String(row[2]).trim();
+                            }
                         } else if (row.length === 1) {
                             fullName = row[0];
                         }
+                    }
+
+                    // Extract class if column was identified
+                    if (classIdx !== -1 && row[classIdx]) {
+                        className = String(row[classIdx]).trim();
                     }
 
                     if (fullName && typeof fullName === 'string' && fullName.trim().length > 1) {
@@ -109,7 +113,8 @@ export default function StudentManager({ students, onAdd, onRemove, onBack, onCl
                         if (!cleanName.includes('NOM') || !cleanName.includes('PRENOM')) {
                             parsedData.push({
                                 id: Date.now() + Math.random(),
-                                name: cleanName
+                                name: cleanName,
+                                className: className // Added class information
                             });
                         }
                     }

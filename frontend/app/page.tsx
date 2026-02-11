@@ -153,6 +153,19 @@ export default function Home() {
     // --- Actions ---
 
     const addStudents = async (newStudentsList: any[]) => {
+        const token = localStorage.getItem('token');
+        const headers: any = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+        // 1. Fetch existing classes to avoid duplicates
+        let existingClasses: any[] = [];
+        try {
+            const resCls = await fetch(`${API_URL}/api/classes`, { headers });
+            if (resCls.ok) existingClasses = await resCls.json();
+        } catch (e) { console.error("Could not fetch classes", e); }
+
+        const classMap = new Map(existingClasses.map(c => [c.name.toUpperCase(), c.id]));
+
         // Filter out students that are already in the current list
         const existingNames = new Set(students.map(s => s.name.toUpperCase()));
         const uniqueNewStudents = newStudentsList.filter(s => !existingNames.has(s.name.toUpperCase()));
@@ -162,25 +175,57 @@ export default function Home() {
             return;
         }
 
-        // Add to backend one by one and collect successful additions
         const addedStudents: any[] = [];
         for (const s of uniqueNewStudents) {
             try {
+                // a. Handle Class Creation if needed
+                let classId = null;
+                if (s.className) {
+                    const upperClassName = s.className.toUpperCase();
+                    if (classMap.has(upperClassName)) {
+                        classId = classMap.get(upperClassName);
+                    } else if (token) {
+                        // Create the class
+                        const resNewCls = await fetch(`${API_URL}/api/classes`, {
+                            method: 'POST',
+                            headers,
+                            body: JSON.stringify({ name: s.className, academic_year: '2024-2025' })
+                        });
+                        if (resNewCls.ok) {
+                            const createdCls = await resNewCls.json();
+                            classId = createdCls.id;
+                            classMap.set(upperClassName, classId);
+                            console.log(`✅ Classe créée : ${s.className}`);
+                        }
+                    }
+                }
+
+                // b. Create Student
                 const res = await fetch(`${API_URL}/students`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: s.name })
                 });
+
                 if (res.ok) {
                     const savedStudent = await res.json();
                     addedStudents.push(savedStudent);
+
+                    // c. Assign Student to Class
+                    if (classId && token) {
+                        await fetch(`${API_URL}/api/classes/${classId}/students`, {
+                            method: 'POST',
+                            headers,
+                            body: JSON.stringify({ student_ids: [savedStudent.id] })
+                        });
+                        console.log(`🔗 Étudiant ${s.name} assigné à ${s.className}`);
+                    }
                 }
             } catch (e) {
-                console.error("Failed to add student to backend", s.name);
+                console.error("Failed to process student", s.name, e);
             }
         }
 
-        // Update local state with what was actually confirmed by backend
         if (addedStudents.length > 0) {
             setStudents(prev => [...prev, ...addedStudents]);
         }
