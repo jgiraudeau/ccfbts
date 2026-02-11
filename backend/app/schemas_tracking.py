@@ -136,6 +136,7 @@ class StudentCreate(BaseModel):
     stage_end_date: Optional[date] = None
     stage_company: Optional[str] = None
     stage_tutor: Optional[str] = None
+    class_name: Optional[str] = None
 
 class StudentUpdate(BaseModel):
     name: Optional[str] = None
@@ -145,6 +146,7 @@ class StudentUpdate(BaseModel):
     stage_end_date: Optional[date] = None
     stage_company: Optional[str] = None
     stage_tutor: Optional[str] = None
+    class_name: Optional[str] = None
 
 class StudentResponse(BaseModel):
     id: int
@@ -154,6 +156,7 @@ class StudentResponse(BaseModel):
     stage_end_date: Optional[date]
     stage_company: Optional[str]
     stage_tutor: Optional[str]
+    class_name: Optional[str] = None
     submissions_count: Optional[int] = 0
     average_grade: Optional[float] = None
 
