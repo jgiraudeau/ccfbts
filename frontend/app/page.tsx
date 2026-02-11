@@ -628,7 +628,7 @@ export default function Home() {
                                                     </tr>
                                                 ) : (
                                                     Object.entries(
-                                                        students.reduce((acc, student) => {
+                                                        students.reduce((acc, student: any) => {
                                                             const cName = student.class_name || "Sans classe";
                                                             if (!acc[cName]) acc[cName] = [];
                                                             acc[cName].push(student);
@@ -636,22 +636,22 @@ export default function Home() {
                                                         }, {} as Record<string, any[]>)
                                                     )
                                                         .sort(([a], [b]) => a.localeCompare(b))
-                                                        .map(([className, classStudents]) => (
+                                                        .map(([className, classStudents]: [string, any]) => (
                                                             <React.Fragment key={className}>
                                                                 {/* Class Header Row */}
-                                                                <tr className="bg-gray-50/50">
-                                                                    <td colSpan={5} className="px-6 py-2">
-                                                                        <div className="flex items-center gap-2">
-                                                                            <div className="h-px w-4 bg-indigo-200"></div>
-                                                                            <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">{className}</span>
-                                                                            <div className="h-px flex-1 bg-indigo-50"></div>
-                                                                            <span className="text-[10px] text-gray-400 font-medium">{classStudents.length} élève{classStudents.length > 1 ? 's' : ''}</span>
+                                                                <tr className="bg-indigo-50/50">
+                                                                    <td colSpan={5} className="px-6 py-2.5 border-y border-indigo-100">
+                                                                        <div className="flex items-center gap-3">
+                                                                            <div className="w-2 h-6 bg-indigo-500 rounded-full"></div>
+                                                                            <span className="text-xs font-black text-indigo-700 uppercase tracking-[0.2em]">{className}</span>
+                                                                            <div className="flex-1"></div>
+                                                                            <span className="text-[10px] bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full font-bold">{classStudents.length} étudiant{classStudents.length > 1 ? 's' : ''}</span>
                                                                         </div>
                                                                     </td>
                                                                 </tr>
                                                                 {classStudents
-                                                                    .sort((a, b) => a.name.localeCompare(b.name))
-                                                                    .map((student, idx) => {
+                                                                    .sort((a: any, b: any) => a.name.localeCompare(b.name))
+                                                                    .map((student: any, idx: number) => {
                                                                         const stat = getStudentStats(student.id);
                                                                         return (
                                                                             <tr key={student.id} className="hover:bg-gray-50/80 transition-colors group">

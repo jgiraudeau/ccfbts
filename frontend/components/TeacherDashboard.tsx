@@ -286,11 +286,11 @@ export default function TeacherDashboard() {
                             )
                                 .sort(([a], [b]) => a.localeCompare(b))
                                 .map(([className, classStudents]) => (
-                                    <div key={className} className="space-y-2">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <div className="h-px flex-1 bg-gray-200"></div>
-                                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{className}</span>
-                                            <div className="h-px flex-1 bg-gray-200"></div>
+                                    <div key={className} className="space-y-3 mb-6">
+                                        <div className="flex items-center gap-3 py-2 px-3 bg-indigo-50 rounded-lg border border-indigo-100">
+                                            <div className="w-2 h-6 bg-indigo-500 rounded-full"></div>
+                                            <span className="text-sm font-bold text-indigo-700 uppercase tracking-widest">{className}</span>
+                                            <span className="text-xs text-indigo-400 font-medium ml-auto">{classStudents.length} élèves</span>
                                         </div>
                                         {classStudents.map((student) => {
                                             const stats = getStudentStats(student.id);
@@ -314,13 +314,18 @@ export default function TeacherDashboard() {
                                                             </span>
                                                         )}
                                                     </div>
-                                                    <div className="flex gap-3 text-xs mt-1">
+                                                    <div className="flex flex-wrap gap-2 text-xs mt-2">
                                                         <span className="inline-flex items-center gap-1 text-gray-600 bg-gray-100 px-2 py-0.5 rounded">
                                                             📄 {stats.total}
                                                         </span>
                                                         {stats.avgGrade !== null && (
                                                             <span className="inline-flex items-center gap-1 text-yellow-700 bg-yellow-50 px-2 py-0.5 rounded font-medium">
                                                                 ⭐ {stats.avgGrade.toFixed(1)}
+                                                            </span>
+                                                        )}
+                                                        {student.class_name && (
+                                                            <span className="inline-flex items-center text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100 font-bold">
+                                                                🏷️ {student.class_name}
                                                             </span>
                                                         )}
                                                     </div>
