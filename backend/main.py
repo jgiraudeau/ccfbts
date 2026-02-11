@@ -121,9 +121,15 @@ def get_students(db: Session = Depends(get_db)):
 def create_student(student: StudentCreate, db: Session = Depends(get_db)):
     # Simple creation sans mot de passe pour le MVP
     email_gen = f"{student.name.lower().replace(' ', '.')}@student.com"
+    
     # Vérifier l'existence
     existing = db.query(User).filter(User.email == email_gen).first()
     if existing:
+        # MISE À JOUR : Si l'élève existe, on met à jour sa classe quand même
+        if student.class_name:
+            existing.class_name = student.class_name
+            db.commit()
+            db.refresh(existing)
         return existing
         
     new_user = User(
