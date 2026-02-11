@@ -26,6 +26,7 @@ class ClassResponse(BaseModel):
     student_count: Optional[int] = 0
 
     class Config:
+        orm_mode = True
         from_attributes = True
 
 class AddStudentsToClass(BaseModel):
@@ -64,6 +65,7 @@ class DeadlineResponse(BaseModel):
     submissions_count: Optional[int] = 0
 
     class Config:
+        orm_mode = True
         from_attributes = True
 
 # ============================================
@@ -98,6 +100,7 @@ class SubmissionResponse(BaseModel):
     deadline_title: Optional[str] = None
 
     class Config:
+        orm_mode = True
         from_attributes = True
 
 # ============================================
@@ -119,6 +122,7 @@ class TeacherResponse(BaseModel):
     student_count: Optional[int] = 0
 
     class Config:
+        orm_mode = True
         from_attributes = True
 
 class ActivateTeacher(BaseModel):
@@ -161,6 +165,7 @@ class StudentResponse(BaseModel):
     average_grade: Optional[float] = None
 
     class Config:
+        orm_mode = True
         from_attributes = True
 
 # ============================================
