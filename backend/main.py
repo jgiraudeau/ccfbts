@@ -81,6 +81,25 @@ app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 # --- Startup Event ---
 @app.on_event("startup")
 def on_startup():
+    # Safety: Add class_name column if missing (avoids crash on login)
+    try:
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            # Check if column exists (Postgres approach or general)
+            # We use a TRY/EXCEPT block to handle different DB dialects
+            try:
+                conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS class_name TEXT"))
+                conn.commit()
+            except Exception as e:
+                # If IF NOT EXISTS is not supported (SQLite), we try standard ALTER
+                try:
+                    conn.execute(text("ALTER TABLE users ADD COLUMN class_name TEXT"))
+                    conn.commit()
+                except:
+                    pass # Probably exists
+    except Exception as e:
+        print(f"Migration warning: {e}")
+
     db = next(get_db())
     init_db.init_db(db)
 
