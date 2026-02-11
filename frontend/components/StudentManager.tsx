@@ -50,10 +50,12 @@ export default function StudentManager({ students, onAdd, onRemove, onBack, onCl
                 let startRow = 0;
 
                 if (rows.length > 0) {
-                    const header = rows[0].map(c => String(c).toLowerCase().trim());
+                    const normalize = (s: string) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+                    const header = rows[0].map(c => normalize(String(c)));
+
                     // Try to find 'nom', 'prenom', and 'classe'
                     surnameIdx = header.findIndex(h => h === 'nom' || h === 'noms');
-                    nameIdx = header.findIndex(h => h.includes('prénom') || h.includes('prenom'));
+                    nameIdx = header.findIndex(h => h.includes('prenom'));
                     classIdx = header.findIndex(h => h.includes('classe') || h.includes('groupe') || h.includes('section'));
 
                     // If we found headers, start from row 1

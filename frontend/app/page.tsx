@@ -157,26 +157,25 @@ export default function Home() {
         const headers: any = { 'Content-Type': 'application/json' };
         if (token) headers['Authorization'] = `Bearer ${token}`;
 
-        // 1. Fetch existing classes to avoid duplicates
+        console.log("🚀 Starting import of", newStudentsList.length, "students");
+
+        // 1. Fetch current classes
         let existingClasses: any[] = [];
         try {
             const resCls = await fetch(`${API_URL}/api/classes`, { headers });
-            if (resCls.ok) existingClasses = await resCls.json();
+            if (resCls.ok) {
+                existingClasses = await resCls.json();
+                console.log("✅ Classes fetched:", existingClasses.length);
+            }
         } catch (e) { console.error("Could not fetch classes", e); }
 
         const classMap = new Map(existingClasses.map(c => [c.name.toUpperCase(), c.id]));
 
-        // Filter out students that are already in the current list
-        const existingNames = new Set(students.map(s => s.name.toUpperCase()));
-        const uniqueNewStudents = newStudentsList.filter(s => !existingNames.has(s.name.toUpperCase()));
+        let studentAddedCount = 0;
+        let classAssignmentCount = 0;
+        let classCreatedCount = 0;
 
-        if (uniqueNewStudents.length === 0) {
-            alert("Tous les étudiants de l'import existent déjà !");
-            return;
-        }
-
-        const addedStudents: any[] = [];
-        for (const s of uniqueNewStudents) {
+        for (const s of newStudentsList) {
             try {
                 // a. Handle Class Creation if needed
                 let classId = null;
@@ -195,12 +194,13 @@ export default function Home() {
                             const createdCls = await resNewCls.json();
                             classId = createdCls.id;
                             classMap.set(upperClassName, classId);
-                            console.log(`✅ Classe créée : ${s.className}`);
+                            classCreatedCount++;
+                            console.log(`✅ Class created : ${s.className}`);
                         }
                     }
                 }
 
-                // b. Create Student
+                // b. Create/Get Student (returns existing student if name/email match)
                 const res = await fetch(`${API_URL}/students`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -209,16 +209,27 @@ export default function Home() {
 
                 if (res.ok) {
                     const savedStudent = await res.json();
-                    addedStudents.push(savedStudent);
+
+                    // Add to local state if not already present
+                    if (!students.some(existing => existing.id === savedStudent.id)) {
+                        setStudents(prev => {
+                            if (prev.some(p => p.id === savedStudent.id)) return prev;
+                            return [...prev, savedStudent];
+                        });
+                        studentAddedCount++;
+                    }
 
                     // c. Assign Student to Class
                     if (classId && token) {
-                        await fetch(`${API_URL}/api/classes/${classId}/students`, {
+                        const resAssign = await fetch(`${API_URL}/api/classes/${classId}/students`, {
                             method: 'POST',
                             headers,
                             body: JSON.stringify({ student_ids: [savedStudent.id] })
                         });
-                        console.log(`🔗 Étudiant ${s.name} assigné à ${s.className}`);
+                        if (resAssign.ok) {
+                            classAssignmentCount++;
+                            console.log(`🔗 Student ${s.name} assigned to ${s.className}`);
+                        }
                     }
                 }
             } catch (e) {
@@ -226,9 +237,7 @@ export default function Home() {
             }
         }
 
-        if (addedStudents.length > 0) {
-            setStudents(prev => [...prev, ...addedStudents]);
-        }
+        alert(`Importation terminée :\n- ${studentAddedCount} nouveaux élèves ajoutés\n- ${classCreatedCount} nouvelles classes créées\n- ${classAssignmentCount} élèves affectés aux classes`);
     };
 
     const removeStudent = async (id: number) => {
