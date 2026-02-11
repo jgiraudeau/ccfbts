@@ -204,7 +204,10 @@ export default function Home() {
                 const res = await fetch(`${API_URL}/students`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: s.name })
+                    body: JSON.stringify({
+                        name: s.name,
+                        class_name: s.className
+                    })
                 });
 
                 if (res.ok) {
@@ -229,7 +232,11 @@ export default function Home() {
                         if (resAssign.ok) {
                             classAssignmentCount++;
                             console.log(`🔗 Student ${s.name} assigned to ${s.className}`);
+                        } else {
+                            console.warn(`⚠️ Failed to assign ${s.name} to class. Status: ${resAssign.status}`);
                         }
+                    } else if (classId && !token) {
+                        console.error("❌ Token manquant pour l'affectation à la classe.");
                     }
                 }
             } catch (e) {

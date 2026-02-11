@@ -34,12 +34,14 @@ app.include_router(students.router, tags=["Students"])
 
 class StudentCreate(BaseModel):
     name: str
+    class_name: Optional[str] = None
 
 class StudentRead(BaseModel):
     id: int
     name: str
     email: Optional[str] = None
     role: str
+    class_name: Optional[str] = None
 
     class Config:
         orm_mode = True
@@ -105,6 +107,7 @@ def create_student(student: StudentCreate, db: Session = Depends(get_db)):
         name=student.name,
         email=email_gen,
         role="student",
+        class_name=student.class_name,
         teacher_id=1, # Lié au prof par défaut pour le MVP
         student_password="0000"
     )

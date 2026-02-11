@@ -24,6 +24,7 @@ add_column(cursor, "users", "stage_start_date", "DATE")
 add_column(cursor, "users", "stage_end_date", "DATE")
 add_column(cursor, "users", "stage_company", "TEXT")
 add_column(cursor, "users", "stage_tutor", "TEXT")
+add_column(cursor, "users", "class_name", "TEXT")
 
 # Create StudentSubmission table if not exists (Create_all might have missed it if main didn't import it at start?)
 # No, create_all should handle new tables. But let's let SQLAlchemy handle new tables by running init_db again after this fixes usage.

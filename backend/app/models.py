@@ -34,6 +34,7 @@ class User(Base):
     
     # Auth fields
     class_code = Column(String, nullable=True) # For teachers (PIN shared with students)
+    class_name = Column(String, nullable=True) # For students (direct display)
     student_password = Column(String, default="0000") # For students
     teacher_id = Column(Integer, ForeignKey("users.id"), nullable=True) # Link student to teacher
 
