@@ -627,47 +627,73 @@ export default function Home() {
                                                         </td>
                                                     </tr>
                                                 ) : (
-                                                    students.sort((a, b) => a.name.localeCompare(b.name)).map((student, idx) => {
-                                                        const stat = getStudentStats(student.id);
-                                                        return (
-                                                            <tr key={student.id} className="hover:bg-gray-50/80 transition-colors group">
-                                                                <td className="px-6 py-4 cursor-pointer" onClick={() => { setActiveStudentId(student.id); setView('student'); }}>
-                                                                    <div className="flex items-center gap-3">
-                                                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-sm ${getAvatarColor(idx)}`}>
-                                                                            {getInitials(student.name)}
+                                                    Object.entries(
+                                                        students.reduce((acc, student) => {
+                                                            const cName = student.class_name || "Sans classe";
+                                                            if (!acc[cName]) acc[cName] = [];
+                                                            acc[cName].push(student);
+                                                            return acc;
+                                                        }, {} as Record<string, any[]>)
+                                                    )
+                                                        .sort(([a], [b]) => a.localeCompare(b))
+                                                        .map(([className, classStudents]) => (
+                                                            <React.Fragment key={className}>
+                                                                {/* Class Header Row */}
+                                                                <tr className="bg-gray-50/50">
+                                                                    <td colSpan={5} className="px-6 py-2">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <div className="h-px w-4 bg-indigo-200"></div>
+                                                                            <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">{className}</span>
+                                                                            <div className="h-px flex-1 bg-indigo-50"></div>
+                                                                            <span className="text-[10px] text-gray-400 font-medium">{classStudents.length} élève{classStudents.length > 1 ? 's' : ''}</span>
                                                                         </div>
-                                                                        <div>
-                                                                            <div className="font-semibold text-gray-900">{student.name}</div>
-                                                                            <div className="text-xs text-gray-400">{stat.last ? `Maj: ${stat.last.toLocaleDateString()}` : 'Non évalué'}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td className="px-6 py-4 text-center">
-                                                                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                                                        {stat.count} fiches
-                                                                    </span>
-                                                                </td>
-                                                                <td className="px-6 py-4 text-center">
-                                                                    {stat.average ? (
-                                                                        <span className={`px-2 py-1 rounded font-bold text-sm ${parseFloat(stat.average) >= 10 ? 'text-green-600' : 'text-red-600'}`}>{stat.average}</span>
-                                                                    ) : <span className="text-gray-300">-</span>}
-                                                                </td>
-                                                                <td className="px-6 py-4 text-center">
-                                                                    {stat.final ? (
-                                                                        <span className="px-3 py-1 bg-gray-800 text-white rounded-lg font-bold text-sm">{stat.final}</span>
-                                                                    ) : <span className="text-gray-300 italic text-xs">En attente</span>}
-                                                                </td>
-                                                                <td className="px-6 py-4 text-right">
-                                                                    <button
-                                                                        onClick={() => { setActiveStudentId(student.id); setView('compare'); }}
-                                                                        className="text-indigo-600 hover:text-indigo-900 font-medium text-sm inline-flex items-center gap-1 hover:underline"
-                                                                    >
-                                                                        <BarChart2 size={16} /> Analyse Écarts
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        );
-                                                    })
+                                                                    </td>
+                                                                </tr>
+                                                                {classStudents
+                                                                    .sort((a, b) => a.name.localeCompare(b.name))
+                                                                    .map((student, idx) => {
+                                                                        const stat = getStudentStats(student.id);
+                                                                        return (
+                                                                            <tr key={student.id} className="hover:bg-gray-50/80 transition-colors group">
+                                                                                <td className="px-6 py-4 cursor-pointer" onClick={() => { setActiveStudentId(student.id); setView('student'); }}>
+                                                                                    <div className="flex items-center gap-3">
+                                                                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-sm ${getAvatarColor(idx)}`}>
+                                                                                            {getInitials(student.name)}
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            <div className="font-semibold text-gray-900">{student.name}</div>
+                                                                                            <div className="text-xs text-gray-400">{stat.last ? `Maj: ${stat.last.toLocaleDateString()}` : 'Non évalué'}</div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td className="px-6 py-4 text-center">
+                                                                                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                                                        {stat.count} fiches
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td className="px-6 py-4 text-center">
+                                                                                    {stat.average ? (
+                                                                                        <span className={`px-2 py-1 rounded font-bold text-sm ${parseFloat(stat.average) >= 10 ? 'text-green-600' : 'text-red-600'}`}>{stat.average}</span>
+                                                                                    ) : <span className="text-gray-300">-</span>}
+                                                                                </td>
+                                                                                <td className="px-6 py-4 text-center">
+                                                                                    {stat.final ? (
+                                                                                        <span className="px-3 py-1 bg-gray-800 text-white rounded-lg font-bold text-sm">{stat.final}</span>
+                                                                                    ) : <span className="text-gray-300 italic text-xs">En attente</span>}
+                                                                                </td>
+                                                                                <td className="px-6 py-4 text-right">
+                                                                                    <button
+                                                                                        onClick={() => { setActiveStudentId(student.id); setView('compare'); }}
+                                                                                        className="text-indigo-600 hover:text-indigo-900 font-medium text-sm inline-flex items-center gap-1 hover:underline"
+                                                                                    >
+                                                                                        <BarChart2 size={16} /> Analyse Écarts
+                                                                                    </button>
+                                                                                </td>
+                                                                            </tr>
+                                                                        );
+                                                                    })}
+                                                            </React.Fragment>
+                                                        ))
                                                 )}
                                             </tbody>
                                         </table>

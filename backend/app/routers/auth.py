@@ -118,7 +118,7 @@ def get_students_by_class_code(class_code: str, db: Session = Depends(get_db)):
         (User.teacher_id == teacher.id) | (User.teacher_id == None)
     ).all()
     
-    return [{"id": s.id, "name": s.name} for s in students]
+    return [{"id": s.id, "name": s.name, "class_name": s.class_name} for s in students]
 
 @router.delete("/auth/students/{class_code}")
 def purge_class_students(class_code: str, db: Session = Depends(get_db)):
