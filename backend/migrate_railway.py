@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, text
 import os
 import sys
 
-# Charger l'URL depuis l'environnement car l'import app.database peut échouer si le schéma est cassé
+# Charger l'URL depuis l'environnement
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 def force_migrate():
@@ -12,7 +12,6 @@ def force_migrate():
 
     print(f">>> Migration : Début de la mise à jour du schéma PostgreSQL...")
     
-    # Correction Railway : remplacer postgres:// par postgresql://
     url = DATABASE_URL
     if url.startswith("postgres://"):
         url = url.replace("postgres://", "postgresql://", 1)
@@ -32,18 +31,24 @@ def force_migrate():
         ("stage_tutor", "VARCHAR(100)")
     ]
 
-    with engine.begin() as conn: # Utilise begin() pour auto-commit
+    # On utilise une connexion directe sans transaction globale (autocommit)
+    # pour que chaque ALTER TABLE soit indépendant.
+    with engine.connect() as conn:
         for col_name, col_type in columns:
             try:
+                # Chaque exécution est sa propre transaction en mode par défaut
                 conn.execute(text(f"ALTER TABLE users ADD COLUMN {col_name} {col_type}"))
+                conn.commit()
                 print(f"✅ Colonne ajoutée : {col_name}")
             except Exception as e:
+                # Important : on rollback la transaction échouée pour libérer le verrou
+                conn.rollback()
                 if "already exists" in str(e).lower() or "existe déjà" in str(e).lower():
                     print(f"ℹ️ {col_name} existe déjà.")
                 else:
                     print(f"⚠️ Erreur {col_name} : {e}")
     
-    print(">>> Migration terminée avec succès.")
+    print(">>> Migration terminée.")
     sys.stdout.flush()
 
 if __name__ == "__main__":
