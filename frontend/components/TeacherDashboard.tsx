@@ -69,7 +69,7 @@ export default function TeacherDashboard() {
 
     const fetchSubmissions = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/submissions`, {
+            const response = await fetch(`${API_URL}/api/tracking/submissions`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -113,7 +113,7 @@ export default function TeacherDashboard() {
         if (!selectedSubmission) return;
 
         try {
-            const response = await fetch(`${API_URL}/api/submissions/${selectedSubmission.id}/review`, {
+            const response = await fetch(`${API_URL}/api/tracking/submissions/${selectedSubmission.id}/review`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -254,8 +254,8 @@ export default function TeacherDashboard() {
                                     key={filter.value}
                                     onClick={() => setFilterStatus(filter.value)}
                                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filterStatus === filter.value
-                                            ? 'bg-emerald-600 text-white'
-                                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                        ? 'bg-emerald-600 text-white'
+                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                         }`}
                                 >
                                     {filter.label}
@@ -278,8 +278,8 @@ export default function TeacherDashboard() {
                                         key={student.id}
                                         onClick={() => setSelectedStudent(student)}
                                         className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedStudent?.id === student.id
-                                                ? 'border-emerald-500 bg-emerald-50 shadow-md'
-                                                : 'border-gray-200 bg-white hover:border-emerald-300 hover:shadow'
+                                            ? 'border-emerald-500 bg-emerald-50 shadow-md'
+                                            : 'border-gray-200 bg-white hover:border-emerald-300 hover:shadow'
                                             }`}
                                     >
                                         <h3 className="font-semibold text-gray-900 mb-1">{student.name}</h3>

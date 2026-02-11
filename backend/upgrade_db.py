@@ -17,6 +17,13 @@ cursor = conn.cursor()
 add_column(cursor, "users", "class_code", "TEXT")
 add_column(cursor, "users", "student_password", "TEXT DEFAULT '0000'")
 add_column(cursor, "users", "teacher_id", "INTEGER REFERENCES users(id)")
+add_column(cursor, "users", "is_active", "BOOLEAN DEFAULT 1")
+add_column(cursor, "users", "name", "TEXT")
+add_column(cursor, "users", "created_at", "DATETIME")
+add_column(cursor, "users", "stage_start_date", "DATE")
+add_column(cursor, "users", "stage_end_date", "DATE")
+add_column(cursor, "users", "stage_company", "TEXT")
+add_column(cursor, "users", "stage_tutor", "TEXT")
 
 # Create StudentSubmission table if not exists (Create_all might have missed it if main didn't import it at start?)
 # No, create_all should handle new tables. But let's let SQLAlchemy handle new tables by running init_db again after this fixes usage.

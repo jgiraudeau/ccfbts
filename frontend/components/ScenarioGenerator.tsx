@@ -23,7 +23,7 @@ export default function ScenarioGenerator({ onBack, blockType, students = [] }: 
 
     useEffect(() => {
         if (selectedStudentId) {
-            const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+            const API_URL = "http://localhost:8000"; // process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
             fetch(`${API_URL}/api/submissions/${selectedStudentId}?type=E4_SITUATION`)
                 .then(res => res.json())
                 .then(data => setStudentSubmissions(data))
@@ -45,7 +45,7 @@ export default function ScenarioGenerator({ onBack, blockType, students = [] }: 
         setGeneratedContent('');
 
         try {
-            const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+            const API_URL = "http://localhost:8000"; // process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
             const response = await fetch(`${API_URL}/api/course`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -78,7 +78,7 @@ export default function ScenarioGenerator({ onBack, blockType, students = [] }: 
         setError('');
 
         try {
-            const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+            const API_URL = "http://localhost:8000"; // process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
             const response = await fetch(`${API_URL}/api/refine`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -112,7 +112,7 @@ export default function ScenarioGenerator({ onBack, blockType, students = [] }: 
 
     const handleExport = async (format: 'pdf' | 'docx') => {
         try {
-            const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+            const API_URL = "http://localhost:8000"; // process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
             // Get student name if a student is selected
             const selectedStudent = students?.find(s => s.id === selectedStudentId);

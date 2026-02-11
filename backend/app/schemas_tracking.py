@@ -114,7 +114,7 @@ class TeacherResponse(BaseModel):
     name: str
     email: str
     is_active: bool
-    created_at: datetime
+    created_at: Optional[datetime] = None
     class_count: Optional[int] = 0
     student_count: Optional[int] = 0
 

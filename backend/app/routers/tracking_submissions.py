@@ -12,7 +12,7 @@ import os
 import shutil
 from pathlib import Path
 
-router = APIRouter(prefix="/api/submissions", tags=["submissions"])
+router = APIRouter(prefix="/api/tracking/submissions", tags=["tracking_submissions"])
 
 # Configuration pour l'upload de fichiers
 UPLOAD_DIR = Path("uploads/submissions")
@@ -28,6 +28,8 @@ def create_submission(
     if current_user.role != "student":
         raise HTTPException(status_code=403, detail="Seuls les élèves peuvent soumettre des documents")
     
+    student_id = current_user.id
+    
     # Vérifier que l'échéance existe
     deadline = db.query(Deadline).filter(Deadline.id == submission_data.deadline_id).first()
     if not deadline:
@@ -36,7 +38,7 @@ def create_submission(
     # Vérifier si l'élève a déjà soumis pour cette échéance
     existing = db.query(Submission).filter(
         and_(
-            Submission.student_id == current_user.id,
+            Submission.student_id == student_id,
             Submission.deadline_id == submission_data.deadline_id
         )
     ).first()
@@ -45,7 +47,7 @@ def create_submission(
         raise HTTPException(status_code=400, detail="Vous avez déjà soumis un document pour cette échéance")
     
     new_submission = Submission(
-        student_id=current_user.id,
+        student_id=student_id,
         deadline_id=submission_data.deadline_id,
         file_url=submission_data.file_url,
         file_name=submission_data.file_name,
@@ -56,9 +58,11 @@ def create_submission(
     db.commit()
     db.refresh(new_submission)
     
+    deadline = db.query(Deadline).filter(Deadline.id == submission_data.deadline_id).first()
+    
     response = SubmissionResponse.from_orm(new_submission)
     response.student_name = current_user.name
-    response.deadline_title = deadline.title
+    response.deadline_title = deadline.title if deadline else None
     return response
 
 
@@ -117,7 +121,7 @@ def list_submissions(
     if deadline_id:
         query = query.filter(Submission.deadline_id == deadline_id)
     
-    if student_id and current_user.role == "teacher":
+    if student_id and current_user.role in ["teacher", "admin"]:
         query = query.filter(Submission.student_id == student_id)
     
     if status_filter:
@@ -157,7 +161,7 @@ def get_submission(
     
     if current_user.role == "teacher":
         student = db.query(User).filter(User.id == submission.student_id).first()
-        if student.teacher_id != current_user.id:
+        if student and student.teacher_id != current_user.id:
             raise HTTPException(status_code=403, detail="Accès non autorisé")
     
     student = db.query(User).filter(User.id == submission.student_id).first()
@@ -178,7 +182,7 @@ def review_submission(
     current_user: User = Depends(get_current_user)
 ):
     """Noter et commenter une soumission (professeur uniquement)"""
-    if current_user.role != "teacher":
+    if current_user.role not in ["teacher", "admin"]:
         raise HTTPException(status_code=403, detail="Seuls les professeurs peuvent noter les soumissions")
     
     submission = db.query(Submission).filter(Submission.id == submission_id).first()
@@ -186,10 +190,11 @@ def review_submission(
     if not submission:
         raise HTTPException(status_code=404, detail="Soumission non trouvée")
     
-    # Vérifier que l'élève appartient au prof
-    student = db.query(User).filter(User.id == submission.student_id).first()
-    if student.teacher_id != current_user.id:
-        raise HTTPException(status_code=403, detail="Vous ne pouvez noter que vos propres élèves")
+    # Vérifier que l'élève appartient au prof (sauf admin)
+    if current_user.role == "teacher":
+        student = db.query(User).filter(User.id == submission.student_id).first()
+        if student and student.teacher_id != current_user.id:
+            raise HTTPException(status_code=403, detail="Vous ne pouvez noter que vos propres élèves")
     
     # Mettre à jour la soumission
     submission.status = review_data.status
@@ -229,10 +234,10 @@ def delete_submission(
         if submission.status != 'pending':
             raise HTTPException(status_code=400, detail="Vous ne pouvez pas supprimer une soumission déjà notée")
     
-    # Le prof peut toujours supprimer
+    # Le prof peut toujours supprimer (ainsi que les admins)
     elif current_user.role == "teacher":
         student = db.query(User).filter(User.id == submission.student_id).first()
-        if student.teacher_id != current_user.id:
+        if student and student.teacher_id != current_user.id:
             raise HTTPException(status_code=403, detail="Accès non autorisé")
     
     # Supprimer le fichier si existe

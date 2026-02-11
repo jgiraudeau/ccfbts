@@ -7,7 +7,7 @@ import { calculateGrade, Domain } from '../app/types';
 import { Line, Radar } from 'react-chartjs-2';
 import { DOMAINS as ALL_DOMAINS } from '../app/constants';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = "http://localhost:8000"; // process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 interface StudentViewProps {
     student: any;

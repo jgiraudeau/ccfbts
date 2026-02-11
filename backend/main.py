@@ -73,6 +73,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from fastapi.staticfiles import StaticFiles
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+
 # --- Startup Event ---
 @app.on_event("startup")
 def on_startup():

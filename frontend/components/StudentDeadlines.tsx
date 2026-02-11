@@ -56,7 +56,7 @@ export default function StudentDeadlines() {
 
     const fetchSubmissions = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/submissions`, {
+            const response = await fetch(`${API_URL}/api/tracking/submissions`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -87,7 +87,7 @@ export default function StudentDeadlines() {
             const formData = new FormData();
             formData.append('file', selectedFile);
 
-            const uploadResponse = await fetch(`${API_URL}/api/submissions/upload`, {
+            const uploadResponse = await fetch(`${API_URL}/api/tracking/submissions/upload`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -102,7 +102,7 @@ export default function StudentDeadlines() {
             const uploadData = await uploadResponse.json();
 
             // 2. Créer la soumission
-            const submitResponse = await fetch(`${API_URL}/api/submissions`, {
+            const submitResponse = await fetch(`${API_URL}/api/tracking/submissions`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -188,8 +188,8 @@ export default function StudentDeadlines() {
                     <button
                         onClick={() => setActiveTab('upcoming')}
                         className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${activeTab === 'upcoming'
-                                ? 'bg-blue-600 text-white shadow-lg'
-                                : 'bg-white text-gray-600 hover:bg-gray-50'
+                            ? 'bg-blue-600 text-white shadow-lg'
+                            : 'bg-white text-gray-600 hover:bg-gray-50'
                             }`}
                     >
                         <Clock size={20} />
@@ -198,8 +198,8 @@ export default function StudentDeadlines() {
                     <button
                         onClick={() => setActiveTab('submitted')}
                         className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${activeTab === 'submitted'
-                                ? 'bg-blue-600 text-white shadow-lg'
-                                : 'bg-white text-gray-600 hover:bg-gray-50'
+                            ? 'bg-blue-600 text-white shadow-lg'
+                            : 'bg-white text-gray-600 hover:bg-gray-50'
                             }`}
                     >
                         <CheckCircle size={20} />
@@ -226,10 +226,10 @@ export default function StudentDeadlines() {
                                     <div
                                         key={deadline.id}
                                         className={`bg-white rounded-lg shadow-md p-6 border-l-4 ${isOverdue
-                                                ? 'border-red-500'
-                                                : isUrgent
-                                                    ? 'border-orange-500'
-                                                    : 'border-blue-500'
+                                            ? 'border-red-500'
+                                            : isUrgent
+                                                ? 'border-orange-500'
+                                                : 'border-blue-500'
                                             }`}
                                     >
                                         <div className="flex justify-between items-start mb-4">
@@ -249,8 +249,8 @@ export default function StudentDeadlines() {
                                                     </div>
                                                     {!isOverdue && (
                                                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${isUrgent
-                                                                ? 'bg-orange-100 text-orange-700'
-                                                                : 'bg-blue-100 text-blue-700'
+                                                            ? 'bg-orange-100 text-orange-700'
+                                                            : 'bg-blue-100 text-blue-700'
                                                             }`}>
                                                             {daysUntil === 0 ? "Aujourd'hui" : `Dans ${daysUntil} jour${daysUntil > 1 ? 's' : ''}`}
                                                         </span>

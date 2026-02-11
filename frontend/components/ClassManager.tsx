@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Plus, Edit2, Trash2, UserPlus, X } from 'lucide-react';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = "http://localhost:8000"; // process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 interface Class {
     id: number;
@@ -214,8 +214,8 @@ export default function ClassManager() {
                                 key={cls.id}
                                 onClick={() => selectClass(cls)}
                                 className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedClass?.id === cls.id
-                                        ? 'border-indigo-500 bg-indigo-50 shadow-md'
-                                        : 'border-gray-200 bg-white hover:border-indigo-300 hover:shadow'
+                                    ? 'border-indigo-500 bg-indigo-50 shadow-md'
+                                    : 'border-gray-200 bg-white hover:border-indigo-300 hover:shadow'
                                     }`}
                             >
                                 <div className="flex justify-between items-start mb-2">

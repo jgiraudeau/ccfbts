@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import {
     FileCheck, LayoutDashboard, Settings, Award, Plus, Sparkles,
-    TrendingUp, Users, UserX, BarChart2, FileText
+    TrendingUp, Users, UserX, BarChart2, FileText, GraduationCap, BookOpen
 } from "lucide-react";
 import {
     Chart as ChartJS,
@@ -46,7 +46,7 @@ ChartJS.register(
 );
 
 // --- CONFIGURATION API ---
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = "http://localhost:8000"; // process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const getInitials = (name: string) => {
     if (!name) return '??';
@@ -342,9 +342,17 @@ export default function Home() {
         />;
     }
 
-    // If tracking mode is enabled, show the new tracking system
-    if (appMode === 'tracking') {
-        return <TrackingSystem user={user} onLogout={() => setUser(null)} />;
+    // Show TrackingSystem with sidebar for teacher/admin roles (only in tracking mode)
+    if ((user.role === 'teacher' || user.role === 'admin') && appMode === 'tracking') {
+        return (
+            <TrackingSystem
+                user={user}
+                onLogout={() => setUser(null)}
+                onSwitchMode={() => setAppMode(appMode === 'tracking' ? 'evaluation' : 'tracking')}
+                appMode={appMode}
+                setAppMode={setAppMode}
+            />
+        );
     }
 
     if (view === 'student_portal' || user.role === 'student') {
@@ -369,7 +377,7 @@ export default function Home() {
                         </div>
                         <div>
                             <h1 className="text-xl font-bold tracking-tight text-gray-900 leading-none">
-                                CCFBTS
+                                Assistant CCF
                             </h1>
                             <span className={`text-xs font-semibold uppercase tracking-widest ${selectedBlock === 'E4' ? 'text-purple-600' : 'text-indigo-600'}`}>
                                 BTS NDRC - Épreuve {selectedBlock}
@@ -386,25 +394,6 @@ export default function Home() {
                             Déconnexion
                         </button>
 
-                        <div className="w-px h-8 bg-gray-200 mx-2"></div>
-
-                        {/* Mode Switcher */}
-                        <div className="bg-gray-100 p-1 rounded-xl flex font-medium text-sm">
-                            <button
-                                onClick={() => setAppMode('evaluation')}
-                                className={`px-4 py-2 rounded-lg transition-all ${appMode === 'evaluation' ? 'bg-white text-purple-700 shadow-sm font-bold' : 'text-gray-500 hover:text-gray-900'}`}
-                            >
-                                Évaluations
-                            </button>
-                            <button
-                                onClick={() => setAppMode('tracking')}
-                                className={`px-4 py-2 rounded-lg transition-all ${appMode === 'tracking' ? 'bg-white text-emerald-700 shadow-sm font-bold' : 'text-gray-500 hover:text-gray-900'}`}
-                            >
-                                Suivi Élèves
-                            </button>
-                        </div>
-
-                        <div className="w-px h-8 bg-gray-200 mx-2"></div>
 
                         <div className="bg-gray-100 p-1 rounded-xl flex font-medium text-sm">
                             <button
@@ -424,218 +413,273 @@ export default function Home() {
                 </div>
             </nav>
 
-            <main className="max-w-7xl mx-auto px-6">
-                {view === 'student_portal' && (
-                    <StudentPortal
-                        students={students}
-                        onBack={() => setView('dashboard')}
-                        currentUser={user}
-                    />
-                )}
-                {/* VUE: DASHBOARD */}
-                {view === 'dashboard' && (
-                    <div className="space-y-8 animate-fade-in">
-                        {/* Top Stats Cards */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow duration-300 group">
-                                <div className="flex justify-between items-start">
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-500">Moyenne Continu</p>
-                                        <h3 className="text-3xl font-bold text-gray-800 mt-2">{classAverages.global || "--"}<span className="text-lg text-gray-400 font-normal">/20</span></h3>
-                                    </div>
-                                    <div className="p-3 bg-indigo-50 rounded-xl text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                                        <TrendingUp />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow duration-300 group">
-                                <div className="flex justify-between items-start">
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-500">Évaluations Continues</p>
-                                        <h3 className="text-3xl font-bold text-gray-800 mt-2">{evaluations.length}</h3>
-                                    </div>
-                                    <div className="p-3 bg-blue-50 rounded-xl text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                                        <FileCheck />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow duration-300 group">
-                                <div className="flex justify-between items-start">
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-500">Étudiants Actifs</p>
-                                        <h3 className="text-3xl font-bold text-gray-800 mt-2">{students.length}</h3>
-                                    </div>
-                                    <div className="p-3 bg-emerald-50 rounded-xl text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                                        <Users />
-                                    </div>
-                                </div>
-                            </div>
+            {/* Add Sidebar for evaluation mode */}
+            {appMode === 'evaluation' && (
+                <div className="flex">
+                    {/* Sidebar - Same as in TrackingSystem */}
+                    <aside className="w-64 bg-white border-r border-gray-200 fixed left-0 top-[73px] bottom-0 overflow-y-auto z-40">
+                        <div className="p-4">
+                            <nav className="space-y-2">
+                                <button
+                                    onClick={() => setAppMode('tracking')}
+                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-gray-600 hover:bg-gray-50"
+                                >
+                                    <BookOpen size={20} />
+                                    <span>Accueil</span>
+                                </button>
+                                <button
+                                    onClick={() => setAppMode('tracking')}
+                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-gray-600 hover:bg-gray-50"
+                                >
+                                    <LayoutDashboard size={20} />
+                                    <span>Tableau de Bord</span>
+                                </button>
+                                <button
+                                    onClick={() => setAppMode('tracking')}
+                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-gray-600 hover:bg-gray-50"
+                                >
+                                    <Users size={20} />
+                                    <span>Mes Classes</span>
+                                </button>
+                                <button
+                                    onClick={() => setAppMode('tracking')}
+                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-gray-600 hover:bg-gray-50"
+                                >
+                                    <FileText size={20} />
+                                    <span>Planning Annuel</span>
+                                </button>
+                                <button
+                                    onClick={() => { setAppMode('evaluation'); console.log('Switching to evaluation mode'); }}
+                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all bg-indigo-50 text-indigo-700 font-semibold shadow-sm"
+                                >
+                                    <GraduationCap size={20} />
+                                    <span>CCF & Évaluations</span>
+                                </button>
+                            </nav>
                         </div>
+                    </aside>
 
-                        {/* Student List */}
-                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                            <div className="p-6 border-b border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
-                                <div className="flex items-center gap-3">
-                                    <h2 className="font-bold text-xl text-gray-800">Suivi & CCF {selectedBlock}</h2>
+                    <main className="max-w-7xl mx-auto px-6 ml-64">
+                        {view === 'student_portal' && (
+                            <StudentPortal
+                                students={students}
+                                onBack={() => setView('dashboard')}
+                                currentUser={user}
+                            />
+                        )}
+                        {/* VUE: DASHBOARD */}
+                        {view === 'dashboard' && (
+                            <div className="space-y-8 animate-fade-in">
+                                {/* Top Stats Cards */}
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow duration-300 group">
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <p className="text-sm font-medium text-gray-500">Moyenne Continu</p>
+                                                <h3 className="text-3xl font-bold text-gray-800 mt-2">{classAverages.global || "--"}<span className="text-lg text-gray-400 font-normal">/20</span></h3>
+                                            </div>
+                                            <div className="p-3 bg-indigo-50 rounded-xl text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                                                <TrendingUp />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow duration-300 group">
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <p className="text-sm font-medium text-gray-500">Évaluations Continues</p>
+                                                <h3 className="text-3xl font-bold text-gray-800 mt-2">{evaluations.length}</h3>
+                                            </div>
+                                            <div className="p-3 bg-blue-50 rounded-xl text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                                <FileCheck />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow duration-300 group">
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <p className="text-sm font-medium text-gray-500">Étudiants Actifs</p>
+                                                <h3 className="text-3xl font-bold text-gray-800 mt-2">{students.length}</h3>
+                                            </div>
+                                            <div className="p-3 bg-emerald-50 rounded-xl text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                                                <Users />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="flex flex-wrap gap-2 justify-center">
-                                    <button onClick={() => setView('settings')} className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-xl shadow-sm transition-all flex items-center gap-2 font-medium text-sm">
-                                        <Settings size={16} /> Gérer la liste
-                                    </button>
-                                    <button onClick={() => { setEditingItem(null); setView('final_evaluate'); }} className="bg-gray-800 hover:bg-black text-white px-4 py-2 rounded-xl shadow-md transition-all flex items-center gap-2 font-medium text-sm">
-                                        <Award size={16} /> Évaluation {selectedBlock}
-                                    </button>
-                                    <button onClick={() => setView('submissions')} className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-xl shadow-md transition-all flex items-center gap-2 font-medium text-sm">
-                                        <FileText size={16} /> Documents Déposés
-                                    </button>
-                                    <button onClick={() => setView('evaluate')} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl shadow-md transition-all flex items-center gap-2 font-medium text-sm">
-                                        <Plus size={16} /> Évaluation Continue
-                                    </button>
-                                    {selectedBlock === 'E4' && (
-                                        <button onClick={() => setView('scenario')} className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl shadow-md transition-all flex items-center gap-2 font-medium text-sm animate-fade-in">
-                                            <Sparkles size={16} /> Générer Scénario
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-left border-collapse">
-                                    <thead className="bg-gray-50/50 text-gray-500 uppercase text-xs tracking-wider">
-                                        <tr>
-                                            <th className="px-6 py-4 font-semibold">Étudiant</th>
-                                            <th className="px-6 py-4 font-semibold text-center">Activités</th>
-                                            <th className="px-6 py-4 font-semibold text-center">Moy. Continu</th>
-                                            <th className="px-6 py-4 font-semibold text-center">Note {selectedBlock}</th>
-                                            <th className="px-6 py-4 font-semibold text-right">Comparatif</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-50">
-                                        {students.length === 0 ? (
-                                            <tr>
-                                                <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                                                    <div className="flex flex-col items-center gap-3">
-                                                        <UserX size={40} className="text-gray-300" />
-                                                        <p>Aucun étudiant dans la liste.</p>
-                                                        <button onClick={() => setView('settings')} className="text-indigo-600 font-medium hover:underline">Ajouter des étudiants</button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ) : (
-                                            students.sort((a, b) => a.name.localeCompare(b.name)).map((student, idx) => {
-                                                const stat = getStudentStats(student.id);
-                                                return (
-                                                    <tr key={student.id} className="hover:bg-gray-50/80 transition-colors group">
-                                                        <td className="px-6 py-4 cursor-pointer" onClick={() => { setActiveStudentId(student.id); setView('student'); }}>
-                                                            <div className="flex items-center gap-3">
-                                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-sm ${getAvatarColor(idx)}`}>
-                                                                    {getInitials(student.name)}
-                                                                </div>
-                                                                <div>
-                                                                    <div className="font-semibold text-gray-900">{student.name}</div>
-                                                                    <div className="text-xs text-gray-400">{stat.last ? `Maj: ${stat.last.toLocaleDateString()}` : 'Non évalué'}</div>
-                                                                </div>
+
+                                {/* Student List */}
+                                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                                    <div className="p-6 border-b border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
+                                        <div className="flex items-center gap-3">
+                                            <h2 className="font-bold text-xl text-gray-800">Suivi & CCF {selectedBlock}</h2>
+                                        </div>
+                                        <div className="flex flex-wrap gap-2 justify-center">
+                                            <button onClick={() => setView('settings')} className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-xl shadow-sm transition-all flex items-center gap-2 font-medium text-sm">
+                                                <Settings size={16} /> Gérer la liste
+                                            </button>
+                                            <button onClick={() => { setEditingItem(null); setView('final_evaluate'); }} className="bg-gray-800 hover:bg-black text-white px-4 py-2 rounded-xl shadow-md transition-all flex items-center gap-2 font-medium text-sm">
+                                                <Award size={16} /> Évaluation {selectedBlock}
+                                            </button>
+                                            <button onClick={() => setView('submissions')} className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-xl shadow-md transition-all flex items-center gap-2 font-medium text-sm">
+                                                <FileText size={16} /> Documents Déposés
+                                            </button>
+                                            <button onClick={() => setView('evaluate')} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl shadow-md transition-all flex items-center gap-2 font-medium text-sm">
+                                                <Plus size={16} /> Évaluation Continue
+                                            </button>
+                                            {selectedBlock === 'E4' && (
+                                                <button onClick={() => setView('scenario')} className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl shadow-md transition-all flex items-center gap-2 font-medium text-sm animate-fade-in">
+                                                    <Sparkles size={16} /> Générer Scénario
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-left border-collapse">
+                                            <thead className="bg-gray-50/50 text-gray-500 uppercase text-xs tracking-wider">
+                                                <tr>
+                                                    <th className="px-6 py-4 font-semibold">Étudiant</th>
+                                                    <th className="px-6 py-4 font-semibold text-center">Activités</th>
+                                                    <th className="px-6 py-4 font-semibold text-center">Moy. Continu</th>
+                                                    <th className="px-6 py-4 font-semibold text-center">Note {selectedBlock}</th>
+                                                    <th className="px-6 py-4 font-semibold text-right">Comparatif</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-50">
+                                                {students.length === 0 ? (
+                                                    <tr>
+                                                        <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                                                            <div className="flex flex-col items-center gap-3">
+                                                                <UserX size={40} className="text-gray-300" />
+                                                                <p>Aucun étudiant dans la liste.</p>
+                                                                <button onClick={() => setView('settings')} className="text-indigo-600 font-medium hover:underline">Ajouter des étudiants</button>
                                                             </div>
                                                         </td>
-                                                        <td className="px-6 py-4 text-center">
-                                                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                                                {stat.count} fiches
-                                                            </span>
-                                                        </td>
-                                                        <td className="px-6 py-4 text-center">
-                                                            {stat.average ? (
-                                                                <span className={`px-2 py-1 rounded font-bold text-sm ${parseFloat(stat.average) >= 10 ? 'text-green-600' : 'text-red-600'}`}>{stat.average}</span>
-                                                            ) : <span className="text-gray-300">-</span>}
-                                                        </td>
-                                                        <td className="px-6 py-4 text-center">
-                                                            {stat.final ? (
-                                                                <span className="px-3 py-1 bg-gray-800 text-white rounded-lg font-bold text-sm">{stat.final}</span>
-                                                            ) : <span className="text-gray-300 italic text-xs">En attente</span>}
-                                                        </td>
-                                                        <td className="px-6 py-4 text-right">
-                                                            <button
-                                                                onClick={() => { setActiveStudentId(student.id); setView('compare'); }}
-                                                                className="text-indigo-600 hover:text-indigo-900 font-medium text-sm inline-flex items-center gap-1 hover:underline"
-                                                            >
-                                                                <BarChart2 size={16} /> Analyse Écarts
-                                                            </button>
-                                                        </td>
                                                     </tr>
-                                                );
-                                            })
-                                        )}
-                                    </tbody>
-                                </table>
+                                                ) : (
+                                                    students.sort((a, b) => a.name.localeCompare(b.name)).map((student, idx) => {
+                                                        const stat = getStudentStats(student.id);
+                                                        return (
+                                                            <tr key={student.id} className="hover:bg-gray-50/80 transition-colors group">
+                                                                <td className="px-6 py-4 cursor-pointer" onClick={() => { setActiveStudentId(student.id); setView('student'); }}>
+                                                                    <div className="flex items-center gap-3">
+                                                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-sm ${getAvatarColor(idx)}`}>
+                                                                            {getInitials(student.name)}
+                                                                        </div>
+                                                                        <div>
+                                                                            <div className="font-semibold text-gray-900">{student.name}</div>
+                                                                            <div className="text-xs text-gray-400">{stat.last ? `Maj: ${stat.last.toLocaleDateString()}` : 'Non évalué'}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td className="px-6 py-4 text-center">
+                                                                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                                        {stat.count} fiches
+                                                                    </span>
+                                                                </td>
+                                                                <td className="px-6 py-4 text-center">
+                                                                    {stat.average ? (
+                                                                        <span className={`px-2 py-1 rounded font-bold text-sm ${parseFloat(stat.average) >= 10 ? 'text-green-600' : 'text-red-600'}`}>{stat.average}</span>
+                                                                    ) : <span className="text-gray-300">-</span>}
+                                                                </td>
+                                                                <td className="px-6 py-4 text-center">
+                                                                    {stat.final ? (
+                                                                        <span className="px-3 py-1 bg-gray-800 text-white rounded-lg font-bold text-sm">{stat.final}</span>
+                                                                    ) : <span className="text-gray-300 italic text-xs">En attente</span>}
+                                                                </td>
+                                                                <td className="px-6 py-4 text-right">
+                                                                    <button
+                                                                        onClick={() => { setActiveStudentId(student.id); setView('compare'); }}
+                                                                        className="text-indigo-600 hover:text-indigo-900 font-medium text-sm inline-flex items-center gap-1 hover:underline"
+                                                                    >
+                                                                        <BarChart2 size={16} /> Analyse Écarts
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        );
+                                                    })
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                )}
+                        )}
 
-                {/* AUTRES VUES */}
-                {view === 'settings' && <StudentManager
-                    students={students}
-                    onAdd={addStudents}
-                    onRemove={removeStudent}
-                    onClearAll={clearAllEvaluations}
-                    onReset={resetApp}
-                    onBack={() => setView('dashboard')}
-                />}
-
-                {view === 'evaluate' && <ContinuousEvaluationForm
-                    students={students}
-                    onSave={saveEvaluation}
-                    onCancel={() => { setEditingItem(null); if (activeStudentId) setView('student'); else setView('dashboard'); }}
-                    initialData={editingItem}
-                />}
-
-                {view === 'final_evaluate' && (
-                    selectedBlock === 'E4' ? (
-                        <E4EvaluationForm
+                        {/* AUTRES VUES */}
+                        {view === 'settings' && <StudentManager
                             students={students}
-                            onSave={saveFinalEvaluation}
+                            onAdd={addStudents}
+                            onRemove={removeStudent}
+                            onClearAll={clearAllEvaluations}
+                            onReset={resetApp}
+                            onBack={() => setView('dashboard')}
+                        />}
+
+                        {view === 'evaluate' && <ContinuousEvaluationForm
+                            students={students}
+                            onSave={saveEvaluation}
                             onCancel={() => { setEditingItem(null); if (activeStudentId) setView('student'); else setView('dashboard'); }}
                             initialData={editingItem}
-                        />
-                    ) : (
-                        <FinalCCFForm
+                        />}
+
+                        {view === 'final_evaluate' && (
+                            selectedBlock === 'E4' ? (
+                                <E4EvaluationForm
+                                    students={students}
+                                    onSave={saveFinalEvaluation}
+                                    onCancel={() => { setEditingItem(null); if (activeStudentId) setView('student'); else setView('dashboard'); }}
+                                    initialData={editingItem}
+                                />
+                            ) : (
+                                <FinalCCFForm
+                                    students={students}
+                                    onSave={saveFinalEvaluation}
+                                    onCancel={() => { setEditingItem(null); if (activeStudentId) setView('student'); else setView('dashboard'); }}
+                                    initialData={editingItem}
+                                />
+                            )
+                        )}
+
+                        {view === 'scenario' && <ScenarioGenerator
+                            onBack={() => setView('dashboard')}
+                            blockType={selectedBlock}
                             students={students}
-                            onSave={saveFinalEvaluation}
-                            onCancel={() => { setEditingItem(null); if (activeStudentId) setView('student'); else setView('dashboard'); }}
-                            initialData={editingItem}
-                        />
-                    )
-                )}
+                        />}
 
-                {view === 'scenario' && <ScenarioGenerator
-                    onBack={() => setView('dashboard')}
-                    blockType={selectedBlock}
-                    students={students}
-                />}
+                        {view === 'student' && activeStudentId && <StudentView
+                            student={students.find(s => s.id === activeStudentId)}
+                            evaluations={evaluations.filter(e => e.studentId === activeStudentId)}
+                            finalEvaluation={filteredEvaluations.find(e => e.studentId === activeStudentId)}
+                            classAverages={classAverages}
+                            selectedBlock={selectedBlock}
+                            onBack={() => setView('dashboard')}
+                            onEdit={handleEdit}
+                            onDelete={handleDeleteEval}
+                        />}
 
-                {view === 'student' && activeStudentId && <StudentView
-                    student={students.find(s => s.id === activeStudentId)}
-                    evaluations={evaluations.filter(e => e.studentId === activeStudentId)}
-                    finalEvaluation={filteredEvaluations.find(e => e.studentId === activeStudentId)}
-                    classAverages={classAverages}
-                    selectedBlock={selectedBlock}
-                    onBack={() => setView('dashboard')}
-                    onEdit={handleEdit}
-                    onDelete={handleDeleteEval}
-                />}
+                        {view === 'compare' && activeStudentId && <ComparisonView
+                            student={students.find(s => s.id === activeStudentId)}
+                            evaluations={evaluations}
+                            finalEvaluation={finalEvaluations.find(e => e.studentId === activeStudentId)}
+                            reflexiveData={reflexiveData[activeStudentId]}
+                            onSaveReflexive={saveReflexive}
+                            onBack={() => setView('dashboard')}
+                        />}
 
-                {view === 'compare' && activeStudentId && <ComparisonView
-                    student={students.find(s => s.id === activeStudentId)}
-                    evaluations={evaluations}
-                    finalEvaluation={finalEvaluations.find(e => e.studentId === activeStudentId)}
-                    reflexiveData={reflexiveData[activeStudentId]}
-                    onSaveReflexive={saveReflexive}
-                    onBack={() => setView('dashboard')}
-                />}
+                        {view === 'submissions' && <SubmissionsView
+                            students={students}
+                            onBack={() => setView('dashboard')}
+                        />}
+                    </main>
+                </div>
+            )}
 
-                {view === 'submissions' && <SubmissionsView
-                    students={students}
-                    onBack={() => setView('dashboard')}
-                />}
-            </main>
+            {/* Main content when not in evaluation mode */}
+            {appMode !== 'evaluation' && (
+                <main className="max-w-7xl mx-auto px-6">
+                    {/* This main is used when sidebar is not showing */}
+                </main>
+            )}
         </div>
     );
 }

@@ -9,21 +9,41 @@ from ..auth import get_current_user
 
 router = APIRouter(prefix="/api/classes", tags=["classes"])
 
-@router.post("/", response_model=ClassResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=ClassResponse, status_code=status.HTTP_201_CREATED)
 def create_class(
     class_data: ClassCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Créer une nouvelle classe (professeur uniquement)"""
-    if current_user.role != "teacher":
-        raise HTTPException(status_code=403, detail="Seuls les professeurs peuvent créer des classes")
+    """Créer une nouvelle classe (professeur ou admin)"""
+    if current_user.role not in ["teacher", "admin"]:
+        raise HTTPException(status_code=403, detail="Non autorisé")
     
+    # L'enseignant est l'utilisateur connecté (ou l'admin)
+    teacher_id = current_user.id
+    
+    # Récupérer le premier professeur trouvé pour l'assignation par défaut
+    # first_teacher = db.query(User).filter(User.role == "teacher").first()
+    
+    # if not first_teacher:
+    #      # Fallback : vérifier si l'utilisateur avec ID 1 existe, sinon erreur 400
+    #     fallback_admin = db.query(User).filter(User.id == 1).first()
+    #     if fallback_admin:
+    #         teacher_id = 1
+    #     else:
+    #          # Si aucun prof et pas d'admin ID 1, on ne peut pas créer de classe avec FK
+    #         raise HTTPException(
+    #             status_code=400, 
+    #             detail="Aucun professeur trouvé pour assigner la classe. Veuillez créer un compte professeur d'abord."
+    #         )
+    # else:
+    #     teacher_id = first_teacher.id
+
     new_class = Class(
         name=class_data.name,
         description=class_data.description,
         academic_year=class_data.academic_year,
-        teacher_id=current_user.id
+        teacher_id=teacher_id
     )
     
     db.add(new_class)
@@ -38,16 +58,19 @@ def create_class(
     return response
 
 
-@router.get("/", response_model=List[ClassResponse])
+@router.get("", response_model=List[ClassResponse])
 def list_my_classes(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Lister toutes mes classes (professeur)"""
-    if current_user.role != "teacher":
-        raise HTTPException(status_code=403, detail="Seuls les professeurs peuvent voir leurs classes")
-    
-    classes = db.query(Class).filter(Class.teacher_id == current_user.id).all()
+    """Lister toutes mes classes (professeur) ou toutes (admin)"""
+    if current_user.role == "admin":
+        classes = db.query(Class).all()
+    elif current_user.role == "teacher":
+        classes = db.query(Class).filter(Class.teacher_id == current_user.id).all()
+    else:
+        # Les étudiants ne listent pas les classes comme ça pour l'instant
+        raise HTTPException(status_code=403, detail="Non autorisé")
     
     result = []
     for cls in classes:
@@ -71,9 +94,9 @@ def get_class(
     if not cls:
         raise HTTPException(status_code=404, detail="Classe non trouvée")
     
-    # Vérifier que c'est bien la classe du prof
-    if cls.teacher_id != current_user.id and current_user.role != "admin":
-        raise HTTPException(status_code=403, detail="Accès non autorisé")
+    # Vérifier que c'est bien la classe du prof ou que c'est un admin
+    if current_user.role != "admin" and cls.teacher_id != current_user.id:
+         raise HTTPException(status_code=403, detail="Accès non autorisé")
     
     student_count = db.query(ClassStudent).filter(ClassStudent.class_id == cls.id).count()
     class_response = ClassResponse.from_orm(cls)
@@ -87,6 +110,7 @@ def update_class(
     class_id: int,
     class_data: ClassUpdate,
     db: Session = Depends(get_db),
+    # current_user: User = Depends(get_current_user)
     current_user: User = Depends(get_current_user)
 ):
     """Modifier une classe"""
@@ -95,7 +119,7 @@ def update_class(
     if not cls:
         raise HTTPException(status_code=404, detail="Classe non trouvée")
     
-    if cls.teacher_id != current_user.id:
+    if current_user.role != "admin" and cls.teacher_id != current_user.id:
         raise HTTPException(status_code=403, detail="Vous ne pouvez modifier que vos propres classes")
     
     # Mettre à jour les champs
@@ -120,6 +144,7 @@ def update_class(
 def delete_class(
     class_id: int,
     db: Session = Depends(get_db),
+    # current_user: User = Depends(get_current_user)
     current_user: User = Depends(get_current_user)
 ):
     """Supprimer une classe"""
@@ -128,7 +153,7 @@ def delete_class(
     if not cls:
         raise HTTPException(status_code=404, detail="Classe non trouvée")
     
-    if cls.teacher_id != current_user.id:
+    if current_user.role != "admin" and cls.teacher_id != current_user.id:
         raise HTTPException(status_code=403, detail="Vous ne pouvez supprimer que vos propres classes")
     
     db.delete(cls)
@@ -142,6 +167,7 @@ def add_students_to_class(
     class_id: int,
     data: AddStudentsToClass,
     db: Session = Depends(get_db),
+    # current_user: User = Depends(get_current_user)
     current_user: User = Depends(get_current_user)
 ):
     """Ajouter des élèves à une classe"""
@@ -150,7 +176,7 @@ def add_students_to_class(
     if not cls:
         raise HTTPException(status_code=404, detail="Classe non trouvée")
     
-    if cls.teacher_id != current_user.id:
+    if current_user.role != "admin" and cls.teacher_id != current_user.id:
         raise HTTPException(status_code=403, detail="Vous ne pouvez modifier que vos propres classes")
     
     added_count = 0
@@ -159,7 +185,7 @@ def add_students_to_class(
         student = db.query(User).filter(
             User.id == student_id,
             User.role == "student",
-            User.teacher_id == current_user.id
+            # User.teacher_id == current_user.id
         ).first()
         
         if not student:
@@ -186,6 +212,7 @@ def remove_student_from_class(
     class_id: int,
     student_id: int,
     db: Session = Depends(get_db),
+    # current_user: User = Depends(get_current_user)
     current_user: User = Depends(get_current_user)
 ):
     """Retirer un élève d'une classe"""
@@ -194,7 +221,7 @@ def remove_student_from_class(
     if not cls:
         raise HTTPException(status_code=404, detail="Classe non trouvée")
     
-    if cls.teacher_id != current_user.id:
+    if current_user.role != "admin" and cls.teacher_id != current_user.id:
         raise HTTPException(status_code=403, detail="Vous ne pouvez modifier que vos propres classes")
     
     class_student = db.query(ClassStudent).filter(
@@ -215,6 +242,7 @@ def remove_student_from_class(
 def list_class_students(
     class_id: int,
     db: Session = Depends(get_db),
+    # current_user: User = Depends(get_current_user)
     current_user: User = Depends(get_current_user)
 ):
     """Lister les élèves d'une classe"""
@@ -223,7 +251,7 @@ def list_class_students(
     if not cls:
         raise HTTPException(status_code=404, detail="Classe non trouvée")
     
-    if cls.teacher_id != current_user.id and current_user.role != "admin":
+    if current_user.role != "admin" and cls.teacher_id != current_user.id:
         raise HTTPException(status_code=403, detail="Accès non autorisé")
     
     # Récupérer les élèves via la table d'association

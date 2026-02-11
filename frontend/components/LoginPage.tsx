@@ -6,7 +6,7 @@ interface LoginPageProps {
     onStudentLogin: (user: any) => void;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = "http://localhost:8000"; // process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageProps) {
     const [mode, setMode] = useState<'teacher' | 'student'>('student'); // Default to student
@@ -25,12 +25,24 @@ export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageP
     const handleTeacherSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            // Simplified Login for MVP (Check against default prof)
-            if (tPin === '1234') { // Fake local check for speed, real one below
-                onTeacherLogin({ name: "Professeur Principal", role: "teacher" });
-                return;
+            // Real API Login
+            const res = await fetch(`${API_URL}/api/auth/teacher`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: tEmail, pin: tPin })
+            });
+
+            if (res.ok) {
+                const userData = await res.json();
+                // Stocker le token JWT
+                if (userData.access_token) {
+                    localStorage.setItem('token', userData.access_token);
+                }
+                onTeacherLogin(userData);
+            } else {
+                const errData = await res.json();
+                alert(errData.detail || "Identifiants incorrects");
             }
-            alert("Code PIN incorrect (Essayer 1234)");
         } catch (err) { alert("Erreur connexion"); }
     };
 
@@ -72,6 +84,10 @@ export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageP
 
             if (res.ok) {
                 const userData = await res.json();
+                // Stocker le token JWT
+                if (userData.access_token) {
+                    localStorage.setItem('token', userData.access_token);
+                }
                 onStudentLogin(userData); // {id, name, role}
             } else {
                 alert("Code personnel incorrect !");

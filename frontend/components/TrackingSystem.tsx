@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     LayoutDashboard, Users, Calendar, FileText, Settings,
-    Shield, LogOut, BookOpen, GraduationCap
+    Shield, LogOut, BookOpen, GraduationCap, ClipboardCheck
 } from 'lucide-react';
 
 // Import tracking system components
@@ -10,14 +10,23 @@ import PlanningManager from './PlanningManager';
 import StudentDeadlines from './StudentDeadlines';
 import TeacherDashboard from './TeacherDashboard';
 import AdminPanel from './AdminPanel';
+import WelcomeDashboard from './WelcomeDashboard';
 
 interface TrackingSystemProps {
     user: any;
     onLogout: () => void;
+    onSwitchMode: () => void;
+    appMode?: 'evaluation' | 'tracking';
+    setAppMode?: (mode: 'evaluation' | 'tracking') => void;
 }
 
-export default function TrackingSystem({ user, onLogout }: TrackingSystemProps) {
+export default function TrackingSystem({ user, onLogout, onSwitchMode, appMode = 'tracking', setAppMode }: TrackingSystemProps) {
     const [activeView, setActiveView] = useState('dashboard');
+
+    // If we're in evaluation mode, don't render TrackingSystem - let page.tsx handle it
+    if (appMode === 'evaluation') {
+        return null;
+    }
 
     // Déterminer les vues disponibles selon le rôle
     const getAvailableViews = () => {
@@ -28,9 +37,11 @@ export default function TrackingSystem({ user, onLogout }: TrackingSystemProps) 
             ];
         } else if (user.role === 'teacher') {
             return [
+                { id: 'welcome', label: 'Accueil', icon: BookOpen },
                 { id: 'dashboard', label: 'Tableau de Bord', icon: LayoutDashboard },
                 { id: 'classes', label: 'Mes Classes', icon: Users },
                 { id: 'planning', label: 'Planning Annuel', icon: Calendar },
+                { id: 'evaluation', label: 'CCF & Évaluations', icon: ClipboardCheck, action: 'switchMode' },
             ];
         } else if (user.role === 'student') {
             return [
@@ -47,7 +58,7 @@ export default function TrackingSystem({ user, onLogout }: TrackingSystemProps) 
         if (user.role === 'admin') {
             setActiveView('admin');
         } else if (user.role === 'teacher') {
-            setActiveView('dashboard');
+            setActiveView('welcome');
         } else if (user.role === 'student') {
             setActiveView('deadlines');
         }
@@ -62,6 +73,7 @@ export default function TrackingSystem({ user, onLogout }: TrackingSystemProps) 
 
         // Teacher views
         if (user.role === 'teacher') {
+            if (activeView === 'welcome') return <WelcomeDashboard />;
             if (activeView === 'dashboard') return <TeacherDashboard />;
             if (activeView === 'classes') return <ClassManager />;
             if (activeView === 'planning') return <PlanningManager />;
@@ -101,10 +113,11 @@ export default function TrackingSystem({ user, onLogout }: TrackingSystemProps) 
                                     <BookOpen size={24} className="text-white" />
                                 </div>
                                 <div>
-                                    <h1 className="text-xl font-bold text-gray-900">ProfVirtuel</h1>
+                                    <h1 className="text-xl font-bold text-gray-900">Assistant CCF</h1>
                                     <p className="text-xs text-gray-500">Système de Suivi BTS NDRC</p>
                                 </div>
                             </div>
+
                         </div>
 
                         <div className="flex items-center gap-4">
@@ -128,8 +141,8 @@ export default function TrackingSystem({ user, onLogout }: TrackingSystemProps) 
 
             {/* Side Navigation + Content */}
             <div className="flex">
-                {/* Sidebar */}
-                <aside className="w-64 bg-white border-r border-gray-200 min-h-[calc(100vh-73px)] sticky top-[73px]">
+                {/* Sidebar - Fixed position, always visible */}
+                <aside className="w-64 bg-white border-r border-gray-200 fixed left-0 top-[73px] bottom-0 overflow-y-auto z-40">
                     <div className="p-4">
                         <nav className="space-y-2">
                             {views.map((view) => {
@@ -138,10 +151,16 @@ export default function TrackingSystem({ user, onLogout }: TrackingSystemProps) 
                                 return (
                                     <button
                                         key={view.id}
-                                        onClick={() => setActiveView(view.id)}
+                                        onClick={() => {
+                                            if (view.action === 'switchMode') {
+                                                onSwitchMode();
+                                            } else {
+                                                setActiveView(view.id);
+                                            }
+                                        }}
                                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${isActive
-                                                ? 'bg-indigo-50 text-indigo-700 font-semibold shadow-sm'
-                                                : 'text-gray-600 hover:bg-gray-50'
+                                            ? 'bg-indigo-50 text-indigo-700 font-semibold shadow-sm'
+                                            : 'text-gray-600 hover:bg-gray-50'
                                             }`}
                                     >
                                         <Icon size={20} />
@@ -153,8 +172,8 @@ export default function TrackingSystem({ user, onLogout }: TrackingSystemProps) 
                     </div>
                 </aside>
 
-                {/* Main Content */}
-                <main className="flex-1">
+                {/* Main Content - Add margin to account for fixed sidebar */}
+                <main className="flex-1 ml-64">
                     {renderContent()}
                 </main>
             </div>

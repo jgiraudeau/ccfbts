@@ -42,9 +42,9 @@ export default function AdminPanel() {
     const fetchTeachers = async () => {
         try {
             const response = await fetch(`${API_URL}/api/admin/teachers`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
+                // headers: {
+                //     'Authorization': `Bearer ${localStorage.getItem('token')}`
+                // }
             });
             if (response.ok) {
                 const data = await response.json();
@@ -58,9 +58,9 @@ export default function AdminPanel() {
     const fetchStats = async () => {
         try {
             const response = await fetch(`${API_URL}/api/admin/stats`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
+                // headers: {
+                //     'Authorization': `Bearer ${localStorage.getItem('token')}`
+                // }
             });
             if (response.ok) {
                 const data = await response.json();
@@ -78,7 +78,7 @@ export default function AdminPanel() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    // 'Authorization': `Bearer ${localStorage.getItem('token')}` // TODO: Re-enable for prod
                 },
                 body: JSON.stringify(newTeacher)
             });
@@ -109,7 +109,7 @@ export default function AdminPanel() {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    // 'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
                 body: JSON.stringify({ is_active: !currentStatus })
             });
@@ -128,9 +128,9 @@ export default function AdminPanel() {
         try {
             const response = await fetch(`${API_URL}/api/admin/teachers/${teacherId}`, {
                 method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
+                // headers: {
+                //     'Authorization': `Bearer ${localStorage.getItem('token')}` // TODO: Re-enable for prod
+                // }
             });
 
             if (response.ok) {
@@ -303,8 +303,8 @@ export default function AdminPanel() {
                                                 <button
                                                     onClick={() => toggleTeacherStatus(teacher.id, teacher.is_active)}
                                                     className={`p-2 rounded-lg transition-colors ${teacher.is_active
-                                                            ? 'bg-orange-100 text-orange-600 hover:bg-orange-200'
-                                                            : 'bg-green-100 text-green-600 hover:bg-green-200'
+                                                        ? 'bg-orange-100 text-orange-600 hover:bg-orange-200'
+                                                        : 'bg-green-100 text-green-600 hover:bg-green-200'
                                                         }`}
                                                     title={teacher.is_active ? 'Désactiver' : 'Activer'}
                                                 >

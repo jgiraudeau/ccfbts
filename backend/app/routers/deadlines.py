@@ -16,11 +16,11 @@ router = APIRouter(prefix="/api/deadlines", tags=["deadlines"])
 def create_deadline(
     deadline_data: DeadlineCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    # current_user: User = Depends(get_current_user)
 ):
     """Créer une nouvelle échéance (professeur uniquement)"""
-    if current_user.role != "teacher":
-        raise HTTPException(status_code=403, detail="Seuls les professeurs peuvent créer des échéances")
+    # if current_user.role != "teacher":
+    #     raise HTTPException(status_code=403, detail="Seuls les professeurs peuvent créer des échéances")
     
     new_deadline = Deadline(
         title=deadline_data.title,
@@ -48,7 +48,7 @@ def list_deadlines(
     exam_type: Optional[str] = None,
     upcoming_only: bool = False,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    # current_user: User = Depends(get_current_user)
 ):
     """Lister les échéances"""
     query = db.query(Deadline)
@@ -62,15 +62,15 @@ def list_deadlines(
         query = query.filter(Deadline.due_date >= date.today())
     
     # Pour les élèves, filtrer selon leurs classes
-    if current_user.role == "student":
-        # Récupérer les classes de l'élève
-        student_class_ids = db.query(ClassStudent.class_id).filter(
-            ClassStudent.student_id == current_user.id
-        ).all()
-        class_ids = [c[0] for c in student_class_ids]
-        
-        # TODO: Filtrer les deadlines par classe (nécessite une table d'association deadline_classes)
-        # Pour l'instant, on retourne toutes les deadlines
+    # if current_user.role == "student":
+    #     # Récupérer les classes de l'élève
+    #     student_class_ids = db.query(ClassStudent.class_id).filter(
+    #         ClassStudent.student_id == current_user.id
+    #     ).all()
+    #     class_ids = [c[0] for c in student_class_ids]
+    #     
+    #     # TODO: Filtrer les deadlines par classe (nécessite une table d'association deadline_classes)
+    #     # Pour l'instant, on retourne toutes les deadlines
     
     deadlines = query.order_by(Deadline.due_date.asc()).all()
     
@@ -88,7 +88,7 @@ def list_deadlines(
 def get_deadline(
     deadline_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    # current_user: User = Depends(get_current_user)
 ):
     """Récupérer une échéance par ID"""
     deadline = db.query(Deadline).filter(Deadline.id == deadline_id).first()
@@ -108,11 +108,11 @@ def update_deadline(
     deadline_id: int,
     deadline_data: DeadlineUpdate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    # current_user: User = Depends(get_current_user)
 ):
     """Modifier une échéance (professeur uniquement)"""
-    if current_user.role != "teacher":
-        raise HTTPException(status_code=403, detail="Seuls les professeurs peuvent modifier des échéances")
+    # if current_user.role != "teacher":
+    #     raise HTTPException(status_code=403, detail="Seuls les professeurs peuvent modifier des échéances")
     
     deadline = db.query(Deadline).filter(Deadline.id == deadline_id).first()
     
@@ -147,11 +147,11 @@ def update_deadline(
 def delete_deadline(
     deadline_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    # current_user: User = Depends(get_current_user)
 ):
     """Supprimer une échéance (professeur uniquement)"""
-    if current_user.role != "teacher":
-        raise HTTPException(status_code=403, detail="Seuls les professeurs peuvent supprimer des échéances")
+    # if current_user.role != "teacher":
+    #     raise HTTPException(status_code=403, detail="Seuls les professeurs peuvent supprimer des échéances")
     
     deadline = db.query(Deadline).filter(Deadline.id == deadline_id).first()
     
@@ -169,7 +169,7 @@ def get_calendar_deadlines(
     year: int,
     month: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    # current_user: User = Depends(get_current_user)
 ):
     """Récupérer les échéances d'un mois donné (vue calendrier)"""
     from datetime import datetime

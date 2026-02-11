@@ -12,22 +12,41 @@ class TeacherLogin(BaseModel):
 
 @router.post("/auth/teacher")
 def login_teacher(creds: TeacherLogin, db: Session = Depends(get_db)):
-    # Search by email (or name if we want)
-    # For MVP, let's use email prof@ccfbts.fr and PIN 1234 (stored in class_code for simplicity or password)
+    from app.auth import verify_password
     
-    # Check if email exists
-    user = db.query(User).filter(User.email == creds.email, User.role == "teacher").first()
-    if not user:
-        raise HTTPException(status_code=401, detail="Professeur inconnu")
+    # Search by email, allow teacher OR admin
+    user = db.query(User).filter(User.email == creds.email).first()
+    
+    if not user or user.role not in ["teacher", "admin"]:
+        raise HTTPException(status_code=401, detail="Utilisateur inconnu ou non autorisé")
         
-    # Check Password (we stored 'admin' as hashed_password for now) OR check class_code as PIN?
-    # User said: "code pin sera un code classe" -> so maybe the teacher logs in with that PIN?
-    # Let's check against class_code for 'PIN' login if provided, or hashed_password
+    # Check Password
+    # 1. Legacy Check (Cleartext match) - for existing "admin" password
+    if user.hashed_password == creds.pin:
+        # Match!
+        pass
+    # 2. Bcrypt Check - for new admin
+    elif user.hashed_password.startswith("$2b$") or user.hashed_password.startswith("$2a$"):
+        if not verify_password(creds.pin, user.hashed_password):
+            raise HTTPException(status_code=401, detail="Mot de passe incorrect")
+    # 3. Class Code Check (fallback for teacher via PIN)
+    elif user.class_code and user.class_code == creds.pin:
+        pass
+    else:
+        raise HTTPException(status_code=401, detail="Identifiants incorrects")
     
-    if creds.pin == user.class_code or creds.pin == user.hashed_password:
-        return {"id": user.id, "name": user.name, "role": "teacher", "class_code": user.class_code}
+    # Générer un token JWT
+    from app.auth import create_access_token
+    access_token = create_access_token(data={"sub": user.email, "role": user.role})
     
-    raise HTTPException(status_code=401, detail="Code PIN ou mot de passe incorrect")
+    return {
+        "id": user.id, 
+        "name": user.name, 
+        "role": user.role, 
+        "class_code": user.class_code,
+        "access_token": access_token,
+        "token_type": "bearer"
+    }
 
 class StudentLoginRequest(BaseModel):
     class_code: str
@@ -56,8 +75,18 @@ def login_student(creds: StudentLoginRequest, db: Session = Depends(get_db)):
     # 3. Check Password
     if student.student_password != creds.password:
         raise HTTPException(status_code=401, detail="Code personnel incorrect")
+    
+    # Générer un token JWT
+    from app.auth import create_access_token
+    access_token = create_access_token(data={"sub": student.email, "role": "student"})
         
-    return {"id": student.id, "name": student.name, "role": "student"}
+    return {
+        "id": student.id, 
+        "name": student.name, 
+        "role": "student",
+        "access_token": access_token,
+        "token_type": "bearer"
+    }
 
 class ChangePasswordRequest(BaseModel):
     student_id: int
