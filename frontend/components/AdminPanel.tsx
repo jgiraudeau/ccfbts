@@ -42,9 +42,9 @@ export default function AdminPanel() {
     const fetchTeachers = async () => {
         try {
             const response = await fetch(`${API_URL}/api/admin/teachers`, {
-                // headers: {
-                //     'Authorization': `Bearer ${localStorage.getItem('token')}`
-                // }
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
             });
             if (response.ok) {
                 const data = await response.json();
@@ -58,9 +58,9 @@ export default function AdminPanel() {
     const fetchStats = async () => {
         try {
             const response = await fetch(`${API_URL}/api/admin/stats`, {
-                // headers: {
-                //     'Authorization': `Bearer ${localStorage.getItem('token')}`
-                // }
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
             });
             if (response.ok) {
                 const data = await response.json();
@@ -78,7 +78,7 @@ export default function AdminPanel() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // 'Authorization': `Bearer ${localStorage.getItem('token')}` // TODO: Re-enable for prod
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
                 body: JSON.stringify(newTeacher)
             });

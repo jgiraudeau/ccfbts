@@ -132,12 +132,16 @@ def create_student(student: StudentCreate, db: Session = Depends(get_db)):
             db.refresh(existing)
         return existing
         
+    # Associer au premier prof trouvé (ou ID 1 par défaut)
+    default_teacher = db.query(User).filter(User.role == "teacher").first()
+    teacher_id = default_teacher.id if default_teacher else 1
+
     new_user = User(
         name=student.name,
         email=email_gen,
         role="student",
         class_name=student.class_name,
-        teacher_id=1, # Lié au prof par défaut pour le MVP
+        teacher_id=teacher_id,
         student_password="0000"
     )
     db.add(new_user)
