@@ -79,13 +79,6 @@ app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 # --- Startup Event ---
 @app.on_event("startup")
 def on_startup():
-    # Force migration for missing columns (PostgreSQL Railway)
-    try:
-        from migrate_railway import force_migrate
-        force_migrate()
-    except Exception as e:
-        print(f"Migration error: {e}")
-
     db = next(get_db())
     init_db.init_db(db)
 

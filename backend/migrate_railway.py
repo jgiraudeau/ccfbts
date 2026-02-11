@@ -1,16 +1,24 @@
 from sqlalchemy import create_engine, text
 import os
-from app.database import DATABASE_URL
+import sys
+
+# Charger l'URL depuis l'environnement car l'import app.database peut échouer si le schéma est cassé
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 def force_migrate():
     if not DATABASE_URL or "sqlite" in DATABASE_URL:
-        print("Mise à jour auto ignorée (SQLite ou pas de DB_URL)")
+        print(">>> Migration : SQLite ou pas de URL, on saute.")
         return
 
-    print(f"Connexion à la base pour migration forcée...")
-    engine = create_engine(DATABASE_URL)
+    print(f">>> Migration : Début de la mise à jour du schéma PostgreSQL...")
     
-    # Liste des colonnes à ajouter si elles manquent
+    # Correction Railway : remplacer postgres:// par postgresql://
+    url = DATABASE_URL
+    if url.startswith("postgres://"):
+        url = url.replace("postgres://", "postgresql://", 1)
+        
+    engine = create_engine(url)
+    
     columns = [
         ("is_active", "BOOLEAN DEFAULT TRUE"),
         ("class_code", "VARCHAR"),
@@ -24,19 +32,19 @@ def force_migrate():
         ("stage_tutor", "VARCHAR(100)")
     ]
 
-    with engine.connect() as conn:
+    with engine.begin() as conn: # Utilise begin() pour auto-commit
         for col_name, col_type in columns:
             try:
-                # Syntaxe ALTER TABLE pour PostgreSQL
                 conn.execute(text(f"ALTER TABLE users ADD COLUMN {col_name} {col_type}"))
-                conn.commit()
                 print(f"✅ Colonne ajoutée : {col_name}")
             except Exception as e:
-                # Si la colonne existe déjà, on l'ignore
                 if "already exists" in str(e).lower() or "existe déjà" in str(e).lower():
-                    print(f"ℹ️ Colonne déjà présente : {col_name}")
+                    print(f"ℹ️ {col_name} existe déjà.")
                 else:
-                    print(f"⚠️ Erreur sur {col_name} : {e}")
+                    print(f"⚠️ Erreur {col_name} : {e}")
+    
+    print(">>> Migration terminée avec succès.")
+    sys.stdout.flush()
 
 if __name__ == "__main__":
     force_migrate()
