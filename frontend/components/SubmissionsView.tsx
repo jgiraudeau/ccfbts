@@ -5,36 +5,23 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 interface SubmissionsViewProps {
     students: any[];
+    submissions: any[];
+    onRefresh: () => void;
     onBack: () => void;
 }
 
-export default function SubmissionsView({ students, onBack }: SubmissionsViewProps) {
-    const [submissions, setSubmissions] = useState<any[]>([]);
+export default function SubmissionsView({ students, submissions, onRefresh, onBack }: SubmissionsViewProps) {
     const [selectedSubmission, setSelectedSubmission] = useState<any>(null);
     const [filterType, setFilterType] = useState<string>('all');
-
-    useEffect(() => {
-        fetchAllSubmissions();
-    }, []);
-
-    const fetchAllSubmissions = async () => {
-        try {
-            const res = await fetch(`${API_URL}/api/submissions`);
-            if (res.ok) {
-                const data = await res.json();
-                setSubmissions(data);
-            }
-        } catch (e) {
-            console.error("Failed to fetch submissions", e);
-        }
-    };
 
     const handleDelete = async (id: number) => {
         if (!confirm("Supprimer cette soumission ?")) return;
         try {
-            await fetch(`${API_URL}/api/submissions/${id}`, { method: 'DELETE' });
-            fetchAllSubmissions();
-            setSelectedSubmission(null);
+            const res = await fetch(`${API_URL}/api/submissions/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                onRefresh();
+                setSelectedSubmission(null);
+            }
         } catch (e) {
             console.error("Failed to delete", e);
         }
@@ -74,8 +61,8 @@ export default function SubmissionsView({ students, onBack }: SubmissionsViewPro
                         <button
                             onClick={() => setFilterType('all')}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filterType === 'all'
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                ? 'bg-indigo-600 text-white'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
                             Tous ({submissions.length})
@@ -83,8 +70,8 @@ export default function SubmissionsView({ students, onBack }: SubmissionsViewPro
                         <button
                             onClick={() => setFilterType('E4_SITUATION')}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filterType === 'E4_SITUATION'
-                                    ? 'bg-purple-600 text-white'
-                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                ? 'bg-purple-600 text-white'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
                             E4
@@ -92,8 +79,8 @@ export default function SubmissionsView({ students, onBack }: SubmissionsViewPro
                         <button
                             onClick={() => setFilterType('E6_CR')}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filterType === 'E6_CR'
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                ? 'bg-indigo-600 text-white'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
                             E6
@@ -127,8 +114,8 @@ export default function SubmissionsView({ students, onBack }: SubmissionsViewPro
                                                     key={sub.id}
                                                     onClick={() => setSelectedSubmission(sub)}
                                                     className={`p-3 rounded-lg cursor-pointer transition-colors ${selectedSubmission?.id === sub.id
-                                                            ? 'bg-indigo-50 border-2 border-indigo-600'
-                                                            : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent'
+                                                        ? 'bg-indigo-50 border-2 border-indigo-600'
+                                                        : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent'
                                                         }`}
                                                 >
                                                     <div className="flex justify-between items-start">

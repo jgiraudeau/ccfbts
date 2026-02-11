@@ -73,6 +73,7 @@ export default function Home() {
     const [reflexiveData, setReflexiveData] = useState<any>({});
     const [activeStudentId, setActiveStudentId] = useState<number | null>(null);
     const [editingItem, setEditingItem] = useState<any>(null);
+    const [submissions, setSubmissions] = useState<any[]>([]);
 
     // Initial Load Check (Mock Auth persistence could go here)
 
@@ -85,6 +86,16 @@ export default function Home() {
         });
     }, [finalEvaluations, selectedBlock]);
 
+    const refreshSubmissions = async () => {
+        try {
+            const res = await fetch(`${API_URL}/api/submissions`);
+            if (res.ok) {
+                const subData = await res.json();
+                setSubmissions(subData);
+            }
+        } catch (e) { console.error("Failed to fetch submissions", e); }
+    };
+
     // --- Data Fetching ---
     useEffect(() => {
         if (!user) return; // Fetch only if logged in
@@ -93,16 +104,10 @@ export default function Home() {
             try {
                 // Students (Backend API) - Use auth endpoint with class code
                 const classCode = user.class_code || '1234';
-                console.log('🔍 Fetching students with class code:', classCode);
-                console.log('🔍 API URL:', `${API_URL}/api/auth/students/${classCode}`);
                 const resStudents = await fetch(`${API_URL}/api/auth/students/${classCode}`);
-                console.log('📡 Response status:', resStudents.status);
                 if (resStudents.ok) {
                     const data = await resStudents.json();
-                    console.log('✅ Students loaded:', data.length, 'students');
                     setStudents(data);
-                } else {
-                    console.error('❌ Failed to load students:', resStudents.statusText);
                 }
 
                 // Evals (LocalStorage for now + future Mock Sync)
@@ -114,6 +119,9 @@ export default function Home() {
 
                 const savedReflex = localStorage.getItem('ndrc_reflexive');
                 if (savedReflex) setReflexiveData(JSON.parse(savedReflex));
+
+                // Fetch Submissions
+                refreshSubmissions();
 
             } catch (err) {
                 console.error("Failed to fetch data:", err);
@@ -286,6 +294,8 @@ export default function Home() {
     // --- Helpers pour les stats ---
     const getStudentStats = (studentId: number) => {
         const studentEvals = evaluations.filter(e => e.studentId === studentId);
+        const studentSubs = submissions.filter(s => s.student_id === studentId);
+
         let totalScore = 0, validEvals = 0;
         studentEvals.forEach(ev => {
             const grade = calculateGrade(ev.ratings);
@@ -297,7 +307,7 @@ export default function Home() {
         const finalEval = filteredEvaluations.find(e => e.studentId === studentId);
         const finalGrade = finalEval ? (finalEval.currentGrade || calculateGrade(finalEval.ratings)) : null;
 
-        return { count: studentEvals.length, last: lastEval, average: avgCont, final: finalGrade };
+        return { count: studentSubs.length, last: lastEval, average: avgCont, final: finalGrade };
     };
 
     const classAverages = useMemo(() => {
@@ -650,6 +660,7 @@ export default function Home() {
                             student={students.find(s => s.id === activeStudentId)}
                             evaluations={evaluations.filter(e => e.studentId === activeStudentId)}
                             finalEvaluation={filteredEvaluations.find(e => e.studentId === activeStudentId)}
+                            submissions={submissions.filter(s => s.student_id === activeStudentId)}
                             classAverages={classAverages}
                             selectedBlock={selectedBlock}
                             onBack={() => setView('dashboard')}
@@ -668,6 +679,8 @@ export default function Home() {
 
                         {view === 'submissions' && <SubmissionsView
                             students={students}
+                            submissions={submissions}
+                            onRefresh={refreshSubmissions}
                             onBack={() => setView('dashboard')}
                         />}
                     </main>

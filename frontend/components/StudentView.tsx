@@ -18,6 +18,7 @@ interface StudentViewProps {
     onBack: () => void;
     onEdit: (item: any, type: string) => void;
     onDelete: (id: number, type: string) => void;
+    submissions?: any[];
 }
 
 const getInitials = (name: string) => {
@@ -30,7 +31,7 @@ const getAvatarColor = (id: number) => {
     return colors[id % colors.length];
 };
 
-export default function StudentView({ student, evaluations, finalEvaluation, classAverages, selectedBlock = 'E6', onBack, onEdit, onDelete }: StudentViewProps) {
+export default function StudentView({ student, evaluations, finalEvaluation, classAverages, selectedBlock = 'E6', onBack, onEdit, onDelete, submissions = [] }: StudentViewProps) {
 
     // Filter domains based on selected block
     const DOMAINS = useMemo(() => {
@@ -195,7 +196,7 @@ export default function StudentView({ student, evaluations, finalEvaluation, cla
                     <div className="w-px h-12 bg-gray-200"></div>
                     <div className="text-center">
                         <p className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Fiches</p>
-                        <div className="text-4xl font-bold text-indigo-600">{evaluations.length}</div>
+                        <div className="text-4xl font-bold text-indigo-600">{submissions.length}</div>
                     </div>
                 </div>
             </div>
