@@ -4,11 +4,13 @@ from pathlib import Path
 import docx
 from .gemini_service import gemini_service
 
-# HARDCODED PATH TO V1 KNOWLEDGE (To share the same KB)
-KNOWLEDGE_DIR = Path('/Users/imac2jacques/Desktop/antigravity/profvirtuel/backend/knowledge')
+# Chemin dynamique : dossier 'knowledge' à la racine du backend
+KNOWLEDGE_DIR = Path(__file__).parent.parent.parent / "knowledge"
 
 if not KNOWLEDGE_DIR.exists():
-    print(f"⚠️ Knowledge directory does not exist: {KNOWLEDGE_DIR}")
+    # Création silencieuse si absent pour éviter le crash
+    KNOWLEDGE_DIR.mkdir(parents=True, exist_ok=True)
+    print(f"📁 Created missing knowledge directory at: {KNOWLEDGE_DIR}")
 else:
     print(f"✅ Knowledge directory found at: {KNOWLEDGE_DIR}")
 
