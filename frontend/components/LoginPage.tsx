@@ -6,7 +6,7 @@ interface LoginPageProps {
     onStudentLogin: (user: any) => void;
 }
 
-const API_URL = "http://localhost:8000"; // process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageProps) {
     const [mode, setMode] = useState<'teacher' | 'student'>('student'); // Default to student

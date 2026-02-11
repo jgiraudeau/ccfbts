@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Plus, Edit2, Trash2, UserPlus, X } from 'lucide-react';
 
-const API_URL = "http://localhost:8000"; // process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 interface Class {
     id: number;
