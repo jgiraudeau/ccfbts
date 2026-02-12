@@ -40,7 +40,7 @@ export default function StudentDeadlines() {
 
     const fetchDeadlines = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/deadlines?upcoming_only=true`, {
+            const response = await fetch(`${API_URL}/api/deadlines`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
