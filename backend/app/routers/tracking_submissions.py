@@ -116,20 +116,25 @@ def list_submissions(
         query = query.filter(Submission.student_id == current_user.id)
     
     elif current_user.role == "teacher":
-        # EMERGENCY FIX: Teacher sees ALL submissions to debug visibility
-        pass
-        # from sqlalchemy import or_
-        # # Voir les soumissions de mes élèves OU pour mes échéances
-        # teacher_deadlines = db.query(Deadline.id).filter(Deadline.teacher_id == current_user.id).all()
-        # deadline_ids = [d[0] for d in teacher_deadlines]
+        # Restore logic with relaxed conditions
+        from sqlalchemy import or_
+        # Voir les soumissions de mes élèves OU pour mes échéances
+        teacher_deadlines = db.query(Deadline.id).filter(Deadline.teacher_id == current_user.id).all()
+        deadline_ids = [d[0] for d in teacher_deadlines]
         
-        # student_ids_res = db.query(User.id).filter(User.teacher_id == current_user.id).all()
-        # student_ids = [s[0] for s in student_ids_res]
+        student_ids_res = db.query(User.id).filter(User.teacher_id == current_user.id).all()
+        student_ids = [s[0] for s in student_ids_res]
         
-        # query = query.filter(or_(
-        #     Submission.student_id.in_(student_ids),
-        #     Submission.deadline_id.in_(deadline_ids)
-        # ))
+        # Le prof voit tout ce qui le concerne de près ou de loin
+        if deadline_ids or student_ids:
+             query = query.filter(or_(
+                Submission.student_id.in_(student_ids),
+                Submission.deadline_id.in_(deadline_ids)
+            ))
+        else:
+             # Si le prof n'a ni élèves ni deadlines, il ne voit rien (logique)
+             # Sauf s'il veut voir des trucs orphelins ? Non restons safe.
+             query = query.filter(Submission.id == -1) # return nothing
     
     # Filtres optionnels
     if deadline_id:

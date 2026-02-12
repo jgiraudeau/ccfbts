@@ -66,13 +66,14 @@ def list_deadlines(
     if upcoming_only:
         query = query.filter(Deadline.due_date >= date.today())
     
-    # Pour les élèves, on désactive le filtre temporairement pour s'assurer qu'ils voient TOUT
+    # Pour les élèves
     if current_user.role == "student":
-        pass
-        # if current_user.teacher_id:
-        #     query = query.filter(Deadline.teacher_id == current_user.teacher_id)
-        # else:
-        #     pass
+        if current_user.teacher_id:
+             query = query.filter(Deadline.teacher_id == current_user.teacher_id)
+        else:
+            # Si pas de teacher_id : voir les deadlines "orphelines" ou voir TOUT en attendant
+            # Pour faciliter la synchro, on montre TOUTES les échéances actives
+            pass
     
     deadlines = query.order_by(Deadline.due_date.asc()).all()
     
