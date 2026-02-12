@@ -236,10 +236,10 @@ export default function PlanningManager() {
                             <div
                                 key={deadline.id}
                                 className={`bg-white rounded-[2rem] p-8 border-2 transition-all hover:shadow-2xl hover:scale-[1.02] relative group ${overdue
-                                        ? 'border-red-100 bg-red-50/10'
-                                        : daysUntil <= 7
-                                            ? 'border-amber-100 bg-amber-50/10'
-                                            : 'border-transparent shadow-xl shadow-gray-100'
+                                    ? 'border-red-100 bg-red-50/10'
+                                    : daysUntil <= 7
+                                        ? 'border-amber-100 bg-amber-50/10'
+                                        : 'border-transparent shadow-xl shadow-gray-100'
                                     }`}
                             >
                                 <div className="flex justify-between items-start mb-6">
@@ -283,7 +283,7 @@ export default function PlanningManager() {
                                             <div>
                                                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Temps restant</p>
                                                 <p className={`font-bold ${daysUntil <= 7 ? 'text-amber-600' : 'text-emerald-600'}`}>
-                                                    {daysUntil === 0 ?\"Aujourd'hui\" : `${daysUntil} jour${daysUntil > 1 ? 's' : ''}`}
+                                                    {daysUntil === 0 ? "Aujourd'hui" : `${daysUntil} jour${daysUntil > 1 ? 's' : ''}`}
                                                 </p>
                                             </div>
                                         </div>
