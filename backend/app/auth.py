@@ -60,9 +60,12 @@ async def get_current_active_user(current_user: models.User = Depends(get_curren
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
-async def get_current_user_optional(token: Optional[str] = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    if not token:
+from fastapi import Header
+
+async def get_current_user_optional(authorization: Optional[str] = Header(None), db: Session = Depends(get_db)):
+    if not authorization or not authorization.startswith("Bearer "):
         return None
+    token = authorization.split(" ")[1]
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
