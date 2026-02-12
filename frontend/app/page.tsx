@@ -65,6 +65,19 @@ export default function Home() {
     // App Mode: 'evaluation' (old E4/E6 system) or 'tracking' (new tracking system)
     const [appMode, setAppMode] = useState<'evaluation' | 'tracking'>('tracking');
 
+    // Restore appMode
+    useEffect(() => {
+        const savedMode = localStorage.getItem('ndrc_app_mode');
+        if (savedMode === 'evaluation' || savedMode === 'tracking') {
+            setAppMode(savedMode);
+        }
+    }, []);
+
+    // Persist appMode
+    useEffect(() => {
+        localStorage.setItem('ndrc_app_mode', appMode);
+    }, [appMode]);
+
     const [view, setView] = useState('dashboard');
     const [selectedBlock, setSelectedBlock] = useState<'E6' | 'E4'>('E4');
     const [students, setStudents] = useState<any[]>([]);
@@ -75,7 +88,28 @@ export default function Home() {
     const [editingItem, setEditingItem] = useState<any>(null);
     const [submissions, setSubmissions] = useState<any[]>([]);
 
-    // Initial Load Check (Mock Auth persistence could go here)
+    // Initial Load Check (Restore session)
+    useEffect(() => {
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+            try {
+                const parsedUser = JSON.parse(savedUser);
+                setUser(parsedUser);
+                // Also restore view if possible, or default based on role
+                if (parsedUser.role === 'student') setView('student_portal');
+            } catch (e) { console.error("Failed to restore user", e); }
+        }
+    }, []);
+
+    // Persist user state
+    useEffect(() => {
+        if (user) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+        } else {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('token');
+        }
+    }, [user]);
 
     // Filter evaluations based on block
     const filteredEvaluations = useMemo(() => {
@@ -418,7 +452,7 @@ export default function Home() {
         return (
             <TrackingSystem
                 user={user}
-                onLogout={() => setUser(null)}
+                onLogout={() => { setUser(null); setView('dashboard'); }}
                 onSwitchMode={() => setAppMode(appMode === 'tracking' ? 'evaluation' : 'tracking')}
                 appMode={appMode}
                 setAppMode={setAppMode}
