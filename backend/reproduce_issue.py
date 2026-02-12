@@ -1,121 +1,156 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from app.models import User
-from app.models_tracking import Deadline, Submission
-from app.database import Base
-from datetime import date
-from sqlalchemy import or_
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, Date, ForeignKey, or_
+from sqlalchemy.orm import sessionmaker, relationship, declarative_base
+from datetime import date, timedelta
+
+Base = declarative_base()
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    email = Column(String, unique=True, index=True)
+    role = Column(String)
+    teacher_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    class_name = Column(String, nullable=True)
+    is_active = Column(Boolean, default=True)
+
+class Deadline(Base):
+    __tablename__ = "deadlines"
+    id = Column(Integer, primary_key=True)
+    title = Column(String)
+    due_date = Column(Date)
+    teacher_id = Column(Integer, ForeignKey("users.id"))
+    document_type = Column(String)
+    exam_type = Column(String)
+    is_mandatory = Column(Boolean)
+
+class Submission(Base):
+    __tablename__ = "submissions"
+    id = Column(Integer, primary_key=True)
+    student_id = Column(Integer, ForeignKey("users.id"))
+    deadline_id = Column(Integer, ForeignKey("deadlines.id"))
+    file_url = Column(String)
+    file_name = Column(String)
+    status = Column(String)
+    submitted_at = Column(Date)
+    grade = Column(Integer, nullable=True)
+    feedback = Column(String, nullable=True)
 
 # Setup memory DB for testing logic
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
-# Important: ensure models are loaded
-import app.models
-import app.models_tracking
-
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-# This creates all tables in memory
 Base.metadata.create_all(bind=engine)
 
 def test_visibility():
     db = SessionLocal()
     
+    print("--- SCENARIO START ---")
+    
     # 1. Create Teacher
-    teacher = User(name="Teacher", email="t@t.com", role="teacher", is_active=True)
+    teacher = User(name="Professeur X", email="prof@test.com", role="teacher", is_active=True)
     db.add(teacher)
     db.commit()
-    db.refresh(teacher)
     
-    # 2. Create Orphan Student
-    student = User(name="Orphan", email="s@s.com", role="student", teacher_id=None, is_active=True)
+    # 2. Create Orphan Student (No teacher_id yet)
+    student = User(name="Élève Orphelin", email="student@test.com", role="student", teacher_id=None, is_active=True)
     db.add(student)
     db.commit()
-    db.refresh(student)
     
-    # 3. Create Deadline - fixed with document_type
+    # 3. Create PAST Deadline (Title: Devoir datant d'hier)
+    yesterday = date.today() - timedelta(days=1)
     deadline = Deadline(
-        title="Test DL", 
-        due_date=date.today(), 
+        title="Devoir Hier", 
+        due_date=yesterday, 
         teacher_id=teacher.id,
         document_type="pdf",
+        exam_type="E4",
         is_mandatory=True
     )
     db.add(deadline)
     db.commit()
-    db.refresh(deadline)
     
     print(f"Teacher ID: {teacher.id}")
-    print(f"Deadline TeacherID: {deadline.teacher_id}")
+    print(f"Student ID: {student.id} (TeacherID: {student.teacher_id})")
+    print(f"Deadline ID: {deadline.id} (TeacherID: {deadline.teacher_id}, Date: {deadline.due_date})")
     
-    # 4. Test Student Seeing Deadline
+    # --- TEST 1: Student View (Fetching Deadlines) ---
+    print("\n--- TEST 1: Student Visibility ---")
     # Logic from deadlines.py
-    visible_deadlines = []
-    
-    # Simulate DB query
     query = db.query(Deadline)
     
+    # SIMULATING: upcoming_only=False (since we removed it from frontend default)
+    # Filter logic:
     if student.role == "student":
         if student.teacher_id:
-            query = query.filter(Deadline.teacher_id == student.teacher_id)
+             query = query.filter(Deadline.teacher_id == student.teacher_id)
         else:
-            # Si l'élève n'a pas encore de prof assigné, on lui montre tout
+            # Si pas de teacher_id : voir TOUT
             pass
             
-    # Also check if other filters kill it (upcoming only usually applies)
     visible_deadlines = query.all()
-    print(f"Student sees {len(visible_deadlines)} deadlines")
-    
-    if len(visible_deadlines) == 0:
-        print("FAIL: Orphan student sees NO deadlines")
+    print(f"Student sees {len(visible_deadlines)} deadlines.")
+    for d in visible_deadlines:
+        print(f" - Found: {d.title} (Due: {d.due_date})")
+        
+    if len(visible_deadlines) > 0 and visible_deadlines[0].id == deadline.id:
+        print("✅ SUCCESS: Orphan student sees the past deadline.")
     else:
-        print("PASS: Orphan student sees deadlines")
+        print("❌ FAILURE: Student cannot see the deadline.")
 
-    # 5. Create Submission
+    # --- TEST 2: Submission & Teacher View ---
+    print("\n--- TEST 2: Submission & Teacher Visibility ---")
+    
+    # Student submits
     sub = Submission(
         student_id=student.id,
         deadline_id=deadline.id,
         file_url="test.pdf",
         file_name="test.pdf",
-        status="pending"
+        status="pending",
+        submitted_at=date.today()
     )
     db.add(sub)
     db.commit()
-    db.refresh(sub)
+    print("Student submitted document.")
     
-    # 6. Test Teacher Seeing Submission
+    # Update student teacher_id (The backend does this on submission creation, but let's assume it happens or NOT for worst case)
+    # Ideally tracking_submissions.py does: 
+    # if current_user.teacher_id is None and deadline.teacher_id: current_user.teacher_id = deadline.teacher_id
+    # Let's verify visibility IF the student is STILL orphan (worst case scenario) or if link failed.
+    
+    # Teacher connects and fetches submissions
     # Logic from tracking_submissions.py
-    
-    # Simulate the query logic inside the router
     query = db.query(Submission)
     
-    # Pour les profs, ne voir que les soumissions de leurs élèves
-    if teacher.role == "teacher":
-        
+    # User is teacher
+    current_user = teacher
+    
+    if current_user.role == "teacher":
         # Voir les soumissions de mes élèves OU pour mes échéances
-        teacher_deadlines = db.query(Deadline.id).filter(Deadline.teacher_id == teacher.id).all()
+        teacher_deadlines = db.query(Deadline.id).filter(Deadline.teacher_id == current_user.id).all()
         deadline_ids = [d[0] for d in teacher_deadlines]
         
-        student_ids_res = db.query(User.id).filter(User.teacher_id == teacher.id).all()
+        student_ids_res = db.query(User.id).filter(User.teacher_id == current_user.id).all()
         student_ids = [s[0] for s in student_ids_res]
         
-        print(f"Teacher Deadlines IDs: {deadline_ids}")
-        print(f"Teacher Students IDs: {student_ids}")
-        
-        # Replicate the OR condition
-        criterion = or_(
-            Submission.student_id.in_(student_ids),
-            Submission.deadline_id.in_(deadline_ids)
-        )
-        query = query.filter(criterion)
-        
-    visible_submissions = query.all()
-    print(f"Teacher sees {len(visible_submissions)} submissions")
-    
-    if len(visible_submissions) == 0:
-        print("FAIL: Teacher sees NO submissions from orphan")
-    else:
-        print("PASS: Teacher sees submission from orphan")
+        # LOGIC from router
+        if deadline_ids or student_ids:
+             query = query.filter(or_(
+                Submission.student_id.in_(student_ids),
+                Submission.deadline_id.in_(deadline_ids)
+            ))
+        else:
+             query = query.filter(Submission.id == -1)
 
+    visible_submissions = query.all()
+    print(f"Teacher sees {len(visible_submissions)} submissions.")
+    
+    if len(visible_submissions) > 0:
+        print("✅ SUCCESS: Teacher sees the submission even if student is orphan (via deadline ownership).")
+    else:
+        print("❌ FAILURE: Teacher cannot see submission.")
+    
     db.close()
 
 if __name__ == "__main__":

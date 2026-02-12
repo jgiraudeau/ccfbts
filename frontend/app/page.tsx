@@ -451,8 +451,8 @@ export default function Home() {
         />;
     }
 
-    // Show TrackingSystem with sidebar for teacher/admin roles (only in tracking mode)
-    if ((user.role === 'teacher' || user.role === 'admin') && appMode === 'tracking') {
+    // Show TrackingSystem with sidebar for teacher/admin/student roles (only in tracking mode)
+    if ((user.role === 'teacher' || user.role === 'admin' || user.role === 'student') && appMode === 'tracking') {
         return (
             <TrackingSystem
                 user={user}
