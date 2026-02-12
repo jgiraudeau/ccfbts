@@ -54,6 +54,11 @@ def create_submission(
         status='pending'
     )
     
+    # Auto-assign teacher to student if missing
+    if current_user.teacher_id is None and deadline.teacher_id:
+        current_user.teacher_id = deadline.teacher_id
+        db.add(current_user)
+    
     db.add(new_submission)
     db.commit()
     db.refresh(new_submission)
@@ -110,12 +115,19 @@ def list_submissions(
     if current_user.role == "student":
         query = query.filter(Submission.student_id == current_user.id)
     
-    # Pour les profs, ne voir que les soumissions de leurs élèves
     elif current_user.role == "teacher":
-        # Récupérer les IDs des élèves du prof
-        student_ids = db.query(User.id).filter(User.teacher_id == current_user.id).all()
-        student_ids = [s[0] for s in student_ids]
-        query = query.filter(Submission.student_id.in_(student_ids))
+        from sqlalchemy import or_
+        # Voir les soumissions de mes élèves OU pour mes échéances
+        teacher_deadlines = db.query(Deadline.id).filter(Deadline.teacher_id == current_user.id).all()
+        deadline_ids = [d[0] for d in teacher_deadlines]
+        
+        student_ids_res = db.query(User.id).filter(User.teacher_id == current_user.id).all()
+        student_ids = [s[0] for s in student_ids_res]
+        
+        query = query.filter(or_(
+            Submission.student_id.in_(student_ids),
+            Submission.deadline_id.in_(deadline_ids)
+        ))
     
     # Filtres optionnels
     if deadline_id:

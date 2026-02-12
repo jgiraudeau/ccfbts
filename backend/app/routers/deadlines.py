@@ -66,16 +66,14 @@ def list_deadlines(
     if upcoming_only:
         query = query.filter(Deadline.due_date >= date.today())
     
-    # Pour les élèves, filtrer selon leurs classes
-    # if current_user.role == "student":
-    #     # Récupérer les classes de l'élève
-    #     student_class_ids = db.query(ClassStudent.class_id).filter(
-    #         ClassStudent.student_id == current_user.id
-    #     ).all()
-    #     class_ids = [c[0] for c in student_class_ids]
-    #     
-    #     # TODO: Filtrer les deadlines par classe (nécessite une table d'association deadline_classes)
-    #     # Pour l'instant, on retourne toutes les deadlines
+    # Pour les élèves, ne voir que les échéances de leur professeur
+    if current_user.role == "student":
+        if current_user.teacher_id:
+            query = query.filter(Deadline.teacher_id == current_user.teacher_id)
+        else:
+            # Si l'élève n'a pas encore de prof assigné, on lui montre tout
+            # pour qu'il puisse soumettre à une échéance et être auto-assigné
+            pass
     
     deadlines = query.order_by(Deadline.due_date.asc()).all()
     
@@ -184,12 +182,20 @@ def get_calendar_deadlines(
     first_day = date(year, month, 1)
     last_day = date(year, month, monthrange(year, month)[1])
     
-    deadlines = db.query(Deadline).filter(
+    query = db.query(Deadline).filter(
         and_(
             Deadline.due_date >= first_day,
             Deadline.due_date <= last_day
         )
-    ).order_by(Deadline.due_date.asc()).all()
+    )
+
+    # Filtrage par professeur
+    if current_user.role == "teacher":
+        query = query.filter(Deadline.teacher_id == current_user.id)
+    elif current_user.role == "student" and current_user.teacher_id:
+        query = query.filter(Deadline.teacher_id == current_user.teacher_id)
+        
+    deadlines = query.order_by(Deadline.due_date.asc()).all()
     
     result = []
     for deadline in deadlines:
