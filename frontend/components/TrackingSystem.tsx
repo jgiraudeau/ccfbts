@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     LayoutDashboard, Users, Calendar, FileText, Settings,
-    Shield, LogOut, BookOpen, GraduationCap, ClipboardCheck
+    Shield, LogOut, BookOpen, GraduationCap, ClipboardCheck, Sparkles
 } from 'lucide-react';
 
 // Import tracking system components
@@ -10,6 +10,7 @@ import PlanningManager from './PlanningManager';
 import StudentDeadlines from './StudentDeadlines';
 import TeacherDashboard from './TeacherDashboard';
 import SubmissionsManager from './SubmissionsManager';
+import ScenarioGenerator from './ScenarioGenerator';
 import AdminPanel from './AdminPanel';
 import WelcomeDashboard from './WelcomeDashboard';
 
@@ -23,6 +24,29 @@ interface TrackingSystemProps {
 
 export default function TrackingSystem({ user, onLogout, onSwitchMode, appMode = 'tracking', setAppMode }: TrackingSystemProps) {
     const [activeView, setActiveView] = useState('dashboard');
+    const [students, setStudents] = useState<any[]>([]);
+
+    useEffect(() => {
+        const fetchStudents = async () => {
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+            try {
+                const response = await fetch(`${API_URL}/api/students`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setStudents(data);
+                }
+            } catch (error) {
+                console.error('Error fetching students:', error);
+            }
+        };
+        if (user.role === 'teacher' || user.role === 'admin') {
+            fetchStudents();
+        }
+    }, [user.role]);
 
     // If we're in evaluation mode, don't render TrackingSystem - let page.tsx handle it
     if (appMode === 'evaluation') {
@@ -43,6 +67,7 @@ export default function TrackingSystem({ user, onLogout, onSwitchMode, appMode =
                 { id: 'classes', label: 'Mes Classes', icon: Users },
                 { id: 'planning', label: 'Planning Annuel', icon: Calendar },
                 { id: 'documents', label: 'Documents Déposés', icon: FileText },
+                { id: 'scenario', label: 'Scénarios E4', icon: Sparkles },
                 { id: 'evaluation', label: 'CCF & Évaluations', icon: ClipboardCheck, action: 'switchMode' },
             ];
         } else if (user.role === 'student') {
@@ -86,6 +111,7 @@ export default function TrackingSystem({ user, onLogout, onSwitchMode, appMode =
             if (activeView === 'classes') return <ClassManager />;
             if (activeView === 'planning') return <PlanningManager />;
             if (activeView === 'documents') return <SubmissionsManager />;
+            if (activeView === 'scenario') return <ScenarioGenerator onBack={() => setActiveView('welcome')} blockType="E4" students={students} />;
         }
 
         // Student views
