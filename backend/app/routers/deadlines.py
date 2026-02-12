@@ -66,14 +66,13 @@ def list_deadlines(
     if upcoming_only:
         query = query.filter(Deadline.due_date >= date.today())
     
-    # Pour les élèves, ne voir que les échéances de leur professeur
+    # Pour les élèves, on désactive le filtre temporairement pour s'assurer qu'ils voient TOUT
     if current_user.role == "student":
-        if current_user.teacher_id:
-            query = query.filter(Deadline.teacher_id == current_user.teacher_id)
-        else:
-            # Si l'élève n'a pas encore de prof assigné, on lui montre tout
-            # pour qu'il puisse soumettre à une échéance et être auto-assigné
-            pass
+        pass
+        # if current_user.teacher_id:
+        #     query = query.filter(Deadline.teacher_id == current_user.teacher_id)
+        # else:
+        #     pass
     
     deadlines = query.order_by(Deadline.due_date.asc()).all()
     

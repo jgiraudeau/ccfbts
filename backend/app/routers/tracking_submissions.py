@@ -116,18 +116,20 @@ def list_submissions(
         query = query.filter(Submission.student_id == current_user.id)
     
     elif current_user.role == "teacher":
-        from sqlalchemy import or_
-        # Voir les soumissions de mes élèves OU pour mes échéances
-        teacher_deadlines = db.query(Deadline.id).filter(Deadline.teacher_id == current_user.id).all()
-        deadline_ids = [d[0] for d in teacher_deadlines]
+        # EMERGENCY FIX: Teacher sees ALL submissions to debug visibility
+        pass
+        # from sqlalchemy import or_
+        # # Voir les soumissions de mes élèves OU pour mes échéances
+        # teacher_deadlines = db.query(Deadline.id).filter(Deadline.teacher_id == current_user.id).all()
+        # deadline_ids = [d[0] for d in teacher_deadlines]
         
-        student_ids_res = db.query(User.id).filter(User.teacher_id == current_user.id).all()
-        student_ids = [s[0] for s in student_ids_res]
+        # student_ids_res = db.query(User.id).filter(User.teacher_id == current_user.id).all()
+        # student_ids = [s[0] for s in student_ids_res]
         
-        query = query.filter(or_(
-            Submission.student_id.in_(student_ids),
-            Submission.deadline_id.in_(deadline_ids)
-        ))
+        # query = query.filter(or_(
+        #     Submission.student_id.in_(student_ids),
+        #     Submission.deadline_id.in_(deadline_ids)
+        # ))
     
     # Filtres optionnels
     if deadline_id:

@@ -18,11 +18,8 @@ def list_my_students(
         # Admin peut voir tous les élèves
         students = db.query(User).filter(User.role == "student").all()
     elif current_user.role == "teacher":
-        # Prof ne voit que ses élèves
-        students = db.query(User).filter(
-            User.role == "student",
-            User.teacher_id == current_user.id
-        ).all()
+        # EMERGENCY FIX: Teacher sees ALL students
+        students = db.query(User).filter(User.role == "student").all()
     else:
         raise HTTPException(status_code=403, detail="Accès non autorisé")
     
