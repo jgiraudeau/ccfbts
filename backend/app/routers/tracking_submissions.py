@@ -18,7 +18,7 @@ router = APIRouter(prefix="/api/tracking/submissions", tags=["tracking_submissio
 UPLOAD_DIR = Path("uploads/submissions")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-@router.post("/", response_model=SubmissionResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=SubmissionResponse, status_code=status.HTTP_201_CREATED)
 def create_submission(
     submission_data: SubmissionCreate,
     db: Session = Depends(get_db),
@@ -95,7 +95,7 @@ async def upload_file(
     }
 
 
-@router.get("/", response_model=List[SubmissionResponse])
+@router.get("", response_model=List[SubmissionResponse])
 def list_submissions(
     deadline_id: Optional[int] = None,
     student_id: Optional[int] = None,

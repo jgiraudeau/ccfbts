@@ -8,7 +8,7 @@ from ..auth import get_current_user, get_password_hash
 
 router = APIRouter(prefix="/api/students", tags=["students"])
 
-@router.get("/", response_model=List[StudentResponse])
+@router.get("", response_model=List[StudentResponse])
 def list_my_students(
     db: Session = Depends(get_db),
     # current_user: User = Depends(get_current_user)
@@ -31,7 +31,7 @@ def list_my_students(
     return [StudentResponse.from_orm(s) for s in students]
 
 
-@router.post("/", response_model=StudentResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=StudentResponse, status_code=status.HTTP_201_CREATED)
 def create_student(
     student_data: StudentCreate,
     db: Session = Depends(get_db),
