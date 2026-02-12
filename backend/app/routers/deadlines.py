@@ -12,15 +12,15 @@ from ..auth import get_current_user
 
 router = APIRouter(prefix="/api/deadlines", tags=["deadlines"])
 
-@router.post("/", response_model=DeadlineResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=DeadlineResponse, status_code=status.HTTP_201_CREATED)
 def create_deadline(
     deadline_data: DeadlineCreate,
     db: Session = Depends(get_db),
-    # current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """Créer une nouvelle échéance (professeur uniquement)"""
-    # if current_user.role != "teacher":
-    #     raise HTTPException(status_code=403, detail="Seuls les professeurs peuvent créer des échéances")
+    if current_user.role not in ["teacher", "admin"]:
+        raise HTTPException(status_code=403, detail="Seuls les professeurs peuvent créer des échéances")
     
     new_deadline = Deadline(
         title=deadline_data.title,
@@ -28,7 +28,8 @@ def create_deadline(
         document_type=deadline_data.document_type,
         due_date=deadline_data.due_date,
         exam_type=deadline_data.exam_type,
-        is_mandatory=deadline_data.is_mandatory
+        is_mandatory=deadline_data.is_mandatory,
+        teacher_id=current_user.id
     )
     
     db.add(new_deadline)
@@ -43,15 +44,19 @@ def create_deadline(
     return response
 
 
-@router.get("/", response_model=List[DeadlineResponse])
+@router.get("", response_model=List[DeadlineResponse])
 def list_deadlines(
     exam_type: Optional[str] = None,
     upcoming_only: bool = False,
     db: Session = Depends(get_db),
-    # current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """Lister les échéances"""
     query = db.query(Deadline)
+    
+    # Pour les professeurs, filtrer par leur propre ID
+    if current_user.role == "teacher":
+        query = query.filter(Deadline.teacher_id == current_user.id)
     
     # Filtrer par type d'examen
     if exam_type:
@@ -88,7 +93,7 @@ def list_deadlines(
 def get_deadline(
     deadline_id: int,
     db: Session = Depends(get_db),
-    # current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """Récupérer une échéance par ID"""
     deadline = db.query(Deadline).filter(Deadline.id == deadline_id).first()
@@ -108,11 +113,11 @@ def update_deadline(
     deadline_id: int,
     deadline_data: DeadlineUpdate,
     db: Session = Depends(get_db),
-    # current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """Modifier une échéance (professeur uniquement)"""
-    # if current_user.role != "teacher":
-    #     raise HTTPException(status_code=403, detail="Seuls les professeurs peuvent modifier des échéances")
+    if current_user.role not in ["teacher", "admin"]:
+        raise HTTPException(status_code=403, detail="Seuls les professeurs peuvent modifier des échéances")
     
     deadline = db.query(Deadline).filter(Deadline.id == deadline_id).first()
     
@@ -147,11 +152,11 @@ def update_deadline(
 def delete_deadline(
     deadline_id: int,
     db: Session = Depends(get_db),
-    # current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """Supprimer une échéance (professeur uniquement)"""
-    # if current_user.role != "teacher":
-    #     raise HTTPException(status_code=403, detail="Seuls les professeurs peuvent supprimer des échéances")
+    if current_user.role not in ["teacher", "admin"]:
+        raise HTTPException(status_code=403, detail="Seuls les professeurs peuvent supprimer des échéances")
     
     deadline = db.query(Deadline).filter(Deadline.id == deadline_id).first()
     
@@ -169,7 +174,7 @@ def get_calendar_deadlines(
     year: int,
     month: int,
     db: Session = Depends(get_db),
-    # current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """Récupérer les échéances d'un mois donné (vue calendrier)"""
     from datetime import datetime

@@ -101,6 +101,18 @@ def on_startup():
                 except Exception:
                     # Column likely already exists
                     pass
+            
+            # Migration for deadlines table
+            try:
+                conn.execute(text("ALTER TABLE deadlines ADD COLUMN IF NOT EXISTS teacher_id INTEGER"))
+                print("✅ Migration: Column teacher_id added or already exists (Postgres)")
+            except Exception:
+                try:
+                    conn.execute(text("ALTER TABLE deadlines ADD COLUMN teacher_id INTEGER"))
+                    print("✅ Migration: Column teacher_id added (Standard)")
+                except Exception:
+                    pass
+
     except Exception as e:
         print(f"❌ Migration failed: {e}")
 

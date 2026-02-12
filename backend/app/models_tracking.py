@@ -14,14 +14,16 @@ class Deadline(Base):
     due_date = Column(Date, nullable=False)
     exam_type = Column(String(10))  # 'E4', 'E6', 'ALL'
     is_mandatory = Column(Boolean, default=True)
+    teacher_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=True) # Temporairement nullable pour ne pas casser l'existant
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     # Relationships
+    teacher = relationship("User", foreign_keys=[teacher_id])
     submissions = relationship("Submission", back_populates="deadline", cascade="all, delete-orphan")
 
     def __repr__(self):
-        return f"<Deadline(id={self.id}, title='{self.title}', due_date={self.due_date})>"
+        return f"<Deadline(id={self.id}, title='{self.title}', due_date={self.due_date}, teacher_id={self.teacher_id})>"
 
 
 class Submission(Base):
