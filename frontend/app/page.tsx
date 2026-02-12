@@ -61,6 +61,7 @@ const getAvatarColor = (index: number) => {
 export default function Home() {
     // Auth State
     const [user, setUser] = useState<any>(null); // { name, role, class_code? }
+    const [isInitialized, setIsInitialized] = useState(false);
 
     // App Mode: 'evaluation' (old E4/E6 system) or 'tracking' (new tracking system)
     const [appMode, setAppMode] = useState<'evaluation' | 'tracking'>('tracking');
@@ -99,17 +100,20 @@ export default function Home() {
                 if (parsedUser.role === 'student') setView('student_portal');
             } catch (e) { console.error("Failed to restore user", e); }
         }
+        setIsInitialized(true);
     }, []);
 
     // Persist user state
     useEffect(() => {
+        if (!isInitialized) return; // Wait for restore attempt
+
         if (user) {
             localStorage.setItem('currentUser', JSON.stringify(user));
         } else {
             localStorage.removeItem('currentUser');
             localStorage.removeItem('token');
         }
-    }, [user]);
+    }, [user, isInitialized]);
 
     // Filter evaluations based on block
     const filteredEvaluations = useMemo(() => {
