@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from app.models import User, Class, ClassStudent
 import os
 
-DATABASE_URL = "sqlite:///./profvirtuel.db"
+DATABASE_URL = "sqlite:///./profvirtuel-v2.db"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

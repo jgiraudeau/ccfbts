@@ -9,6 +9,7 @@ import ClassManager from './ClassManager';
 import PlanningManager from './PlanningManager';
 import StudentDeadlines from './StudentDeadlines';
 import TeacherDashboard from './TeacherDashboard';
+import SubmissionsManager from './SubmissionsManager';
 import AdminPanel from './AdminPanel';
 import WelcomeDashboard from './WelcomeDashboard';
 
@@ -41,6 +42,7 @@ export default function TrackingSystem({ user, onLogout, onSwitchMode, appMode =
                 { id: 'dashboard', label: 'Tableau de Bord', icon: LayoutDashboard },
                 { id: 'classes', label: 'Mes Classes', icon: Users },
                 { id: 'planning', label: 'Planning Annuel', icon: Calendar },
+                { id: 'documents', label: 'Documents Déposés', icon: FileText },
                 { id: 'evaluation', label: 'CCF & Évaluations', icon: ClipboardCheck, action: 'switchMode' },
             ];
         } else if (user.role === 'student') {
@@ -83,6 +85,7 @@ export default function TrackingSystem({ user, onLogout, onSwitchMode, appMode =
             if (activeView === 'dashboard') return <TeacherDashboard />;
             if (activeView === 'classes') return <ClassManager />;
             if (activeView === 'planning') return <PlanningManager />;
+            if (activeView === 'documents') return <SubmissionsManager />;
         }
 
         // Student views
