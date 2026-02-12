@@ -14,6 +14,7 @@ Base.metadata.create_all(bind=engine)
 
 from app.routers import generate, export, submissions, auth, scenario_export
 from app.routers import classes, deadlines, tracking_submissions, admin, students
+from app.auth import get_current_user_optional
 
 app = FastAPI(title="ProfVirtuel V2 - E6 & CCF")
 
@@ -121,24 +122,38 @@ def get_students(db: Session = Depends(get_db)):
     return db.query(User).filter(User.role == "student").all()
 
 @app.post("/students", response_model=StudentRead)
-def create_student(student: StudentCreate, db: Session = Depends(get_db)):
+def create_student(
+    student: StudentCreate, 
+    db: Session = Depends(get_db),
+    current_user: Optional[models.User] = Depends(get_current_user_optional)
+):
     # Simple creation sans mot de passe pour le MVP
     email_gen = f"{student.name.lower().replace(' ', '.')}@student.com"
     
     # Vérifier l'existence
     existing = db.query(User).filter(User.email == email_gen).first()
+    
+    # Déterminer le prof (current_user si prof, sinon premier trouvé)
+    teacher_id = None
+    if current_user and current_user.role in ["teacher", "admin"]:
+        teacher_id = current_user.id
+    else:
+        default_teacher = db.query(User).filter(User.role == "teacher").first()
+        teacher_id = default_teacher.id if default_teacher else 1
+
     if existing:
         # MISE À JOUR : Si l'élève existe, on met à jour sa classe quand même
         if student.class_name:
             existing.class_name = student.class_name
-            db.commit()
-            db.refresh(existing)
+        
+        # Ré-assigner au prof actuel si c'était orphelin ou si changement
+        if teacher_id and (existing.teacher_id is None):
+            existing.teacher_id = teacher_id
+            
+        db.commit()
+        db.refresh(existing)
         return existing
         
-    # Associer au premier prof trouvé (ou ID 1 par défaut)
-    default_teacher = db.query(User).filter(User.role == "teacher").first()
-    teacher_id = default_teacher.id if default_teacher else 1
-
     new_user = User(
         name=student.name,
         email=email_gen,
