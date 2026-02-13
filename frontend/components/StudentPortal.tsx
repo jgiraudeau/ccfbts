@@ -9,12 +9,13 @@ interface StudentPortalProps {
     students: any[];
     onBack: () => void;
     currentUser: any; // { id, name, role }
+    defaultType?: string; // Optional default type for the form
 }
 
-export default function StudentPortal({ students, onBack, currentUser }: StudentPortalProps) {
+export default function StudentPortal({ students, onBack, currentUser, defaultType }: StudentPortalProps) {
     const [selectedStudentId, setSelectedStudentId] = useState<number | null>(currentUser.id);
     const [submissions, setSubmissions] = useState<any[]>([]);
-    const [newSubmission, setNewSubmission] = useState({ title: '', content: '', type: 'E4_SITUATION' });
+    const [newSubmission, setNewSubmission] = useState({ title: '', content: '', type: defaultType || 'E4_SITUATION' });
     const [showForm, setShowForm] = useState(false);
 
     useEffect(() => {
@@ -251,15 +252,20 @@ export default function StudentPortal({ students, onBack, currentUser }: Student
                 <section>
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                            <Upload className="text-indigo-600" /> Mes Dépôts (Fiches & Dossiers)
+                            <Upload className="text-indigo-600" />
+                            {defaultType === 'E4_SITUATION' ? 'Mes Fiches E4 (Négociation)' :
+                                defaultType === 'E6_CR' ? 'Mes Fiches E6 (Évènement)' :
+                                    'Mes Dépôts (Fiches & Dossiers)'}
                         </h2>
                         <div className="flex gap-2">
-                            <button
-                                onClick={() => setShowAIHelper(true)}
-                                className="bg-purple-100 text-purple-700 border border-purple-200 px-4 py-2 rounded-lg flex items-center gap-2 font-bold hover:bg-purple-200 transition-colors"
-                            >
-                                <Sparkles size={18} /> Aide IA
-                            </button>
+                            {defaultType === 'E4_SITUATION' && (
+                                <button
+                                    onClick={() => setShowAIHelper(true)}
+                                    className="bg-purple-100 text-purple-700 border border-purple-200 px-4 py-2 rounded-lg flex items-center gap-2 font-bold hover:bg-purple-200 transition-colors"
+                                >
+                                    <Sparkles size={18} /> Aide IA
+                                </button>
+                            )}
                             <button
                                 onClick={() => setShowForm(!showForm)}
                                 className="bg-indigo-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-bold hover:bg-indigo-700 transition-colors"
@@ -271,7 +277,7 @@ export default function StudentPortal({ students, onBack, currentUser }: Student
 
                     {showForm && (
                         <div className="bg-white p-6 rounded-2xl shadow-lg border border-indigo-100 mb-6 animate-slide-up">
-                            <h3 className="font-bold text-gray-800 mb-4">Déposer un nouveau document</h3>
+                            <h3 className="font-bold text-gray-800 mb-4">Déposer un nouveau document {defaultType === 'E4_SITUATION' ? 'E4' : defaultType === 'E6_CR' ? 'E6' : ''}</h3>
                             <div className="space-y-4">
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-1">Titre du document</label>
@@ -283,18 +289,20 @@ export default function StudentPortal({ students, onBack, currentUser }: Student
                                         placeholder="Ex: Fiche Situation Négociation Client X"
                                     />
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Type de document</label>
-                                    <select
-                                        value={newSubmission.type}
-                                        onChange={e => setNewSubmission({ ...newSubmission, type: e.target.value })}
-                                        className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
-                                    >
-                                        <option value="E4_SITUATION">Fiche Situation E4 (Négociation)</option>
-                                        <option value="E6_CR">Compte Rendu E6</option>
-                                        <option value="AUTRE">Autre Document / Preuve</option>
-                                    </select>
-                                </div>
+                                {!defaultType && ( // Only show selector if no default type is forced
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">Type de document</label>
+                                        <select
+                                            value={newSubmission.type}
+                                            onChange={e => setNewSubmission({ ...newSubmission, type: e.target.value })}
+                                            className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                                        >
+                                            <option value="E4_SITUATION">Fiche Situation E4 (Négociation)</option>
+                                            <option value="E6_CR">Compte Rendu E6</option>
+                                            <option value="AUTRE">Autre Document / Preuve</option>
+                                        </select>
+                                    </div>
+                                )}
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-1">Contenu (Copier-Coller le texte)</label>
                                     <textarea
@@ -318,10 +326,10 @@ export default function StudentPortal({ students, onBack, currentUser }: Student
                     )}
 
                     <div className="grid gap-4 md:grid-cols-2">
-                        {submissions.length === 0 ? (
-                            <p className="text-gray-400 italic col-span-2 text-center py-8">Aucun document déposé.</p>
+                        {submissions.filter(s => !defaultType || s.submission_type === defaultType).length === 0 ? (
+                            <p className="text-gray-400 italic col-span-2 text-center py-8">Aucun document déposé pour cette catégorie.</p>
                         ) : (
-                            submissions.map(sub => (
+                            submissions.filter(s => !defaultType || s.submission_type === defaultType).map(sub => (
                                 <div key={sub.id} className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex justify-between items-start group hover:border-indigo-200 transition-colors">
                                     <div className="flex items-start gap-3">
                                         <div className="bg-blue-50 text-blue-600 p-2 rounded-lg">

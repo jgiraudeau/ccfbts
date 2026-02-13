@@ -74,7 +74,8 @@ export default function TrackingSystem({ user, onLogout, onSwitchMode, appMode =
         } else if (user.role === 'student') {
             return [
                 { id: 'deadlines', label: 'Mes Échéances', icon: Calendar },
-                { id: 'files', label: 'Mes Dépôts & IA', icon: FileText },
+                { id: 'remise_e4', label: 'Remise Fiche E4', icon: FileText },
+                { id: 'remise_e6', label: 'Remise Fiche E6', icon: FileText },
             ];
         }
         return [];
@@ -121,7 +122,8 @@ export default function TrackingSystem({ user, onLogout, onSwitchMode, appMode =
         // Student views
         if (user.role === 'student') {
             if (activeView === 'deadlines') return <StudentDeadlines />;
-            if (activeView === 'files') return <StudentPortal students={[user]} currentUser={user} onBack={() => { }} />;
+            if (activeView === 'remise_e4') return <StudentPortal students={[user]} currentUser={user} onBack={() => { }} defaultType="E4_SITUATION" />;
+            if (activeView === 'remise_e6') return <StudentPortal students={[user]} currentUser={user} onBack={() => { }} defaultType="E6_CR" />;
         }
 
         return <div className="text-center py-12">Vue non disponible</div>;
