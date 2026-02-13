@@ -179,12 +179,30 @@ export default function SubmissionsView({ students, submissions, onRefresh, onBa
                                     </div>
 
                                     <div className="border-t border-gray-200 pt-4">
-                                        <h4 className="font-semibold text-gray-700 mb-2">Contenu :</h4>
-                                        <div className="bg-white rounded-lg p-4 max-h-96 overflow-y-auto">
-                                            <pre className="whitespace-pre-wrap text-sm text-gray-700 font-sans">
-                                                {selectedSubmission.content}
-                                            </pre>
-                                        </div>
+                                        <h4 className="font-semibold text-gray-700 mb-2">Contenu / Fichier :</h4>
+
+                                        {selectedSubmission.file_url && (
+                                            <div className="mb-4">
+                                                <a
+                                                    href={`${API_URL}${selectedSubmission.file_url}`}
+                                                    download
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors"
+                                                >
+                                                    <FileText size={16} /> Télécharger le document
+                                                </a>
+                                            </div>
+                                        )}
+
+                                        {selectedSubmission.content && (
+                                            <div className="bg-white rounded-lg p-4 border border-gray-100">
+                                                <p className="text-xs font-bold text-gray-400 uppercase mb-1">Message / Note :</p>
+                                                <pre className="whitespace-pre-wrap text-sm text-gray-700 font-sans">
+                                                    {selectedSubmission.content}
+                                                </pre>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             ) : (

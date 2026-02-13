@@ -126,10 +126,22 @@ export default function Home() {
 
     const refreshSubmissions = async () => {
         try {
-            const res = await fetch(`${API_URL}/api/submissions`);
+            const token = localStorage.getItem('token');
+            const headers: any = {};
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+
+            // Try fetching from the main tracking endpoint first to sync with Dashboard
+            const res = await fetch(`${API_URL}/api/tracking/submissions`, { headers });
             if (res.ok) {
                 const subData = await res.json();
                 setSubmissions(subData);
+            } else {
+                // Fallback for compatibility during migration
+                const oldRes = await fetch(`${API_URL}/api/submissions`);
+                if (oldRes.ok) {
+                    const subData = await oldRes.json();
+                    setSubmissions(subData);
+                }
             }
         } catch (e) { console.error("Failed to fetch submissions", e); }
     };

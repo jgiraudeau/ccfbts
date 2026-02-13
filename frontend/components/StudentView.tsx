@@ -298,30 +298,111 @@ function StudentSubmissionsList({ studentId }: { studentId: number }) {
     const [submissions, setSubmissions] = React.useState<any[]>([]);
 
     React.useEffect(() => {
-        fetch(`${API_URL}/api/submissions/${studentId}`)
-            .then(res => res.json())
-            .then(data => setSubmissions(data))
-            .catch(e => console.error(e));
+        const fetchSubs = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const headers: any = {};
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+
+                // Try fetching from the main tracking endpoint first
+                const res = await fetch(`${API_URL}/api/tracking/submissions?student_id=${studentId}`, { headers });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    // Identify correct data structure: if filtered by quit param, it returns filtered array.
+                    // If it returns all, filter manually.
+                    if (Array.isArray(data)) {
+                        setSubmissions(data.filter((s: any) => s.student_id === studentId));
+                    }
+                } else {
+                    // Fallback to legacy endpoint if tracking fails
+                    const oldRes = await fetch(`${API_URL}/api/submissions/${studentId}`);
+                    if (oldRes.ok) {
+                        const data = await oldRes.json();
+                        setSubmissions(data);
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        };
+        fetchSubs();
     }, [studentId]);
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="p-6 border-b border-gray-50 flex items-center gap-2">
-                <FileText className="text-gray-400" />
-                <h3 className="font-bold text-gray-900">Documents remis par l'étudiant</h3>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mt-8">
+            <div className="p-6 border-b border-gray-50 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <FileText className="text-indigo-600" />
+                    <h3 className="font-bold text-gray-900">Documents remis par l'étudiant</h3>
+                </div>
+                <span className="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold">{submissions.length}</span>
             </div>
+
             <div className="p-6 grid gap-4 md:grid-cols-2">
                 {submissions.length === 0 ? (
-                    <p className="text-gray-400 italic">Aucun document remis.</p>
+                    <div className="col-span-2 text-center py-8">
+                        <div className="bg-gray-50 p-4 rounded-full inline-block text-gray-400 mb-3">
+                            <FileText size={24} />
+                        </div>
+                        <p className="text-gray-400 font-medium">Aucun document déposé pour le moment.</p>
+                    </div>
                 ) : (
                     submissions.map(sub => (
-                        <div key={sub.id} className="p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors">
-                            <div className="flex justify-between items-start mb-2">
-                                <h4 className="font-bold text-gray-800">{sub.title}</h4>
-                                <span className="text-xs bg-gray-100 px-2 py-0.5 rounded text-gray-500">{sub.date}</span>
+                        <div key={sub.id || Math.random()} className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-indigo-200 transition-all group flex flex-col h-full">
+                            <div className="flex justify-between items-start mb-3">
+                                <div>
+                                    <h4 className="font-bold text-gray-900 mb-1 line-clamp-1">{sub.deadline_title || sub.title || 'Document sans titre'}</h4>
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded tracking-wide ${sub.submission_type === 'E4_SITUATION' ? 'bg-purple-100 text-purple-700' :
+                                                sub.submission_type === 'E6_CR' ? 'bg-indigo-100 text-indigo-700' :
+                                                    'bg-gray-100 text-gray-700'
+                                            }`}>
+                                            {sub.submission_type === 'E4_SITUATION' ? 'E4' :
+                                                sub.submission_type === 'E6_CR' ? 'E6' : 'Autre'}
+                                        </span>
+                                        <span className="text-xs text-gray-500">
+                                            {sub.submitted_at || sub.date ? new Date(sub.submitted_at || sub.date).toLocaleDateString() : ''}
+                                        </span>
+                                    </div>
+                                </div>
+                                {sub.grade !== null && sub.grade !== undefined && (
+                                    <span className={`font-bold text-sm px-2 py-1 rounded ${parseFloat(sub.grade) >= 10 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                                        {sub.grade}/20
+                                    </span>
+                                )}
                             </div>
-                            <p className="text-sm text-gray-500 line-clamp-2 mb-2">{sub.content}</p>
-                            <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">{sub.submission_type}</span>
+
+                            {sub.feedback && (
+                                <div className="bg-yellow-50 p-3 rounded-lg mb-3 text-sm text-yellow-800 border border-yellow-100 text-xs">
+                                    <span className="font-bold block text-[10px] uppercase mb-1 text-yellow-600">Feedback Professeur</span>
+                                    {sub.feedback}
+                                </div>
+                            )}
+
+                            {sub.content && (
+                                <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded mb-3 line-clamp-3 italic">
+                                    "{sub.content}"
+                                </div>
+                            )}
+
+                            <div className="mt-auto pt-3 border-t border-gray-50 flex gap-2">
+                                {sub.file_url ? (
+                                    <a
+                                        href={`${API_URL}${sub.file_url}`}
+                                        download
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-bold text-sm transition-colors"
+                                    >
+                                        <Monitor size={16} /> Télécharger
+                                    </a>
+                                ) : (
+                                    <button disabled className="w-full bg-gray-100 text-gray-400 py-2 rounded-lg font-bold text-sm flex items-center justify-center gap-2 cursor-not-allowed">
+                                        <FileText size={16} /> Pas de fichier
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     ))
                 )}
