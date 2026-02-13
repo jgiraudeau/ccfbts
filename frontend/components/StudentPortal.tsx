@@ -220,7 +220,7 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
                         <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
                             <Upload className="text-indigo-600" />
                             {defaultType === 'E4_SITUATION' ? 'Mes Fiches E4 (Négociation)' :
-                                defaultType === 'E6_CR' ? 'Mes Fiches E6 (Évènement)' :
+                                defaultType === 'E6_CR' ? 'Mes Fiches Animation Commerciale' :
                                     'Mes Dépôts (Fiches & Dossiers)'}
                         </h2>
                         <div className="flex gap-2">
@@ -236,7 +236,7 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
                     {showForm && (
                         <div className="bg-white p-6 rounded-2xl shadow-lg border border-indigo-100 mb-6 animate-slide-up">
                             <h3 className="font-bold text-gray-800 mb-4">
-                                Déposer un nouveau document {defaultType === 'E4_SITUATION' ? 'E4' : defaultType === 'E6_CR' ? 'E6' : ''}
+                                Déposer un nouveau document {defaultType === 'E4_SITUATION' ? 'E4' : defaultType === 'E6_CR' ? 'Animation Commerciale' : ''}
                             </h3>
                             <div className="space-y-4">
                                 <div>
@@ -259,7 +259,7 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
                                             className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
                                         >
                                             <option value="E4_SITUATION">Fiche Situation E4 (Négociation)</option>
-                                            <option value="E6_CR">Compte Rendu E6</option>
+                                            <option value="E6_CR">Fiche Animation Commerciale</option>
                                             <option value="AUTRE">Autre Document / Preuve</option>
                                         </select>
                                     </div>
@@ -321,7 +321,7 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
                                 <div key={sub.id} className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex justify-between items-start group hover:border-indigo-200 transition-colors">
                                     <div className="flex items-start gap-3">
                                         <div className={`p-3 rounded-lg ${sub.submission_type === 'E4_SITUATION' ? 'bg-purple-50 text-purple-600' :
-                                                sub.submission_type === 'E6_CR' ? 'bg-indigo-50 text-indigo-600' : 'bg-blue-50 text-blue-600'
+                                            sub.submission_type === 'E6_CR' ? 'bg-indigo-50 text-indigo-600' : 'bg-blue-50 text-blue-600'
                                             }`}>
                                             <FileText size={24} />
                                         </div>
@@ -330,7 +330,7 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
                                             <div className="flex items-center gap-2 mt-1">
                                                 <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
                                                     {sub.submission_type === 'E4_SITUATION' ? 'Fiche E4' :
-                                                        sub.submission_type === 'E6_CR' ? 'Fiche E6' : 'Autre'}
+                                                        sub.submission_type === 'E6_CR' ? 'Fiche Animation Co.' : 'Autre'}
                                                 </span>
                                                 {sub.grade !== null && (
                                                     <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700">
