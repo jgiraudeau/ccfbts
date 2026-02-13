@@ -395,6 +395,9 @@ export default function Home() {
         const studentEvals = evaluations.filter(e => e.studentId === studentId);
         const studentSubs = submissions.filter(s => s.student_id === studentId);
 
+        const countE4 = studentSubs.filter(s => s.submission_type === 'E4_SITUATION').length;
+        const countE6 = studentSubs.filter(s => s.submission_type === 'E6_CR').length;
+
         let totalScore = 0, validEvals = 0;
         studentEvals.forEach(ev => {
             const grade = calculateGrade(ev.ratings);
@@ -406,7 +409,7 @@ export default function Home() {
         const finalEval = filteredEvaluations.find(e => e.studentId === studentId);
         const finalGrade = finalEval ? (finalEval.currentGrade || calculateGrade(finalEval.ratings)) : null;
 
-        return { count: studentSubs.length, last: lastEval, average: avgCont, final: finalGrade };
+        return { count: studentSubs.length, countE4, countE6, last: lastEval, average: avgCont, final: finalGrade };
     };
 
     const classAverages = useMemo(() => {
@@ -661,7 +664,7 @@ export default function Home() {
                                             <thead className="bg-gray-50/50 text-gray-500 uppercase text-xs tracking-wider">
                                                 <tr>
                                                     <th className="px-6 py-4 font-semibold">Étudiant</th>
-                                                    <th className="px-6 py-4 font-semibold text-center">Activités</th>
+                                                    <th className="px-6 py-4 font-semibold text-center">Fiches remises</th>
                                                     <th className="px-6 py-4 font-semibold text-center">Moy. Continu</th>
                                                     <th className="px-6 py-4 font-semibold text-center">Note {selectedBlock}</th>
                                                     <th className="px-6 py-4 font-semibold text-right">Comparatif</th>
@@ -719,9 +722,21 @@ export default function Home() {
                                                                                     </div>
                                                                                 </td>
                                                                                 <td className="px-6 py-4 text-center">
-                                                                                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                                                                        {stat.count} fiches
-                                                                                    </span>
+                                                                                    <div className="flex flex-col gap-1 items-center justify-center">
+                                                                                        {stat.countE4 > 0 && (
+                                                                                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                                                                                {stat.countE4} E4
+                                                                                            </span>
+                                                                                        )}
+                                                                                        {stat.countE6 > 0 && (
+                                                                                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                                                                                {stat.countE6} E6
+                                                                                            </span>
+                                                                                        )}
+                                                                                        {stat.countE4 === 0 && stat.countE6 === 0 && (
+                                                                                            <span className="text-gray-300 text-xs italic">Aucune fiche</span>
+                                                                                        )}
+                                                                                    </div>
                                                                                 </td>
                                                                                 <td className="px-6 py-4 text-center">
                                                                                     {stat.average ? (
