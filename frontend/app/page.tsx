@@ -558,6 +558,20 @@ export default function Home() {
                                     <span>Planning Annuel</span>
                                 </button>
                                 <button
+                                    onClick={() => setAppMode('tracking')}
+                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-gray-600 hover:bg-gray-50"
+                                >
+                                    <FileText size={20} />
+                                    <span>Documents Déposés</span>
+                                </button>
+                                <button
+                                    onClick={() => setAppMode('tracking')}
+                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-gray-600 hover:bg-gray-50"
+                                >
+                                    <Sparkles size={20} />
+                                    <span>Scénarios E4</span>
+                                </button>
+                                <button
                                     onClick={() => { setAppMode('evaluation'); console.log('Switching to evaluation mode'); }}
                                     className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all bg-indigo-50 text-indigo-700 font-semibold shadow-sm"
                                 >
