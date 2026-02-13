@@ -27,8 +27,7 @@ interface Submission {
 
 // Assuming the component function starts here, let's call it Dashboard for now
 // The user's provided content seems to be the body of this function.
-export default function Dashboard() {
-    // Placeholder states and functions, as they are not provided in the prompt but implied by the JSX
+export default function TeacherDashboard() {
     const [students, setStudents] = useState<Student[]>([]);
     const [submissions, setSubmissions] = useState<Submission[]>([]);
     const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
@@ -41,21 +40,44 @@ export default function Dashboard() {
         feedback: ''
     });
 
-    // Mock data for demonstration if actual fetching is not implemented
     useEffect(() => {
-        // In a real app, you would fetch data here
-        setStudents([
-            { id: 1, name: 'Alice Smith', email: 'alice@example.com', class_name: 'Class A' },
-            { id: 2, name: 'Bob Johnson', email: 'bob@example.com', class_name: 'Class B' },
-            { id: 3, name: 'Charlie Brown', email: 'charlie@example.com', class_name: 'Class A' },
-        ]);
-        setSubmissions([
-            { id: 101, student_id: 1, deadline_id: 1, file_url: '/files/doc1.pdf', file_name: 'doc1.pdf', submitted_at: '2023-10-26T10:00:00Z', status: 'pending', grade: null, feedback: null, student_name: 'Alice Smith', deadline_title: 'Devoir E4', submission_type: 'E4_SITUATION' },
-            { id: 102, student_id: 1, deadline_id: 2, file_url: '/files/doc2.pdf', file_name: 'doc2.pdf', submitted_at: '2023-10-25T11:00:00Z', status: 'reviewed', grade: 18, feedback: 'Excellent travail!', student_name: 'Alice Smith', deadline_title: 'Rapport E6', submission_type: 'E6_CR' },
-            { id: 103, student_id: 2, deadline_id: 1, file_url: '/files/doc3.pdf', file_name: 'doc3.pdf', submitted_at: '2023-10-24T12:00:00Z', status: 'approved', grade: 15, feedback: 'Bien fait.', student_name: 'Bob Johnson', deadline_title: 'Devoir E4', submission_type: 'E4_SITUATION' },
-            { id: 104, student_id: 3, deadline_id: 3, file_url: '/files/doc4.pdf', file_name: 'doc4.pdf', submitted_at: '2023-10-23T13:00:00Z', status: 'pending', grade: null, feedback: null, student_name: 'Charlie Brown', deadline_title: 'Projet Final', submission_type: 'E6_CR' },
-        ]);
+        fetchStudents();
+        fetchSubmissions();
     }, []);
+
+    const fetchStudents = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_URL}/api/students`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setStudents(data);
+            }
+        } catch (error) {
+            console.error('Error fetching students:', error);
+        }
+    };
+
+    const fetchSubmissions = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_URL}/api/tracking/submissions`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setSubmissions(data);
+            }
+        } catch (error) {
+            console.error('Error fetching submissions:', error);
+        }
+    };
 
     const getStudentSubmissions = (studentId: number) => {
         return submissions.filter(s => s.student_id === studentId);
@@ -64,18 +86,41 @@ export default function Dashboard() {
     const openReviewModal = (submission: Submission) => {
         setSelectedSubmission(submission);
         setReviewData({
-            status: submission.status,
+            status: submission.status || 'reviewed',
             grade: submission.grade !== null ? submission.grade.toString() : '',
             feedback: submission.feedback || ''
         });
         setShowReviewModal(true);
     };
 
-    const submitReview = () => {
-        // In a real app, you would send this data to your API
-        console.log('Submitting review:', reviewData, 'for submission:', selectedSubmission?.id);
-        setShowReviewModal(false);
-        // You would typically refetch submissions or update state here
+    const submitReview = async () => {
+        if (!selectedSubmission) return;
+
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_URL}/api/tracking/submissions/${selectedSubmission.id}/review`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    status: reviewData.status,
+                    grade: reviewData.grade ? parseFloat(reviewData.grade) : null,
+                    feedback: reviewData.feedback
+                })
+            });
+
+            if (response.ok) {
+                setShowReviewModal(false);
+                setSelectedSubmission(null);
+                fetchSubmissions(); // Refresh submissions
+                // alert('Évaluation enregistrée ! ✅');
+            }
+        } catch (error) {
+            console.error('Error submitting review:', error);
+            alert('Erreur lors de l\'enregistrement');
+        }
     };
 
     const getStudentStats = (studentId: number) => {
