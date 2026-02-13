@@ -13,6 +13,7 @@ import SubmissionsManager from './SubmissionsManager';
 import ScenarioGenerator from './ScenarioGenerator';
 import AdminPanel from './AdminPanel';
 import WelcomeDashboard from './WelcomeDashboard';
+import StudentPortal from './StudentPortal';
 
 interface TrackingSystemProps {
     user: any;
@@ -72,7 +73,8 @@ export default function TrackingSystem({ user, onLogout, onSwitchMode, appMode =
             ];
         } else if (user.role === 'student') {
             return [
-                { id: 'deadlines', label: 'Mes Échéances', icon: FileText },
+                { id: 'deadlines', label: 'Mes Échéances', icon: Calendar },
+                { id: 'files', label: 'Mes Dépôts & IA', icon: FileText },
             ];
         }
         return [];
@@ -82,14 +84,16 @@ export default function TrackingSystem({ user, onLogout, onSwitchMode, appMode =
 
     // Set default view based on role
     useEffect(() => {
-        if (user.role === 'admin') {
-            setActiveView('admin');
-        } else if (user.role === 'teacher') {
-            setActiveView('welcome');
-        } else if (user.role === 'student') {
-            setActiveView('deadlines');
+        if (!activeView) { // Only set if not already set, or on role change
+            if (user.role === 'admin') {
+                setActiveView('admin');
+            } else if (user.role === 'teacher') {
+                setActiveView('welcome');
+            } else if (user.role === 'student') {
+                setActiveView('deadlines');
+            }
         }
-    }, [user.role]);
+    }, [user.role, activeView]); // Added activeView to dependency array to prevent re-setting if already set
 
     const renderContent = () => {
         // Admin views
@@ -117,6 +121,7 @@ export default function TrackingSystem({ user, onLogout, onSwitchMode, appMode =
         // Student views
         if (user.role === 'student') {
             if (activeView === 'deadlines') return <StudentDeadlines />;
+            if (activeView === 'files') return <StudentPortal students={[user]} currentUser={user} onBack={() => { }} />;
         }
 
         return <div className="text-center py-12">Vue non disponible</div>;
