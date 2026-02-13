@@ -149,8 +149,27 @@ class GenerateRequest(BaseModel):
     topic: str
     duration_hours: Optional[int] = 4
     target_block: Optional[str] = None
-    document_type: Literal["dossier_prof", "dossier_eleve", "jeu_de_role", "jeu_de_role_evenement"] = "jeu_de_role_evenement" # simplified types for now
+    document_type: Literal["dossier_prof", "dossier_eleve", "jeu_de_role", "jeu_de_role_evenement", "student_fiche_e4"] = "jeu_de_role_evenement" # simplified types for now
     category: Optional[str] = "NDRC"
+
+PROMPT_TEMPLATES["student_fiche_e4"] = """Tu es un expert pédagogique en BTS NDRC.
+Ta mission est d'aider un étudiant à rédiger sa **Fiche d'Activité Professionnelle E4 (Négociation Vente)** à partir de ses notes en vrac.
+
+CONTEXTE DE L'ÉTUDIANT :
+{topic}
+
+CONSIGNES DE RÉDACTION :
+1. Rédige une fiche structurée, professionnelle et conforme aux attentes du jury.
+2. Structure attendue :
+   - **Titre de la fiche** : Clair et accrocheur.
+   - **Contexte** : Description de l'entreprise, de la cible et de l'offre.
+   - **Analyse de la situation** : Problématique client, besoins décelés.
+   - **Déroulement de la négociation** : Phases de découverte, argumentation, traitement des objections.
+   - **Résultats** : Quantitatifs (CA, Marge) et Qualitatifs (Satisfaction client, fidélisation).
+   - **Analyse Réflexive** : Ce qui a fonctionné, ce qui est à améliorer.
+
+Ton ton doit être professionnel, précis et valorisant pour l'étudiant. N'invente pas de chiffres s'ils ne sont pas fournis, mets des crochets [A COMPLÉTER] si nécessaire.
+"""
 
 class GenerateResponse(BaseModel):
     content: str

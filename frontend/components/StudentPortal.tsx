@@ -146,7 +146,7 @@ export default function StudentPortal({ students, onBack, currentUser }: Student
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     topic: `Rédige une fiche E4 de BTS NDRC professionnelle et détaillée sur ce contexte : ${aiContext}. Structure : Contexte, Objectifs, Déroulement, Résultats.`,
-                    document_type: 'simple_text', // Backend needs to handle this or valid type
+                    document_type: 'student_fiche_e4', // Backend needs to handle this or valid type
                     category: 'NDRC',
                     duration_hours: 1
                 })
