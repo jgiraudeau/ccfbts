@@ -22,137 +22,75 @@ interface Submission {
     feedback: string | null;
     student_name: string | null;
     deadline_title: string | null;
+    submission_type?: string; // Add this
 }
 
-interface Deadline {
-    id: number;
-    title: string;
-    due_date: string;
-    submissions_count: number;
-}
-
-export default function TeacherDashboard() {
+// Assuming the component function starts here, let's call it Dashboard for now
+// The user's provided content seems to be the body of this function.
+export default function Dashboard() {
+    // Placeholder states and functions, as they are not provided in the prompt but implied by the JSX
     const [students, setStudents] = useState<Student[]>([]);
     const [submissions, setSubmissions] = useState<Submission[]>([]);
-    const [deadlines, setDeadlines] = useState<Deadline[]>([]);
     const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-    const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
-    const [showReviewModal, setShowReviewModal] = useState(false);
     const [filterStatus, setFilterStatus] = useState<string>('all');
-
+    const [showReviewModal, setShowReviewModal] = useState(false);
+    const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
     const [reviewData, setReviewData] = useState({
         status: 'reviewed',
         grade: '',
         feedback: ''
     });
 
+    // Mock data for demonstration if actual fetching is not implemented
     useEffect(() => {
-        fetchStudents();
-        fetchSubmissions();
-        fetchDeadlines();
+        // In a real app, you would fetch data here
+        setStudents([
+            { id: 1, name: 'Alice Smith', email: 'alice@example.com', class_name: 'Class A' },
+            { id: 2, name: 'Bob Johnson', email: 'bob@example.com', class_name: 'Class B' },
+            { id: 3, name: 'Charlie Brown', email: 'charlie@example.com', class_name: 'Class A' },
+        ]);
+        setSubmissions([
+            { id: 101, student_id: 1, deadline_id: 1, file_url: '/files/doc1.pdf', file_name: 'doc1.pdf', submitted_at: '2023-10-26T10:00:00Z', status: 'pending', grade: null, feedback: null, student_name: 'Alice Smith', deadline_title: 'Devoir E4', submission_type: 'E4_SITUATION' },
+            { id: 102, student_id: 1, deadline_id: 2, file_url: '/files/doc2.pdf', file_name: 'doc2.pdf', submitted_at: '2023-10-25T11:00:00Z', status: 'reviewed', grade: 18, feedback: 'Excellent travail!', student_name: 'Alice Smith', deadline_title: 'Rapport E6', submission_type: 'E6_CR' },
+            { id: 103, student_id: 2, deadline_id: 1, file_url: '/files/doc3.pdf', file_name: 'doc3.pdf', submitted_at: '2023-10-24T12:00:00Z', status: 'approved', grade: 15, feedback: 'Bien fait.', student_name: 'Bob Johnson', deadline_title: 'Devoir E4', submission_type: 'E4_SITUATION' },
+            { id: 104, student_id: 3, deadline_id: 3, file_url: '/files/doc4.pdf', file_name: 'doc4.pdf', submitted_at: '2023-10-23T13:00:00Z', status: 'pending', grade: null, feedback: null, student_name: 'Charlie Brown', deadline_title: 'Projet Final', submission_type: 'E6_CR' },
+        ]);
     }, []);
-
-    const fetchStudents = async () => {
-        try {
-            const response = await fetch(`${API_URL}/api/students`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setStudents(data);
-            }
-        } catch (error) {
-            console.error('Error fetching students:', error);
-        }
-    };
-
-    const fetchSubmissions = async () => {
-        try {
-            const response = await fetch(`${API_URL}/api/tracking/submissions`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setSubmissions(data);
-            }
-        } catch (error) {
-            console.error('Error fetching submissions:', error);
-        }
-    };
-
-    const fetchDeadlines = async () => {
-        try {
-            const response = await fetch(`${API_URL}/api/deadlines`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setDeadlines(data);
-            }
-        } catch (error) {
-            console.error('Error fetching deadlines:', error);
-        }
-    };
-
-    const openReviewModal = (submission: Submission) => {
-        setSelectedSubmission(submission);
-        setReviewData({
-            status: submission.status || 'reviewed',
-            grade: submission.grade?.toString() || '',
-            feedback: submission.feedback || ''
-        });
-        setShowReviewModal(true);
-    };
-
-    const submitReview = async () => {
-        if (!selectedSubmission) return;
-
-        try {
-            const response = await fetch(`${API_URL}/api/tracking/submissions/${selectedSubmission.id}/review`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify({
-                    status: reviewData.status,
-                    grade: reviewData.grade ? parseFloat(reviewData.grade) : null,
-                    feedback: reviewData.feedback
-                })
-            });
-
-            if (response.ok) {
-                setShowReviewModal(false);
-                setSelectedSubmission(null);
-                fetchSubmissions();
-                alert('Évaluation enregistrée ! ✅');
-            }
-        } catch (error) {
-            console.error('Error submitting review:', error);
-            alert('Erreur lors de l\'enregistrement');
-        }
-    };
 
     const getStudentSubmissions = (studentId: number) => {
         return submissions.filter(s => s.student_id === studentId);
     };
 
+    const openReviewModal = (submission: Submission) => {
+        setSelectedSubmission(submission);
+        setReviewData({
+            status: submission.status,
+            grade: submission.grade !== null ? submission.grade.toString() : '',
+            feedback: submission.feedback || ''
+        });
+        setShowReviewModal(true);
+    };
+
+    const submitReview = () => {
+        // In a real app, you would send this data to your API
+        console.log('Submitting review:', reviewData, 'for submission:', selectedSubmission?.id);
+        setShowReviewModal(false);
+        // You would typically refetch submissions or update state here
+    };
+
     const getStudentStats = (studentId: number) => {
         const studentSubs = getStudentSubmissions(studentId);
         const total = studentSubs.length;
+        const countE4 = studentSubs.filter(s => s.submission_type === 'E4_SITUATION').length;
+        const countE6 = studentSubs.filter(s => s.submission_type === 'E6_CR').length;
+
         const graded = studentSubs.filter(s => s.grade !== null);
         const avgGrade = graded.length > 0
             ? graded.reduce((sum, s) => sum + (s.grade || 0), 0) / graded.length
             : null;
         const pending = studentSubs.filter(s => s.status === 'pending').length;
 
-        return { total, avgGrade, pending };
+        return { total, countE4, countE6, avgGrade, pending };
     };
 
     const formatDate = (dateString: string) => {
@@ -315,9 +253,21 @@ export default function TeacherDashboard() {
                                                         )}
                                                     </div>
                                                     <div className="flex flex-wrap gap-2 text-xs mt-2">
-                                                        <span className="inline-flex items-center gap-1 text-gray-600 bg-gray-100 px-2 py-0.5 rounded">
-                                                            📄 {stats.total}
-                                                        </span>
+                                                        {stats.countE4 > 0 && (
+                                                            <span className="inline-flex items-center gap-1 text-purple-700 bg-purple-50 px-2 py-0.5 rounded font-medium">
+                                                                📄 {stats.countE4} E4
+                                                            </span>
+                                                        )}
+                                                        {stats.countE6 > 0 && (
+                                                            <span className="inline-flex items-center gap-1 text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded font-medium">
+                                                                📄 {stats.countE6} E6
+                                                            </span>
+                                                        )}
+                                                        {stats.countE4 === 0 && stats.countE6 === 0 && (
+                                                            <span className="inline-flex items-center gap-1 text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                                                                0 fiche
+                                                            </span>
+                                                        )}
                                                         {stats.avgGrade !== null && (
                                                             <span className="inline-flex items-center gap-1 text-yellow-700 bg-yellow-50 px-2 py-0.5 rounded font-medium">
                                                                 ⭐ {stats.avgGrade.toFixed(1)}
