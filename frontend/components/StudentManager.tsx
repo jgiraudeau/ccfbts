@@ -205,7 +205,23 @@ export default function StudentManager({ students, onAdd, onRemove, onBack, onCl
                                 onClick={downloadTemplate}
                                 className="text-xs text-indigo-600 hover:text-indigo-800 flex items-center gap-1 font-medium transition-colors"
                             >
-                                <Download size={14} /> Télécharger le modèle
+                                <Download size={14} /> Modèle
+                            </button>
+                            <button
+                                onClick={() => {
+                                    const dummyStudents = [
+                                        { id: Date.now() + 1, name: "MARTIN Sophie", className: "NDRC 1" },
+                                        { id: Date.now() + 2, name: "DUBOIS Thomas", className: "NDRC 1" },
+                                        { id: Date.now() + 3, name: "LEROY Julie", className: "NDRC 2" },
+                                        { id: Date.now() + 4, name: "PETIT Lucas", className: "NDRC 2" },
+                                        { id: Date.now() + 5, name: "MOREAU Emma", className: "NDRC 1" }
+                                    ];
+                                    onAdd(dummyStudents);
+                                    alert("5 étudiants de test générés !");
+                                }}
+                                className="text-xs text-green-600 hover:text-green-800 flex items-center gap-1 font-medium transition-colors border border-green-200 bg-green-50 px-2 py-1 rounded"
+                            >
+                                <Users size={14} /> Générer Test
                             </button>
                         </div>
                         <div
