@@ -44,7 +44,7 @@ export default function TrackingSystem({ user, onLogout, onSwitchMode, appMode =
                 console.error('Error fetching students:', error);
             }
         };
-        if (user.role === 'teacher' || user.role === 'admin') {
+        if (user.role === 'teacher') {
             fetchStudents();
         }
     }, [user.role]);
