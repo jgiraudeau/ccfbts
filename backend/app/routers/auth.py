@@ -8,40 +8,69 @@ from typing import List, Optional
 
 router = APIRouter()
 
+class AdminLogin(BaseModel):
+    email: str
+    password: str
+
+@router.post("/auth/admin")
+def login_admin(creds: AdminLogin, db: Session = Depends(get_db)):
+    """Connexion administrateur — route dédiée"""
+    user = db.query(User).filter(User.email == creds.email, User.role == "admin").first()
+
+    if not user:
+        raise HTTPException(status_code=401, detail="Identifiants incorrects")
+
+    if not user.is_active:
+        raise HTTPException(status_code=403, detail="Compte désactivé")
+
+    # Vérification bcrypt uniquement
+    if not user.hashed_password or not (user.hashed_password.startswith("$2b$") or user.hashed_password.startswith("$2a$")):
+        raise HTTPException(status_code=401, detail="Mot de passe non configuré")
+
+    if not verify_password(creds.password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="Mot de passe incorrect")
+
+    access_token = create_access_token(data={"sub": user.email, "role": "admin"})
+
+    return {
+        "id": user.id,
+        "name": user.name,
+        "role": "admin",
+        "access_token": access_token,
+        "token_type": "bearer"
+    }
+
 class TeacherLogin(BaseModel):
     email: str
-    pin: str # Using class_code as pin for now or hashed_password
+    pin: str
 
 @router.post("/auth/teacher")
 def login_teacher(creds: TeacherLogin, db: Session = Depends(get_db)):
-    # Search by email, allow teacher OR admin
-    user = db.query(User).filter(User.email == creds.email).first()
-    
-    if not user or user.role not in ["teacher", "admin"]:
-        raise HTTPException(status_code=401, detail="Utilisateur inconnu ou non autorisé")
-        
-    # Check Password
-    # 1. Legacy Check (Cleartext match) - for existing "admin" password
-    if user.hashed_password == creds.pin:
-        # Match!
-        pass
-    # 2. Bcrypt Check - for new admin
-    elif user.hashed_password.startswith("$2b$") or user.hashed_password.startswith("$2a$"):
+    """Connexion professeur uniquement"""
+    user = db.query(User).filter(User.email == creds.email, User.role == "teacher").first()
+
+    if not user:
+        raise HTTPException(status_code=401, detail="Identifiants incorrects")
+
+    if not user.is_active:
+        raise HTTPException(status_code=403, detail="Compte désactivé")
+
+    # Vérification bcrypt
+    if user.hashed_password and (user.hashed_password.startswith("$2b$") or user.hashed_password.startswith("$2a$")):
         if not verify_password(creds.pin, user.hashed_password):
             raise HTTPException(status_code=401, detail="Mot de passe incorrect")
-    # 3. Class Code Check (fallback for teacher via PIN)
+    # Fallback class_code pour les anciens comptes
     elif user.class_code and user.class_code == creds.pin:
         pass
     else:
         raise HTTPException(status_code=401, detail="Identifiants incorrects")
-    
-    # Générer un token JWT
-    access_token = create_access_token(data={"sub": user.email, "role": user.role})
-    
+
+    access_token = create_access_token(data={"sub": user.email, "role": "teacher"})
+
     return {
-        "id": user.id, 
-        "name": user.name, 
-        "role": user.role, 
+        "id": user.id,
+        "name": user.name,
+        "role": "teacher",
         "class_code": user.class_code,
         "access_token": access_token,
         "token_type": "bearer"

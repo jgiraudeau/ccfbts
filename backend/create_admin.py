@@ -6,12 +6,13 @@ from app.auth import get_password_hash
 def create_admin():
     db = SessionLocal()
     try:
-        # Supprimer l'ancien admin si existant
-        old_admin = db.query(User).filter(User.email == "admin@ccfbts.fr").first()
-        if old_admin:
-            db.delete(old_admin)
-            db.commit()
-            print("Ancien admin supprimé")
+        # Supprimer les anciens comptes admin/prof par défaut
+        for old_email in ["admin@ccfbts.fr", "prof@ccfbts.fr"]:
+            old_user = db.query(User).filter(User.email == old_email).first()
+            if old_user:
+                db.delete(old_user)
+                db.commit()
+                print(f"Ancien compte supprimé : {old_email}")
 
         # Check if admin exists
         admin = db.query(User).filter(User.email == "jacques.giraudeau@gmail.com").first()
