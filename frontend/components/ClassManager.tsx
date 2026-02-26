@@ -187,7 +187,7 @@ export default function ClassManager() {
         let addedCount = 0;
         for (const s of parsedData) {
             try {
-                const res = await fetch(`${API_URL}/students`, {
+                const res = await fetch(`${API_URL}/api/students`, {
                     method: 'POST',
                     headers,
                     body: JSON.stringify({ name: s.name, class_name: s.className })

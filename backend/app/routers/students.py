@@ -5,6 +5,7 @@ import unicodedata
 import re
 from ..database import get_db
 from ..models import User
+from ..models_classes import Class, ClassStudent
 from ..schemas_tracking import StudentResponse, StudentCreate, StudentUpdate
 from ..auth import get_current_user, get_password_hash
 
@@ -93,6 +94,32 @@ def create_student(
     db.add(new_student)
     db.commit()
     db.refresh(new_student)
+
+    # Auto-assigner à la classe si class_name fourni
+    if student_data.class_name:
+        existing_class = db.query(Class).filter(
+            Class.name == student_data.class_name,
+            Class.teacher_id == teacher_id
+        ).first()
+        if not existing_class:
+            # Créer la classe automatiquement
+            import random
+            while True:
+                code = str(random.randint(100000, 999999))
+                if not db.query(Class).filter(Class.class_code == code).first():
+                    break
+            existing_class = Class(name=student_data.class_name, teacher_id=teacher_id, class_code=code)
+            db.add(existing_class)
+            db.commit()
+            db.refresh(existing_class)
+        # Vérifier si pas déjà associé
+        already = db.query(ClassStudent).filter(
+            ClassStudent.class_id == existing_class.id,
+            ClassStudent.student_id == new_student.id
+        ).first()
+        if not already:
+            db.add(ClassStudent(class_id=existing_class.id, student_id=new_student.id))
+            db.commit()
 
     return StudentResponse.from_orm(new_student)
 
