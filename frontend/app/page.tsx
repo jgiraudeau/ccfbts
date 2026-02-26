@@ -152,9 +152,12 @@ export default function Home() {
 
         const fetchData = async () => {
             try {
-                // Students (Backend API) - Use auth endpoint with class code
-                const classCode = user.class_code || '1234';
-                const resStudents = await fetch(`${API_URL}/api/auth/students/${classCode}`);
+                // Students (Backend API) - Use secured endpoint
+                const resStudents = await fetch(`${API_URL}/api/students`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
                 if (resStudents.ok) {
                     const data = await resStudents.json();
                     setStudents(data);

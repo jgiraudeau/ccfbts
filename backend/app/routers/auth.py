@@ -139,10 +139,10 @@ def get_students_by_class_code(class_code: str, db: Session = Depends(get_db)):
     if not teacher:
         raise HTTPException(status_code=404, detail="Code classe introuvable")
         
-    # Get students for this teacher
+    # Get students for this teacher only
     students = db.query(User).filter(
-        User.role == "student", 
-        (User.teacher_id == teacher.id) | (User.teacher_id == None)
+        User.role == "student",
+        User.teacher_id == teacher.id
     ).all()
     
     return [{"id": s.id, "name": s.name, "class_name": s.class_name} for s in students]
