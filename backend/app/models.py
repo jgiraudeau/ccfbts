@@ -33,7 +33,8 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
     # Auth fields
-    class_code = Column(String, nullable=True) # For teachers (PIN shared with students)
+    username = Column(String, unique=True, nullable=True)  # prenom-nom pour les élèves
+    class_code = Column(String, nullable=True) # Legacy (was on teachers)
     class_name = Column(String, nullable=True) # For students (direct display)
     student_password = Column(String, default="0000") # For students
     teacher_id = Column(Integer, ForeignKey("users.id"), nullable=True) # Link student to teacher

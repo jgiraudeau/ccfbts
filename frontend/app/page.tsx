@@ -515,7 +515,6 @@ export default function Home() {
                     <div className="flex items-center gap-4">
                         <div className="text-right mr-2 hidden md:block">
                             <p className="text-sm font-bold text-gray-900">{user.name}</p>
-                            <p className="text-xs text-gray-500">Code Classe: {user.class_code || '1234'}</p>
                         </div>
                         <button onClick={() => setUser(null)} className="text-xs text-red-500 hover:text-red-700 font-bold border border-red-100 px-3 py-1 bg-red-50 rounded-lg">
                             Déconnexion

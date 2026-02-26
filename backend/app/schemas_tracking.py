@@ -19,6 +19,7 @@ class ClassUpdate(BaseModel):
 class ClassResponse(BaseModel):
     id: int
     name: str
+    class_code: Optional[str] = None
     description: Optional[str]
     academic_year: Optional[str]
     teacher_id: int
@@ -134,7 +135,7 @@ class ActivateTeacher(BaseModel):
 
 class StudentCreate(BaseModel):
     name: str
-    email: EmailStr
+    email: Optional[str] = None  # Auto-généré si non fourni
     student_password: str = "0000"
     stage_start_date: Optional[date] = None
     stage_end_date: Optional[date] = None
@@ -155,7 +156,8 @@ class StudentUpdate(BaseModel):
 class StudentResponse(BaseModel):
     id: int
     name: str
-    email: str
+    email: Optional[str] = None
+    username: Optional[str] = None
     stage_start_date: Optional[date]
     stage_end_date: Optional[date]
     stage_company: Optional[str]

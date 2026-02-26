@@ -21,26 +21,17 @@ def create_class(
     
     # L'enseignant est l'utilisateur connecté (ou l'admin)
     teacher_id = current_user.id
-    
-    # Récupérer le premier professeur trouvé pour l'assignation par défaut
-    # first_teacher = db.query(User).filter(User.role == "teacher").first()
-    
-    # if not first_teacher:
-    #      # Fallback : vérifier si l'utilisateur avec ID 1 existe, sinon erreur 400
-    #     fallback_admin = db.query(User).filter(User.id == 1).first()
-    #     if fallback_admin:
-    #         teacher_id = 1
-    #     else:
-    #          # Si aucun prof et pas d'admin ID 1, on ne peut pas créer de classe avec FK
-    #         raise HTTPException(
-    #             status_code=400, 
-    #             detail="Aucun professeur trouvé pour assigner la classe. Veuillez créer un compte professeur d'abord."
-    #         )
-    # else:
-    #     teacher_id = first_teacher.id
+
+    # Générer un code classe unique (6 chiffres)
+    import random
+    while True:
+        code = str(random.randint(100000, 999999))
+        if not db.query(Class).filter(Class.class_code == code).first():
+            break
 
     new_class = Class(
         name=class_data.name,
+        class_code=code,
         description=class_data.description,
         academic_year=class_data.academic_year,
         teacher_id=teacher_id

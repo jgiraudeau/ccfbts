@@ -9,6 +9,7 @@ class Class(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)  # Ex: "BTS NDRC 1A", "BTS NDRC 2A"
+    class_code = Column(String(6), unique=True, nullable=True)  # Code unique 6 chiffres
     description = Column(Text)
     teacher_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     academic_year = Column(String(20))  # Ex: "2024-2025"

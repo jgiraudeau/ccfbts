@@ -1,10 +1,38 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
+import unicodedata
+import re
 from ..database import get_db
 from ..models import User
 from ..schemas_tracking import StudentResponse, StudentCreate, StudentUpdate
 from ..auth import get_current_user, get_password_hash
+
+
+def generate_username(name: str, db: Session) -> str:
+    """Génère un username prenom-nom à partir du nom complet."""
+    # Supprimer les accents
+    normalized = unicodedata.normalize('NFD', name)
+    ascii_name = normalized.encode('ascii', 'ignore').decode('ascii')
+    # Séparer les parties du nom (NOM Prénom → prénom-nom)
+    parts = ascii_name.strip().split()
+    if len(parts) >= 2:
+        # Convention: MOREAU Camille → camille-moreau
+        surname = parts[0].lower()
+        firstname = "-".join(p.lower() for p in parts[1:])
+        base = f"{firstname}-{surname}"
+    else:
+        base = parts[0].lower() if parts else "eleve"
+    # Nettoyer les caractères spéciaux
+    base = re.sub(r'[^a-z0-9-]', '', base)
+    base = re.sub(r'-+', '-', base).strip('-')
+    # Vérifier unicité
+    username = base
+    counter = 2
+    while db.query(User).filter(User.username == username).first():
+        username = f"{base}-{counter}"
+        counter += 1
+    return username
 
 router = APIRouter(prefix="/api/students", tags=["students"])
 
@@ -40,15 +68,23 @@ def create_student(
     # ID du prof qui crée l'élève
     teacher_id = current_user.id if current_user.role == "teacher" else student_data.teacher_id
 
+    # Générer username
+    username = generate_username(student_data.name, db)
+
+    # Email auto-généré si non fourni
+    email = student_data.email or f"{username}@profvirtuel.local"
+
     # Vérifier si l'email existe déjà
-    existing = db.query(User).filter(User.email == student_data.email).first()
+    existing = db.query(User).filter(User.email == email).first()
     if existing:
         raise HTTPException(status_code=400, detail="Cet email est déjà utilisé")
 
     new_student = User(
         name=student_data.name,
-        email=student_data.email,
-        hashed_password=get_password_hash(student_data.password),
+        username=username,
+        email=email,
+        hashed_password=get_password_hash("0000"),
+        student_password=student_data.student_password,
         role="student",
         teacher_id=teacher_id,
         is_active=True

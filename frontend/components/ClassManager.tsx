@@ -7,6 +7,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 interface Class {
     id: number;
     name: string;
+    class_code: string | null;
     description: string | null;
     academic_year: string | null;
     teacher_id: number;
@@ -373,7 +374,10 @@ export default function ClassManager() {
                                                     <Trash2 size={16} />
                                                 </button>
                                             </div>
-                                            <div className="flex items-center gap-2 text-sm text-gray-500 mt-3 font-medium">
+                                            {cls.class_code && (
+                                                <p className="text-xs font-mono text-indigo-600 bg-indigo-50 px-2 py-1 rounded mt-2 inline-block">Code : {cls.class_code}</p>
+                                            )}
+                                            <div className="flex items-center gap-2 text-sm text-gray-500 mt-2 font-medium">
                                                 <Users size={16} className="text-indigo-400" />
                                                 <span>{cls.student_count} élève{cls.student_count > 1 ? 's' : ''}</span>
                                             </div>
@@ -395,6 +399,9 @@ export default function ClassManager() {
                                             <div>
                                                 <span className="text-xs font-black text-indigo-600 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">{selectedClass.academic_year || '2024-2025'}</span>
                                                 <h2 className="text-3xl font-black text-gray-900 mt-3">{selectedClass.name}</h2>
+                                                {selectedClass.class_code && (
+                                                    <p className="text-sm font-mono text-indigo-600 mt-1">Code classe : <span className="font-bold text-lg">{selectedClass.class_code}</span></p>
+                                                )}
                                                 <p className="text-gray-500 mt-2">{selectedClass.description || 'Pas de description'}</p>
                                             </div>
                                             <button

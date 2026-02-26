@@ -77,39 +77,29 @@ def login_teacher(creds: TeacherLogin, db: Session = Depends(get_db)):
     }
 
 class StudentLoginRequest(BaseModel):
-    class_code: str
-    student_id: int
+    username: str
     password: str
 
 @router.post("/auth/student")
 def login_student(creds: StudentLoginRequest, db: Session = Depends(get_db)):
-    # 1. Check Class Code (Teacher)
-    teacher = db.query(User).filter(User.class_code == creds.class_code, User.role == "teacher").first()
-    if not teacher:
-        raise HTTPException(status_code=404, detail="Code classe invalide")
-    
-    # 2. Check Student belongs to this teacher
-    student = db.query(User).filter(User.id == creds.student_id).first()
-    if not student:
-        raise HTTPException(status_code=404, detail="Élève introuvable")
-        
-    if student.teacher_id != teacher.id:
-         # Fallback for MVP if teacher_id not set on legacy data
-         if student.teacher_id is None:
-             pass 
-         else:
-            raise HTTPException(status_code=403, detail="Cet élève n'appartient pas à cette classe")
+    """Connexion élève : identifiant (prenom-nom) + mot de passe"""
+    student = db.query(User).filter(
+        User.username == creds.username.lower().strip(),
+        User.role == "student"
+    ).first()
 
-    # 3. Check Password
+    if not student:
+        raise HTTPException(status_code=401, detail="Identifiant inconnu")
+
     if student.student_password != creds.password:
-        raise HTTPException(status_code=401, detail="Code personnel incorrect")
-    
-    # Générer un token JWT
+        raise HTTPException(status_code=401, detail="Mot de passe incorrect")
+
     access_token = create_access_token(data={"sub": student.email, "role": "student"})
-        
+
     return {
-        "id": student.id, 
-        "name": student.name, 
+        "id": student.id,
+        "name": student.name,
+        "username": student.username,
         "role": "student",
         "access_token": access_token,
         "token_type": "bearer"
@@ -133,28 +123,14 @@ def change_password(req: ChangePasswordRequest, db: Session = Depends(get_db)):
     db.commit()
     return {"status": "success"}
 
-@router.get("/auth/students/{class_code}")
-def get_students_by_class_code(class_code: str, db: Session = Depends(get_db)):
-    teacher = db.query(User).filter(User.class_code == class_code, User.role == "teacher").first()
-    if not teacher:
-        raise HTTPException(status_code=404, detail="Code classe introuvable")
-        
-    # Get students for this teacher only
-    students = db.query(User).filter(
-        User.role == "student",
-        User.teacher_id == teacher.id
-    ).all()
-    
-    return [{"id": s.id, "name": s.name, "class_name": s.class_name} for s in students]
-
 @router.delete("/auth/students/{class_code}")
 def purge_class_students(class_code: str, db: Session = Depends(get_db)):
     teacher = db.query(User).filter(User.class_code == class_code, User.role == "teacher").first()
     if not teacher:
         raise HTTPException(status_code=404, detail="Code classe introuvable")
-    
+
     students = db.query(User).filter(
-        User.role == "student", 
+        User.role == "student",
         (User.teacher_id == teacher.id) | (User.teacher_id == None)
     ).all()
     student_ids = [s.id for s in students]
