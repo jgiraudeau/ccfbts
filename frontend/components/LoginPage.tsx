@@ -106,7 +106,7 @@ export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageP
                         <div className="bg-white/10 p-3 rounded-2xl backdrop-blur-md border border-white/20 shadow-inner">
                             <Shield size={28} className="text-indigo-200" />
                         </div>
-                        <h1 className="text-2xl font-extrabold tracking-tight">ProfVirtuel <span className="text-indigo-300">V2</span></h1>
+                        <h1 className="text-2xl font-extrabold tracking-tight">CCF BTS <span className="text-indigo-300">NDRC</span></h1>
                     </div>
 
                     <h2 className="text-4xl xl:text-5xl font-extrabold mb-6 leading-tight">L'assistant pédagogique nouvelle génération <br />pour le BTS NDRC.</h2>
@@ -167,7 +167,7 @@ export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageP
                     <div className="mx-auto w-16 h-16 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-4">
                         <Shield size={32} />
                     </div>
-                    <h1 className="text-2xl font-extrabold text-gray-900">ProfVirtuel <span className="text-indigo-600">V2</span></h1>
+                    <h1 className="text-2xl font-extrabold text-gray-900">CCF BTS <span className="text-indigo-600">NDRC</span></h1>
                     <p className="text-gray-500 mt-2">Assistant pédagogique BTS NDRC</p>
                 </div>
 
@@ -339,7 +339,7 @@ export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageP
                     </div>
 
                     <div className="text-center mt-8 text-sm text-gray-400 font-medium">
-                        © {new Date().getFullYear()} ProfVirtuel V2 • Assistant CCF NDRC
+                        © {new Date().getFullYear()} CCF BTS NDRC • Assistant CCF NDRC
                     </div>
                 </div>
             </div>
