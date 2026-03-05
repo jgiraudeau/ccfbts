@@ -3,41 +3,41 @@ import { ArrowLeft, Award, Save, FileText, Target, Users, Printer } from "lucide
 import { calculateGrade } from '../app/types';
 import { exportHTMLToWord } from '../app/lib/exportUtils';
 
-// Structure E4
+// Structure conforme à l'Annexe V-4 de la circulaire officielle
 const E4_GRILLE = {
     situationA: {
         id: 'E4_SITUATION_A',
-        title: "Situation A : Cibler et prospecter la clientèle",
+        title: "Cibler et prospecter la clientèle",
         skills: [
-            { id: 'E4.CIBLER_1', name: "Analyser un portefeuille clients", desc: "Pertinence analyse, qualification prospects" },
-            { id: 'E4.CIBLER_2', name: "Identifier des cibles de clientèle", desc: "Cohérence ciblage/démarche" },
-            { id: 'E4.CIBLER_3', name: "Mettre en oeuvre une démarche de prospection", desc: "Efficacité choix opérés" },
-            { id: 'E4.CIBLER_4', name: "Développer des réseaux professionnels", desc: "Activation pertinente réseaux" }
+            { id: 'E4.CIBLER_1', name: "Analyser un portefeuille client", desc: "Pertinence de l'analyse du portefeuille clients, qualification pertinente des prospects" },
+            { id: 'E4.CIBLER_2', name: "Identifier des cibles de clientèle", desc: "Cohérence entre ciblage et démarche de prospection" },
+            { id: 'E4.CIBLER_3', name: "Mettre en œuvre et évaluer une démarche de prospection", desc: "Efficacité des choix opérés" },
+            { id: 'E4.CIBLER_4', name: "Développer des réseaux professionnels", desc: "Activation pertinente des réseaux professionnels" }
         ]
     },
     situationB_Nego: {
         id: 'E4_SITUATION_B_NEGO',
-        title: "Situation B : Négociation-Vente",
+        title: "Négocier et accompagner la relation client",
         skills: [
-            { id: 'E4.NEGOCIER_1', name: "Négocier et vendre une solution", desc: "Relationnel, efficacité négo, pertinence solution" },
-            { id: 'E4.NEGOCIER_2', name: "Créer et maintenir une relation durable", desc: "Personnalisation, diagnostic, respect engagements" }
+            { id: 'E4.NEGOCIER_1', name: "Négocier et vendre une solution adaptée au client", desc: "Maîtrise de la relation interpersonnelle, efficacité de la négociation commerciale, pertinence de la solution proposée" },
+            { id: 'E4.NEGOCIER_2', name: "Créer et maintenir une relation client durable", desc: "Personnalisation de la relation client, qualité du diagnostic et de l'accompagnement client, respect des engagements, évolutivité et enrichissement de la relation client" }
         ]
     },
     situationB_Event: {
         id: 'E4_SITUATION_B_EVENT',
-        title: "Situation B : Évènement Commercial",
+        title: "Organiser et animer un évènement commercial",
         skills: [
-            { id: 'E4.EVENT_1', name: "Organiser un évènement commercial", desc: "Pertinence choix, logistique/finance" },
-            { id: 'E4.EVENT_2', name: "Animer un évènement commercial", desc: "Qualité et efficacité animation" },
-            { id: 'E4.EVENT_3', name: "Exploiter un évènement commercial", desc: "Bilan quanti/quali, suivi contacts" }
+            { id: 'E4.EVENT_1', name: "Organiser un évènement commercial", desc: "Pertinence du choix de l'événement commercial, efficacité de l'organisation au regard des contraintes logistiques, financières, commerciales" },
+            { id: 'E4.EVENT_2', name: "Animer un évènement commercial", desc: "Qualité et efficacité de l'animation" },
+            { id: 'E4.EVENT_3', name: "Exploiter un évènement commercial", desc: "Précision du bilan quantitatif et qualitatif de l'événement commercial, rigueur dans le suivi des contacts et des opportunités d'affaires" }
         ]
     },
     transversal: {
         id: 'E4_TRANSVERSAL',
         title: "Exploiter et mutualiser l'information commerciale",
         skills: [
-            { id: 'E4.INFO_1', name: "Remonter et partager l'info", desc: "Qualité collecte, hiérarchisation diffusion" },
-            { id: 'E4.INFO_2', name: "Collaborer au développement de l'expertise", desc: "Qualité analyses et propositions" }
+            { id: 'E4.INFO_1', name: "Remonter, valoriser et partager l'information commerciale", desc: "Pertinence et qualité des informations collectées, sélection et hiérarchisation de l'information diffusée" },
+            { id: 'E4.INFO_2', name: "Collaborer à l'interne en vue de développer l'expertise commerciale", desc: "Qualité des analyses commerciales et des propositions" }
         ]
     }
 };

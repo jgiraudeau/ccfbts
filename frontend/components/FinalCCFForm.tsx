@@ -3,32 +3,33 @@ import { ArrowLeft, Award, Save, Printer } from "lucide-react";
 import { calculateGrade, RATINGS } from '../app/types';
 import { exportHTMLToWord } from '../app/lib/exportUtils';
 
-// TODO: Centraliser cette structure
+// Structure conforme à l'Annexe VII-2 de la circulaire officielle
 const CCF_GRILLE = {
-    title: "GRILLE D'AIDE À L'ÉVALUATION - CCF FINAL",
+    title: "GRILLE D'AIDE À L'ÉVALUATION - CCF",
     sections: [
         {
             id: 'E6_DISTRIBUTION',
-            title: "Implanter et promouvoir l'offre (Distributeurs)",
+            title: "Implanter et promouvoir l'offre chez les distributeurs",
             skills: [
-                { id: 'ccf_distrib_1', name: "Valoriser l’offre sur le lieu de vente", desc: "Rigueur suivi accords, cohérence merchandising, argumentation" },
-                { id: 'ccf_distrib_2', name: "Développer la présence dans le réseau", desc: "Diagnostic rayon/zone, identification opportunités, choix techniques" }
+                { id: 'ccf_distrib_1', name: "Valoriser l'offre sur le lieu de vente", desc: "Rigueur dans le suivi de l'application des accords de référencement, utilisation pertinente des techniques d'implantation et de valorisation des produits" },
+                { id: 'ccf_distrib_2', name: "Développer la présence dans le réseau de distributeurs", desc: "Repérage des opportunités de référencement, qualité du diagnostic rayon, réseau et zone de prospection, pertinence des propositions et des actions pour développer la présence de la marque/produit" }
             ]
         },
         {
             id: 'E6_PARTENARIAT',
             title: "Développer et piloter un réseau de partenaires",
             skills: [
-                { id: 'ccf_part_1', name: "Participer au développement du réseau", desc: "Analyse environnement, SWOT, sélection partenaires" },
-                { id: 'ccf_part_2', name: "Mobiliser un réseau et évaluer performances", desc: "Actions animation, outils évaluation, efficience" }
+                { id: 'ccf_part_1', name: "Participer au développement d'un réseau de partenaires", desc: "Pertinence de la sélection de partenaires" },
+                { id: 'ccf_part_2', name: "Mobiliser un réseau de partenaires et évaluer les performances", desc: "Efficience et rentabilité des actions de dynamisation du réseau" }
             ]
         },
         {
             id: 'E6_VD',
             title: "Créer et animer un réseau de vente directe",
             skills: [
-                { id: 'ccf_vd_1', name: "Prospecter, organiser et vendre en réunion", desc: "Fichier prospects, OAV, conduite de réunion" },
-                { id: 'ccf_vd_2', name: "Recruter, former et dynamiser", desc: "Process recrutement, cadre légal/éthique, stimulation réseau" }
+                { id: 'ccf_vd_1', name: "Prospecter, organiser des rencontres et vendre en réunion", desc: "Développement du fichier des conseillers, professionnalisme et efficacité commerciale lors des ventes en réunion" },
+                { id: 'ccf_vd_2', name: "Recruter et former des vendeurs à domicile", desc: "Pertinence et efficacité des actions de recrutement et de formation" },
+                { id: 'ccf_vd_3', name: "Impulser une dynamique de réseau", desc: "Cohérence de l'animation réseau avec les orientations commerciales, respect de la réglementation et de l'éthique" }
             ]
         }
     ]

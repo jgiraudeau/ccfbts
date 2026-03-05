@@ -86,16 +86,17 @@ class SubmissionReview(BaseModel):
 class SubmissionResponse(BaseModel):
     id: int
     student_id: int
-    deadline_id: int
-    file_url: Optional[str]
-    file_name: Optional[str]
+    deadline_id: Optional[int] = None
+    file_url: Optional[str] = None
+    file_name: Optional[str] = None
     submitted_at: datetime
     status: str
-    grade: Optional[float]
-    feedback: Optional[str]
-    reviewed_at: Optional[datetime]
-    reviewed_by: Optional[int]
-    
+    grade: Optional[float] = None
+    feedback: Optional[str] = None
+    reviewed_at: Optional[datetime] = None
+    reviewed_by: Optional[int] = None
+    submission_type: Optional[str] = None
+
     # Relations
     student_name: Optional[str] = None
     deadline_title: Optional[str] = None

@@ -4,7 +4,7 @@ from sqlalchemy import and_
 from typing import List, Optional
 from datetime import datetime
 from ..database import get_db
-from ..models import User
+from ..models import User, StudentSubmission
 from ..models_tracking import Deadline, Submission
 from ..schemas_tracking import SubmissionCreate, SubmissionReview, SubmissionResponse
 from ..auth import get_current_user
@@ -147,18 +147,60 @@ def list_submissions(
         query = query.filter(Submission.status == status_filter)
     
     submissions = query.order_by(Submission.submitted_at.desc()).all()
-    
+
     # Enrichir avec les noms
     result = []
     for submission in submissions:
         student = db.query(User).filter(User.id == submission.student_id).first()
         deadline = db.query(Deadline).filter(Deadline.id == submission.deadline_id).first()
-        
+
         submission_response = SubmissionResponse.from_orm(submission)
         submission_response.student_name = student.name if student else None
         submission_response.deadline_title = deadline.title if deadline else None
         result.append(submission_response)
-    
+
+    # Inclure aussi les soumissions legacy (table student_submissions)
+    legacy_query = db.query(StudentSubmission)
+    if current_user.role == "student":
+        legacy_query = legacy_query.filter(StudentSubmission.student_id == current_user.id)
+    elif current_user.role == "teacher":
+        student_ids_res = db.query(User.id).filter(User.teacher_id == current_user.id).all()
+        student_ids = [s[0] for s in student_ids_res]
+        if student_ids:
+            legacy_query = legacy_query.filter(StudentSubmission.student_id.in_(student_ids))
+        else:
+            legacy_query = legacy_query.filter(StudentSubmission.id == -1)
+
+    if student_id and current_user.role in ["teacher", "admin"]:
+        legacy_query = legacy_query.filter(StudentSubmission.student_id == student_id)
+
+    legacy_submissions = legacy_query.all()
+
+    # Convertir les soumissions legacy au même format
+    tracking_ids = {s.id for s in submissions}
+    for ls in legacy_submissions:
+        student = db.query(User).filter(User.id == ls.student_id).first()
+        legacy_response = SubmissionResponse(
+            id=ls.id + 100000,  # Offset pour éviter les conflits d'ID
+            student_id=ls.student_id,
+            deadline_id=None,
+            file_url=ls.file_url,
+            file_name=ls.title,
+            submitted_at=datetime.combine(ls.date, datetime.min.time()) if ls.date else datetime.now(),
+            status='pending',
+            grade=None,
+            feedback=None,
+            reviewed_at=None,
+            reviewed_by=None,
+            submission_type=ls.submission_type,
+            student_name=student.name if student else None,
+            deadline_title=ls.title
+        )
+        result.append(legacy_response)
+
+    # Trier par date décroissante
+    result.sort(key=lambda x: x.submitted_at, reverse=True)
+
     return result
 
 
