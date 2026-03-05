@@ -148,7 +148,7 @@ export default function FinalCCFForm({ students, onSave, onCancel, initialData }
                         </select>
                     </div>
 
-                    <div className="space-y-10 print:space-y-4">
+                    <div className="space-y-10 print:hidden">
                         {/* EN-TÊTE DU TABLEAU A L'IMPRESSION */}
                         <div className="hidden print:grid grid-cols-12 gap-2 border-b-2 border-black pb-2 font-bold text-center text-xs">
                             <div className="col-span-8 text-left">CRITÈRES D&apos;ÉVALUATION et COMPÉTENCES</div>
@@ -185,26 +185,49 @@ export default function FinalCCFForm({ students, onSave, onCancel, initialData }
                                                     ))}
                                                 </div>
                                             </div>
-
-                                            {/* AFFICHAGE IMPRESSION */}
-                                            <div className="hidden print:grid grid-cols-12 gap-0 border-x border-b border-black text-xs items-stretch h-full">
-                                                <div className="col-span-8 p-2">
-                                                    <div className="font-bold">{skill.name}</div>
-                                                    <div className="italic text-[10px] text-gray-700">({skill.desc})</div>
-                                                </div>
-                                                {RATINGS.map((r, idx) => (
-                                                    <div key={`print-${skill.id}-${r.id}`} className="col-span-1 border-l border-black flex items-center justify-center align-middle font-bold text-lg">
-                                                        {ratings[skill.id] === r.id ? 'X' : ''}
-                                                    </div>
-                                                ))}
-                                            </div>
-
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         ))}
                     </div>
+
+                    {/* GRILLE IMPRESSION (TABLE HTML PURE POUR WORD) */}
+                    <table className="hidden print:table w-full border-collapse border border-black text-xs mb-6 break-inside-avoid">
+                        <thead>
+                            <tr className="border-b-2 border-black bg-gray-100">
+                                <th className="border-r border-black p-2 text-left">CRITÈRES D'ÉVALUATION et COMPÉTENCES</th>
+                                <th className="border-r border-black p-2 w-[40px] text-center">TI</th>
+                                <th className="border-r border-black p-2 w-[40px] text-center">I</th>
+                                <th className="border-r border-black p-2 w-[40px] text-center">S</th>
+                                <th className="p-2 w-[40px] text-center">TS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {CCF_GRILLE.sections.map(section => (
+                                <React.Fragment key={section.id}>
+                                    <tr>
+                                        <td colSpan={5} className="border border-black p-2 font-bold bg-gray-200 uppercase text-center">
+                                            {section.title}
+                                        </td>
+                                    </tr>
+                                    {section.skills.map(skill => (
+                                        <tr key={`print-${skill.id}`} className="border-b border-black break-inside-avoid">
+                                            <td className="border-r border-black p-2">
+                                                <div className="font-bold">{skill.name}</div>
+                                                <div className="italic text-[10px] text-gray-700">({skill.desc})</div>
+                                            </td>
+                                            {RATINGS.map(r => (
+                                                <td key={`print-${skill.id}-${r.id}`} className="border-r border-black p-2 text-center font-bold text-lg align-middle">
+                                                    {ratings[skill.id] === r.id ? 'X' : ''}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </React.Fragment>
+                            ))}
+                        </tbody>
+                    </table>
 
                     <div className="mt-8 pt-6 border-t border-gray-200 print:hidden">
                         <label className="block text-sm font-bold text-gray-700 mb-2">Appréciation Générale du Jury</label>

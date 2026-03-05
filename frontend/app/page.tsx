@@ -502,7 +502,7 @@ export default function Home() {
     // --- Rendu Professeur ---
     return (
         <div className="min-h-screen bg-slate-50 pb-20 font-sans text-gray-800">
-            <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200 px-6 py-4 mb-8">
+            <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200 px-6 py-4 mb-8 print:hidden">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
                     <div className="flex items-center gap-3 cursor-pointer group" onClick={() => { setView('dashboard'); setEditingItem(null); }}>
                         <div className={`p-2 rounded-lg shadow-lg transition-transform ${selectedBlock === 'E4' ? 'bg-purple-600 shadow-purple-200' : 'bg-indigo-600 shadow-indigo-200'} group-hover:scale-105`}>
@@ -547,9 +547,9 @@ export default function Home() {
 
             {/* Add Sidebar for evaluation mode */}
             {appMode === 'evaluation' && (
-                <div className="flex">
+                <div className="flex print:block">
                     {/* Sidebar - Same as in TrackingSystem */}
-                    <aside className="w-64 bg-white border-r border-gray-200 fixed left-0 top-[73px] bottom-0 overflow-y-auto z-40">
+                    <aside className="w-64 bg-white border-r border-gray-200 fixed left-0 top-[73px] bottom-0 overflow-y-auto z-40 print:hidden">
                         <div className="p-4">
                             <nav className="space-y-2">
                                 <button
@@ -605,7 +605,7 @@ export default function Home() {
                         </div>
                     </aside>
 
-                    <main className="max-w-7xl mx-auto px-6 ml-64">
+                    <main className="max-w-7xl mx-auto px-6 ml-64 print:ml-0 print:px-0 print:max-w-none">
                         {view === 'student_portal' && (
                             <StudentPortal
                                 students={students}
