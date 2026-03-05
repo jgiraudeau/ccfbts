@@ -96,8 +96,11 @@ def download_file(file_id: int, db: Session = Depends(get_db)):
     if not uploaded:
         raise HTTPException(status_code=404, detail="Fichier non trouvé")
 
+    # PostgreSQL renvoie memoryview pour LargeBinary, convertir en bytes
+    file_data = bytes(uploaded.data) if uploaded.data else b""
+
     return FastAPIResponse(
-        content=uploaded.data,
+        content=file_data,
         media_type=uploaded.content_type,
         headers={
             "Content-Disposition": f'attachment; filename="{uploaded.original_name}"'
