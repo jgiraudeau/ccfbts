@@ -101,11 +101,16 @@ def download_file(file_id: int, db: Session = Depends(get_db)):
         # PostgreSQL renvoie memoryview pour LargeBinary, convertir en bytes
         file_data = bytes(uploaded.data) if uploaded.data else b""
 
+        # Encoder le nom de fichier pour les headers HTTP (RFC 5987)
+        from urllib.parse import quote
+        safe_name = uploaded.original_name.encode('ascii', 'ignore').decode('ascii') or "download"
+        utf8_name = quote(uploaded.original_name)
+
         return FastAPIResponse(
             content=file_data,
             media_type=uploaded.content_type,
             headers={
-                "Content-Disposition": f'attachment; filename="{uploaded.original_name}"'
+                "Content-Disposition": f"attachment; filename=\"{safe_name}\"; filename*=UTF-8''{utf8_name}"
             }
         )
     except HTTPException:
