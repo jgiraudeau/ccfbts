@@ -62,6 +62,7 @@ export default function Home() {
     // Auth State
     const [user, setUser] = useState<any>(null); // { name, role, class_code? }
     const [isInitialized, setIsInitialized] = useState(false);
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     // App Mode: 'evaluation' (old E4/E6 system) or 'tracking' (new tracking system)
     const [appMode, setAppMode] = useState<'evaluation' | 'tracking'>('tracking');
@@ -173,6 +174,8 @@ export default function Home() {
                 const savedReflex = localStorage.getItem('ndrc_reflexive');
                 if (savedReflex) setReflexiveData(JSON.parse(savedReflex));
 
+                setIsDataLoaded(true);
+
                 // Fetch Submissions
                 refreshSubmissions();
 
@@ -185,6 +188,7 @@ export default function Home() {
 
     // --- Sync Logic (Background) ---
     useEffect(() => {
+        if (!isDataLoaded) return;
         localStorage.setItem('ndrc_evaluations', JSON.stringify(evaluations));
         if (evaluations.length > 0) {
             fetch(`${API_URL}/sync/evaluations`, {
@@ -193,15 +197,17 @@ export default function Home() {
                 body: JSON.stringify(evaluations)
             }).catch(e => console.warn("Sync failed", e));
         }
-    }, [evaluations]);
+    }, [evaluations, isDataLoaded]);
 
     useEffect(() => {
+        if (!isDataLoaded) return;
         localStorage.setItem('ndrc_final_evaluations', JSON.stringify(finalEvaluations));
-    }, [finalEvaluations]);
+    }, [finalEvaluations, isDataLoaded]);
 
     useEffect(() => {
+        if (!isDataLoaded) return;
         localStorage.setItem('ndrc_reflexive', JSON.stringify(reflexiveData));
-    }, [reflexiveData]);
+    }, [reflexiveData, isDataLoaded]);
 
     // --- Actions ---
 
