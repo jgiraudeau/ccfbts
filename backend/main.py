@@ -92,20 +92,50 @@ from app.models_tracking import UploadedFile
 @app.get("/api/files/{file_id}")
 def download_file(file_id: int, db: Session = Depends(get_db)):
     """Télécharger un fichier stocké en base de données"""
-    uploaded = db.query(UploadedFile).filter(UploadedFile.id == file_id).first()
-    if not uploaded:
-        raise HTTPException(status_code=404, detail="Fichier non trouvé")
+    import traceback
+    try:
+        uploaded = db.query(UploadedFile).filter(UploadedFile.id == file_id).first()
+        if not uploaded:
+            raise HTTPException(status_code=404, detail="Fichier non trouvé")
 
-    # PostgreSQL renvoie memoryview pour LargeBinary, convertir en bytes
-    file_data = bytes(uploaded.data) if uploaded.data else b""
+        # PostgreSQL renvoie memoryview pour LargeBinary, convertir en bytes
+        file_data = bytes(uploaded.data) if uploaded.data else b""
 
-    return FastAPIResponse(
-        content=file_data,
-        media_type=uploaded.content_type,
-        headers={
-            "Content-Disposition": f'attachment; filename="{uploaded.original_name}"'
+        return FastAPIResponse(
+            content=file_data,
+            media_type=uploaded.content_type,
+            headers={
+                "Content-Disposition": f'attachment; filename="{uploaded.original_name}"'
+            }
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"❌ Download error: {e}")
+        print(traceback.format_exc())
+        return FastAPIResponse(
+            content=f"Error: {str(e)}\n{traceback.format_exc()}",
+            media_type="text/plain",
+            status_code=500
+        )
+
+@app.get("/api/files/{file_id}/debug")
+def debug_file(file_id: int, db: Session = Depends(get_db)):
+    """Debug: voir les métadonnées d'un fichier sans télécharger"""
+    try:
+        uploaded = db.query(UploadedFile).filter(UploadedFile.id == file_id).first()
+        if not uploaded:
+            return {"error": "not found"}
+        return {
+            "id": uploaded.id,
+            "original_name": uploaded.original_name,
+            "content_type": uploaded.content_type,
+            "data_type": str(type(uploaded.data)),
+            "data_len": len(uploaded.data) if uploaded.data else 0,
+            "uploaded_by": uploaded.uploaded_by,
         }
-    )
+    except Exception as e:
+        return {"error": str(e)}
 
 # --- Startup Event ---
 @app.on_event("startup")
