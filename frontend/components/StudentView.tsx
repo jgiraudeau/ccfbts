@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import {
     ArrowLeft, GraduationCap, Activity, Crosshair, History, Pencil, Trash2,
-    Monitor, Users, Handshake, FileText, Briefcase
+    Monitor, FileText, Printer
 } from "lucide-react";
 import { calculateGrade, Domain } from '../app/types';
 import { Line, Radar } from 'react-chartjs-2';
@@ -45,39 +45,6 @@ export default function StudentView({ student, evaluations, finalEvaluation, cla
         return filtered;
     }, [selectedBlock]);
 
-    const handleExport = async (format: 'pdf' | 'docx') => {
-        try {
-            const response = await fetch(`${API_URL}/api/export/${format}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    student_id: student.id,
-                    exam_type: selectedBlock,
-                    evaluations: evaluations
-                })
-            });
-
-            if (response.ok) {
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `Bilan_${student.name.replace(' ', '_')}.${format === 'docx' ? 'docx' : 'pdf'}`;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-            } else {
-                alert("Erreur lors de l'export.");
-            }
-        } catch (error) {
-            console.error(error);
-            alert("Erreur de connexion.");
-        }
-    };
-
-    const handleExportPDF = () => handleExport('pdf');
-    const handleExportWord = () => handleExport('docx');
-
     const allHistory = useMemo(() => {
 
         const continuous = evaluations.map(e => ({
@@ -92,9 +59,21 @@ export default function StudentView({ student, evaluations, finalEvaluation, cla
 
     const studentAverage = useMemo(() => {
         let total = 0, count = 0;
-        evaluations.forEach(ev => { const g = calculateGrade(ev.ratings); if (g) { total += parseFloat(g); count++; } });
+
+        // Notes des évaluations continues
+        evaluations.forEach(ev => {
+            const g = calculateGrade(ev.ratings);
+            if (g) { total += parseFloat(g); count++; }
+        });
+
+        // Notes de l'évaluation finale
+        if (finalEvaluation) {
+            const fg = calculateGrade(finalEvaluation.ratings);
+            if (fg) { total += parseFloat(fg); count++; }
+        }
+
         return count > 0 ? (total / count).toFixed(1) : null;
-    }, [evaluations]);
+    }, [evaluations, finalEvaluation]);
 
     const studentDomainAverages = useMemo(() => {
         const avgs: any = {};
@@ -173,18 +152,22 @@ export default function StudentView({ student, evaluations, finalEvaluation, cla
                             <GraduationCap size={16} /> BTS NDRC 2ème année
                         </p>
                         <div className="flex gap-2 mt-3">
-                            <button
-                                onClick={handleExportPDF}
-                                className="text-xs bg-red-50 text-red-600 px-3 py-1.5 rounded-lg border border-red-100 font-bold hover:bg-red-100 flex items-center gap-1 transition-colors"
-                            >
-                                <FileText size={14} /> PDF
-                            </button>
-                            <button
-                                onClick={handleExportWord}
-                                className="text-xs bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg border border-blue-100 font-bold hover:bg-blue-100 flex items-center gap-1 transition-colors"
-                            >
-                                <FileText size={14} /> Word
-                            </button>
+                            {finalEvaluation ? (
+                                <button
+                                    onClick={() => onEdit(finalEvaluation, 'final')}
+                                    className="text-xs bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg border border-indigo-100 font-bold hover:bg-indigo-100 flex items-center gap-1 transition-colors"
+                                >
+                                    <Printer size={14} /> Imprimer Grille Officielle (A4)
+                                </button>
+                            ) : (
+                                <button
+                                    disabled
+                                    className="text-xs bg-gray-50 text-gray-400 px-3 py-1.5 rounded-lg border border-gray-100 font-bold flex items-center gap-1 cursor-not-allowed"
+                                    title="Le CCF doit d'abord être évalué pour être imprimé."
+                                >
+                                    <Printer size={14} /> Grille en attente d'évaluation
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -264,9 +247,9 @@ export default function StudentView({ student, evaluations, finalEvaluation, cla
                                                     <button
                                                         onClick={() => onEdit(item, item.type)}
                                                         className="p-1.5 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
-                                                        title="Modifier"
+                                                        title={item.type === 'final' ? "Modifier / Imprimer la Grille Officielle" : "Modifier / Imprimer"}
                                                     >
-                                                        <Pencil size={16} />
+                                                        {item.type === 'final' ? <Printer size={16} /> : <Pencil size={16} />}
                                                     </button>
                                                     <button
                                                         onClick={() => {
@@ -355,8 +338,8 @@ function StudentSubmissionsList({ studentId }: { studentId: number }) {
                                     <h4 className="font-bold text-gray-900 mb-1 line-clamp-1">{sub.deadline_title || sub.title || 'Document sans titre'}</h4>
                                     <div className="flex flex-wrap items-center gap-2">
                                         <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded tracking-wide ${sub.submission_type === 'E4_SITUATION' ? 'bg-purple-100 text-purple-700' :
-                                                sub.submission_type === 'E6_CR' ? 'bg-indigo-100 text-indigo-700' :
-                                                    'bg-gray-100 text-gray-700'
+                                            sub.submission_type === 'E6_CR' ? 'bg-indigo-100 text-indigo-700' :
+                                                'bg-gray-100 text-gray-700'
                                             }`}>
                                             {sub.submission_type === 'E4_SITUATION' ? 'E4' :
                                                 sub.submission_type === 'E6_CR' ? 'E6' : 'Autre'}
