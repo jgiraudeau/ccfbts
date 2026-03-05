@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, Date, DateTime, Boolean, DECIMAL, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Text, Date, DateTime, Boolean, DECIMAL, ForeignKey, UniqueConstraint, LargeBinary
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from .database import Base
@@ -54,3 +54,15 @@ class Submission(Base):
 
     def __repr__(self):
         return f"<Submission(id={self.id}, student_id={self.student_id}, deadline_id={self.deadline_id}, status='{self.status}')>"
+
+
+class UploadedFile(Base):
+    """Fichiers uploadés stockés en base de données"""
+    __tablename__ = "uploaded_files"
+
+    id = Column(Integer, primary_key=True, index=True)
+    original_name = Column(String(300), nullable=False)
+    content_type = Column(String(100), nullable=False)
+    data = Column(LargeBinary, nullable=False)
+    uploaded_by = Column(Integer, ForeignKey("users.id"), nullable=True)
+    uploaded_at = Column(DateTime(timezone=True), server_default=func.now())

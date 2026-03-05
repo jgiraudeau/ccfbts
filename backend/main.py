@@ -9,7 +9,8 @@ from pydantic import BaseModel
 from typing import List, Dict, Optional, Any
 from datetime import date, datetime
 
-# Init DB models
+# Init DB models (importer tous les modèles avant create_all)
+from app import models_tracking  # noqa - nécessaire pour que les tables tracking soient créées
 Base.metadata.create_all(bind=engine)
 
 from app.routers import generate, export, submissions, auth, scenario_export
@@ -81,6 +82,25 @@ app.add_middleware(
 
 from fastapi.staticfiles import StaticFiles
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+
+# --- Endpoint de téléchargement de fichiers depuis la BDD ---
+from fastapi.responses import Response as FastAPIResponse
+from app.models_tracking import UploadedFile
+
+@app.get("/api/files/{file_id}")
+def download_file(file_id: int, db: Session = Depends(get_db)):
+    """Télécharger un fichier stocké en base de données"""
+    uploaded = db.query(UploadedFile).filter(UploadedFile.id == file_id).first()
+    if not uploaded:
+        raise HTTPException(status_code=404, detail="Fichier non trouvé")
+
+    return FastAPIResponse(
+        content=uploaded.data,
+        media_type=uploaded.content_type,
+        headers={
+            "Content-Disposition": f'attachment; filename="{uploaded.original_name}"'
+        }
+    )
 
 # --- Startup Event ---
 @app.on_event("startup")

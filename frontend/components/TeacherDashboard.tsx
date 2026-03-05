@@ -384,7 +384,8 @@ export default function TeacherDashboard() {
                                         {submission.file_url && (
                                             <a
                                                 href={`${API_URL}${submission.file_url}`}
-                                                download
+                                                target="_blank"
+                                                rel="noreferrer"
                                                 className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
                                             >
                                                 <Download size={18} />

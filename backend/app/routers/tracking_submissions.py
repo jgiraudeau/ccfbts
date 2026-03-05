@@ -1,20 +1,20 @@
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
+from fastapi.responses import Response
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 from typing import List, Optional
 from datetime import datetime
 from ..database import get_db
 from ..models import User, StudentSubmission
-from ..models_tracking import Deadline, Submission
+from ..models_tracking import Deadline, Submission, UploadedFile
 from ..schemas_tracking import SubmissionCreate, SubmissionReview, SubmissionResponse
 from ..auth import get_current_user
 import os
-import shutil
 from pathlib import Path
 
 router = APIRouter(prefix="/api/tracking/submissions", tags=["tracking_submissions"])
 
-# Configuration pour l'upload de fichiers
+# Dossier fallback local (dev uniquement)
 UPLOAD_DIR = Path("uploads/submissions")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -74,25 +74,28 @@ def create_submission(
 @router.post("/upload", status_code=status.HTTP_201_CREATED)
 async def upload_file(
     file: UploadFile = File(...),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Upload un fichier et retourner l'URL"""
+    """Upload un fichier en base de données et retourner l'URL"""
     if current_user.role != "student":
         raise HTTPException(status_code=403, detail="Seuls les élèves peuvent uploader des fichiers")
-    
-    # Générer un nom de fichier unique
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_extension = os.path.splitext(file.filename)[1]
-    unique_filename = f"{current_user.id}_{timestamp}{file_extension}"
-    file_path = UPLOAD_DIR / unique_filename
-    
-    # Sauvegarder le fichier
-    with file_path.open("wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    
-    # Retourner l'URL relative
-    file_url = f"/uploads/submissions/{unique_filename}"
-    
+
+    file_data = await file.read()
+    content_type = file.content_type or "application/octet-stream"
+
+    uploaded = UploadedFile(
+        original_name=file.filename,
+        content_type=content_type,
+        data=file_data,
+        uploaded_by=current_user.id
+    )
+    db.add(uploaded)
+    db.commit()
+    db.refresh(uploaded)
+
+    file_url = f"/api/files/{uploaded.id}"
+
     return {
         "file_url": file_url,
         "file_name": file.filename,
