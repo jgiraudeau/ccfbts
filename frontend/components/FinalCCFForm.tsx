@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ArrowLeft, Award, Save, Printer } from "lucide-react";
 import { calculateGrade, RATINGS } from '../app/types';
+import { exportHTMLToWord } from '../app/lib/exportUtils';
 
 // TODO: Centraliser cette structure
 const CCF_GRILLE = {
@@ -58,7 +59,7 @@ export default function FinalCCFForm({ students, onSave, onCancel, initialData }
     }, [initialData]);
 
     return (
-        <div className="max-w-4xl mx-auto animate-slide-up print:max-w-none print:w-full print:bg-white print:text-black">
+        <div id="ccf-grid-print" className="max-w-4xl mx-auto animate-slide-up print:max-w-none print:w-full print:bg-white print:text-black">
             <div className="flex justify-between items-center mb-6 print:hidden">
                 <button onClick={onCancel} className="flex items-center gap-2 text-gray-500 hover:text-black transition-colors font-medium">
                     <ArrowLeft size={20} /> Retour
@@ -66,10 +67,21 @@ export default function FinalCCFForm({ students, onSave, onCancel, initialData }
                 <div className="flex gap-3">
                     <button
                         onClick={() => window.print()}
-                        className="px-4 py-2 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-xl font-bold flex items-center gap-2 transition-colors"
+                        className="px-4 py-2 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-xl font-bold flex items-center gap-2 transition-colors print:hidden"
+                        disabled={!selectedStudent}
+                        title="Imprimer ou enregistrer en PDF via le navigateur"
+                    >
+                        <Printer size={18} /> Imprimer / PDF
+                    </button>
+                    <button
+                        onClick={() => {
+                            const name = selectedStudentData?.name?.replace(/ /g, '_') || 'etudiant';
+                            exportHTMLToWord('ccf-grid-print', `CCF_E6_${name}`);
+                        }}
+                        className="px-4 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-xl font-bold flex items-center gap-2 transition-colors print:hidden"
                         disabled={!selectedStudent}
                     >
-                        <Printer size={18} /> Imprimer la grille (A4)
+                        Word (.doc)
                     </button>
                     <button onClick={() => {
                         if (!selectedStudent) return alert('Sélectionnez un candidat');
