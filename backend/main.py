@@ -144,9 +144,6 @@ def on_startup():
                 except Exception:
                     pass
 
-    except Exception as e:
-        print(f"❌ Migration failed: {e}")
-
             # Migration RGPD: consent_given_at column
             try:
                 conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS consent_given_at TIMESTAMP"))
