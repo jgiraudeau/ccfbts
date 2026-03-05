@@ -32,3 +32,27 @@ body {
 .animate-slide-up {
     animation: fadeIn 0.5s ease-out forwards;
 }
+
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .print-only {
+        display: block !important;
+    }
+
+    .print-break-inside-avoid {
+        break-inside: avoid;
+    }
+
+    @page {
+        margin: 1.5cm;
+        size: A4 portrait;
+    }
+}
