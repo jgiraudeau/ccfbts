@@ -173,11 +173,14 @@ def add_students_to_class(
     added_count = 0
     for student_id in data.student_ids:
         # Vérifier que l'élève existe et appartient au prof
-        student = db.query(User).filter(
+        student_query = db.query(User).filter(
             User.id == student_id,
             User.role == "student",
-            # User.teacher_id == current_user.id
-        ).first()
+        )
+        # Un prof ne peut ajouter que SES élèves
+        if current_user.role == "teacher":
+            student_query = student_query.filter(User.teacher_id == current_user.id)
+        student = student_query.first()
         
         if not student:
             continue
@@ -265,10 +268,10 @@ def sync_classes_from_students(
     if current_user.role not in ["teacher", "admin"]:
         raise HTTPException(status_code=403, detail="Non autorisé")
 
-    # 1. Trouver tous les noms de classe uniques parmi les élèves du prof (ou orphelins)
+    # 1. Trouver tous les noms de classe uniques parmi les élèves du prof UNIQUEMENT
     student_classes = db.query(User.class_name).filter(
         User.role == "student",
-        (User.teacher_id == current_user.id) | (User.teacher_id == None),
+        User.teacher_id == current_user.id,
         User.class_name != None,
         User.class_name != ""
     ).distinct().all()
@@ -297,18 +300,14 @@ def sync_classes_from_students(
             db.refresh(cls)
             classes_created += 1
 
-        # 3. Lier les élèves qui ont ce class_name mais ne sont pas encore dans ClassStudent
+        # 3. Lier les élèves qui ont ce class_name — UNIQUEMENT ceux du prof
         students_with_name = db.query(User).filter(
             User.role == "student",
-            (User.teacher_id == current_user.id) | (User.teacher_id == None),
+            User.teacher_id == current_user.id,
             User.class_name == name
         ).all()
 
         for student in students_with_name:
-            # Assigner le prof si non assigné
-            if student.teacher_id is None:
-                student.teacher_id = current_user.id
-                db.add(student)
             # Vérifier si déjà lié
             link = db.query(ClassStudent).filter(
                 ClassStudent.class_id == cls.id,

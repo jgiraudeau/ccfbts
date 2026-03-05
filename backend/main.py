@@ -192,6 +192,26 @@ def on_startup():
     except Exception as e:
         print(f"❌ Password migration failed: {e}")
 
+    # Migration: Détacher les élèves assignés à l'admin (l'admin ne possède pas d'élèves)
+    try:
+        db = next(get_db())
+        admin_user = db.query(User).filter(User.role == "admin").first()
+        if admin_user:
+            orphaned = db.query(User).filter(
+                User.role == "student",
+                User.teacher_id == admin_user.id
+            ).count()
+            if orphaned > 0:
+                db.query(User).filter(
+                    User.role == "student",
+                    User.teacher_id == admin_user.id
+                ).update({User.teacher_id: None}, synchronize_session=False)
+                db.commit()
+                print(f"🔄 Migration: {orphaned} élève(s) détaché(s) de l'admin")
+        db.close()
+    except Exception as e:
+        print(f"❌ Admin student migration failed: {e}")
+
     # Standard init
     try:
         db = next(get_db())
@@ -206,8 +226,21 @@ def read_root():
 # --- Routes Étudiants ---
 
 @app.get("/students", response_model=List[StudentRead])
-def get_students(db: Session = Depends(get_db)):
-    return db.query(User).filter(User.role == "student").all()
+def get_students(
+    db: Session = Depends(get_db),
+    current_user: Optional[models.User] = Depends(get_current_user_optional)
+):
+    # Chaque prof ne voit que SES élèves
+    if current_user and current_user.role == "teacher":
+        return db.query(User).filter(
+            User.role == "student",
+            User.teacher_id == current_user.id
+        ).all()
+    elif current_user and current_user.role == "admin":
+        # L'admin ne possède pas d'élèves — renvoyer liste vide
+        return []
+    else:
+        return []
 
 @app.post("/students", response_model=StudentRead)
 def create_student(
@@ -221,13 +254,16 @@ def create_student(
     # Vérifier l'existence
     existing = db.query(User).filter(User.email == email_gen).first()
     
-    # Déterminer le prof (current_user si prof, sinon premier trouvé)
+    # Déterminer le prof — JAMAIS l'admin, uniquement un vrai prof
     teacher_id = None
-    if current_user and current_user.role in ["teacher", "admin"]:
+    if current_user and current_user.role == "teacher":
         teacher_id = current_user.id
+    elif current_user and current_user.role == "admin":
+        # L'admin ne possède pas d'élèves — ne pas assigner
+        teacher_id = None
     else:
-        default_teacher = db.query(User).filter(User.role == "teacher").first()
-        teacher_id = default_teacher.id if default_teacher else 1
+        # Pas de fallback dangereux — l'élève reste orphelin jusqu'à un prof le réclame
+        teacher_id = None
 
     if existing:
         # MISE À JOUR : Si l'élève existe, on met à jour sa classe quand même

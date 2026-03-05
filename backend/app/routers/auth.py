@@ -210,9 +210,10 @@ def purge_class_students(
     if not teacher:
         raise HTTPException(status_code=404, detail="Code classe introuvable")
 
+    # Ne supprimer QUE les élèves du prof trouvé — pas les orphelins
     students = db.query(User).filter(
         User.role == "student",
-        (User.teacher_id == teacher.id) | (User.teacher_id == None)
+        User.teacher_id == teacher.id
     ).all()
     student_ids = [s.id for s in students]
 
@@ -232,7 +233,7 @@ def purge_class_students(
         # 3. Finally delete the Users
         db.query(User).filter(
             User.role == "student",
-            (User.teacher_id == teacher.id) | (User.teacher_id == None)
+            User.teacher_id == teacher.id
         ).delete(synchronize_session=False)
 
         db.commit()
