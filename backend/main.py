@@ -92,55 +92,26 @@ from app.models_tracking import UploadedFile
 @app.get("/api/files/{file_id}")
 def download_file(file_id: int, db: Session = Depends(get_db)):
     """Télécharger un fichier stocké en base de données"""
-    import traceback
-    try:
-        uploaded = db.query(UploadedFile).filter(UploadedFile.id == file_id).first()
-        if not uploaded:
-            raise HTTPException(status_code=404, detail="Fichier non trouvé")
+    from urllib.parse import quote
 
-        # PostgreSQL renvoie memoryview pour LargeBinary, convertir en bytes
-        file_data = bytes(uploaded.data) if uploaded.data else b""
+    uploaded = db.query(UploadedFile).filter(UploadedFile.id == file_id).first()
+    if not uploaded:
+        raise HTTPException(status_code=404, detail="Fichier non trouvé")
 
-        # Encoder le nom de fichier pour les headers HTTP (RFC 5987)
-        from urllib.parse import quote
-        safe_name = uploaded.original_name.encode('ascii', 'ignore').decode('ascii') or "download"
-        utf8_name = quote(uploaded.original_name)
+    # PostgreSQL renvoie memoryview pour LargeBinary, convertir en bytes
+    file_data = bytes(uploaded.data) if uploaded.data else b""
 
-        return FastAPIResponse(
-            content=file_data,
-            media_type=uploaded.content_type,
-            headers={
-                "Content-Disposition": f"attachment; filename=\"{safe_name}\"; filename*=UTF-8''{utf8_name}"
-            }
-        )
-    except HTTPException:
-        raise
-    except Exception as e:
-        print(f"❌ Download error: {e}")
-        print(traceback.format_exc())
-        return FastAPIResponse(
-            content=f"Error: {str(e)}\n{traceback.format_exc()}",
-            media_type="text/plain",
-            status_code=500
-        )
+    # Encoder le nom de fichier pour les headers HTTP (RFC 5987)
+    safe_name = uploaded.original_name.encode('ascii', 'ignore').decode('ascii') or "download"
+    utf8_name = quote(uploaded.original_name)
 
-@app.get("/api/files/{file_id}/debug")
-def debug_file(file_id: int, db: Session = Depends(get_db)):
-    """Debug: voir les métadonnées d'un fichier sans télécharger"""
-    try:
-        uploaded = db.query(UploadedFile).filter(UploadedFile.id == file_id).first()
-        if not uploaded:
-            return {"error": "not found"}
-        return {
-            "id": uploaded.id,
-            "original_name": uploaded.original_name,
-            "content_type": uploaded.content_type,
-            "data_type": str(type(uploaded.data)),
-            "data_len": len(uploaded.data) if uploaded.data else 0,
-            "uploaded_by": uploaded.uploaded_by,
+    return FastAPIResponse(
+        content=file_data,
+        media_type=uploaded.content_type,
+        headers={
+            "Content-Disposition": f"attachment; filename=\"{safe_name}\"; filename*=UTF-8''{utf8_name}"
         }
-    except Exception as e:
-        return {"error": str(e)}
+    )
 
 # --- Startup Event ---
 @app.on_event("startup")
@@ -175,6 +146,54 @@ def on_startup():
 
     except Exception as e:
         print(f"❌ Migration failed: {e}")
+
+            # Migration RGPD: consent_given_at column
+            try:
+                conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS consent_given_at TIMESTAMP"))
+                print("✅ Migration: Column consent_given_at added or already exists")
+            except Exception:
+                try:
+                    conn.execute(text("ALTER TABLE users ADD COLUMN consent_given_at TIMESTAMP"))
+                except Exception:
+                    pass
+
+    except Exception as e:
+        print(f"❌ Migration failed: {e}")
+
+    # RGPD: Migration auto des mots de passe en clair vers bcrypt
+    # EXCLUT les comptes de test (prof "teusteuria" et ses élèves)
+    try:
+        from app.auth import get_password_hash
+        db = next(get_db())
+        students_to_migrate = db.query(User).filter(
+            User.role == "student",
+            User.student_password != None,
+            User.student_password != ""
+        ).all()
+
+        migrated = 0
+        for student in students_to_migrate:
+            # Exclure les comptes de test : chercher si le prof est "teusteuria"
+            if student.teacher_id:
+                teacher = db.query(User).filter(User.id == student.teacher_id).first()
+                if teacher and "teusteuria" in (teacher.name or "").lower():
+                    print(f"⏭️  Skip test account: {student.username}")
+                    continue
+            # Aussi exclure si le nom de l'élève contient "test"
+            if student.name and "test" in student.name.lower():
+                print(f"⏭️  Skip test account: {student.username}")
+                continue
+
+            student.hashed_password = get_password_hash(student.student_password)
+            student.student_password = None
+            migrated += 1
+
+        if migrated > 0:
+            db.commit()
+            print(f"🔒 RGPD: {migrated} mot(s) de passe élève(s) migré(s) vers bcrypt")
+        db.close()
+    except Exception as e:
+        print(f"❌ Password migration failed: {e}")
 
     # Standard init
     try:
@@ -226,13 +245,15 @@ def create_student(
         db.refresh(existing)
         return existing
         
+    from app.auth import get_password_hash as _hash_pw
     new_user = User(
         name=student.name,
         email=email_gen,
         role="student",
         class_name=student.class_name,
         teacher_id=teacher_id,
-        student_password="0000"
+        hashed_password=_hash_pw("0000"),
+        student_password=None
     )
     db.add(new_user)
     db.commit()

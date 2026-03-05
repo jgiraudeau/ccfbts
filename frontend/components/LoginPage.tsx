@@ -22,6 +22,7 @@ export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageP
     // Student Form
     const [sUsername, setSUsername] = useState('');
     const [sPassword, setSPassword] = useState('');
+    const [sConsent, setSConsent] = useState(false);
 
     const handleAdminSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -330,7 +331,27 @@ export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageP
                                         </div>
                                     </div>
 
-                                    <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:shadow-indigo-200/50 hover:-translate-y-0.5 mt-4">
+                                    <label className="flex items-start gap-3 mt-4 cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={sConsent}
+                                            onChange={e => setSConsent(e.target.checked)}
+                                            className="mt-1 w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                        />
+                                        <span className="text-xs text-gray-500 leading-relaxed">
+                                            J&apos;ai lu et j&apos;accepte la{" "}
+                                            <a href="/privacy" target="_blank" className="text-indigo-600 hover:underline font-medium">
+                                                politique de confidentialité
+                                            </a>{" "}
+                                            et le traitement de mes données personnelles.
+                                        </span>
+                                    </label>
+
+                                    <button
+                                        type="submit"
+                                        disabled={!sConsent}
+                                        className={`w-full font-bold py-4 rounded-2xl transition-all mt-4 ${sConsent ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 hover:shadow-xl hover:shadow-indigo-200/50 hover:-translate-y-0.5' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+                                    >
                                         Me connecter
                                     </button>
                                 </form>
@@ -339,7 +360,10 @@ export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageP
                     </div>
 
                     <div className="text-center mt-8 text-sm text-gray-400 font-medium">
-                        © {new Date().getFullYear()} CCF BTS NDRC • Assistant CCF NDRC
+                        © {new Date().getFullYear()} CCF BTS NDRC •{" "}
+                        <a href="/privacy" className="hover:text-indigo-600 hover:underline transition-colors">
+                            Politique de confidentialité
+                        </a>
                     </div>
                 </div>
             </div>

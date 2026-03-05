@@ -160,9 +160,10 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
         if (newPass.length !== 4) { alert("Le code doit faire 4 caractères !"); return; }
 
         try {
+            const token = localStorage.getItem('token');
             const res = await fetch(`${API_URL}/api/auth/student/password`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({
                     student_id: currentUser.id,
                     old_password: oldPass,
@@ -172,6 +173,29 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
 
             if (res.ok) alert("Code modifié avec succès !");
             else alert("Erreur : Ancien code incorrect.");
+        } catch (e) { alert("Erreur connexion"); }
+    };
+
+    const handleDeleteAccount = async () => {
+        if (!confirm("Voulez-vous vraiment supprimer votre compte et TOUTES vos données ? Cette action est irréversible.")) return;
+        const confirmPass = prompt("Pour confirmer, entrez votre code secret :");
+        if (!confirmPass) return;
+
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${API_URL}/api/auth/my-account`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.ok) {
+                localStorage.removeItem('token');
+                alert("Votre compte et toutes vos données ont été supprimés.");
+                onBack();
+            } else {
+                const err = await res.json();
+                alert(err.detail || "Erreur lors de la suppression");
+            }
         } catch (e) { alert("Erreur connexion"); }
     };
 
@@ -398,6 +422,22 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
                             className="text-purple-600 font-bold border border-purple-100 bg-purple-50 px-4 py-2 rounded-lg hover:bg-purple-100 transition-colors text-sm"
                         >
                             Modifier mon code
+                        </button>
+                    </div>
+                </section>
+
+                {/* RGPD : Suppression de compte */}
+                <section className="bg-red-50 border border-red-100 rounded-2xl p-5">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="font-medium text-red-900">Supprimer mon compte</p>
+                            <p className="text-sm text-red-600">Supprime votre compte et toutes vos données de manière irréversible (RGPD art. 17).</p>
+                        </div>
+                        <button
+                            onClick={handleDeleteAccount}
+                            className="text-red-600 font-bold border border-red-200 bg-white px-4 py-2 rounded-lg hover:bg-red-100 transition-colors text-sm"
+                        >
+                            Supprimer
                         </button>
                     </div>
                 </section>

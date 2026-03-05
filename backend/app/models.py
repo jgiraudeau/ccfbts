@@ -39,6 +39,9 @@ class User(Base):
     student_password = Column(String, default="0000") # For students
     teacher_id = Column(Integer, ForeignKey("users.id"), nullable=True) # Link student to teacher
 
+    # RGPD
+    consent_given_at = Column(DateTime(timezone=True), nullable=True)
+
     # Stage tracking fields (for students)
     stage_start_date = Column(Date, nullable=True)
     stage_end_date = Column(Date, nullable=True)

@@ -80,12 +80,14 @@ def create_student(
     if existing:
         raise HTTPException(status_code=400, detail="Cet email est déjà utilisé")
 
+    # Hasher le mot de passe (RGPD : ne plus stocker en clair)
+    raw_password = student_data.student_password or "0000"
     new_student = User(
         name=student_data.name,
         username=username,
         email=email,
-        hashed_password=get_password_hash("0000"),
-        student_password=student_data.student_password,
+        hashed_password=get_password_hash(raw_password),
+        student_password=None,  # Ne plus stocker en clair
         role="student",
         teacher_id=teacher_id,
         is_active=True
