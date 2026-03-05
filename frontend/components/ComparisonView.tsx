@@ -121,7 +121,7 @@ export default function ComparisonView({ student, evaluations, finalEvaluation, 
                                     {/* Comparateur Visuel */}
                                     <div className="flex-1 w-full grid grid-cols-3 gap-4 text-center">
                                         <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                                            <div className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Moy. Continu</div>
+                                            <div className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Moy. Prépa.</div>
                                             <div className="text-2xl font-bold text-gray-700">{contScore || '--'}</div>
                                         </div>
                                         <div className="flex flex-col items-center justify-center">

@@ -233,7 +233,7 @@ export default function StudentView({ student, evaluations, finalEvaluation, cla
                                             <td className="px-6 py-4 text-gray-600">{new Date(item.date).toLocaleDateString()}</td>
                                             <td className="px-6 py-4">
                                                 <span className={`px-2 py-1 rounded text-xs font-bold ${item.type === 'final' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-50 text-blue-700'}`}>
-                                                    {item.type === 'final' ? 'CCF Final' : 'Continu'}
+                                                    {item.type === 'final' ? 'CCF Final' : 'Préparatoire'}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 font-medium text-gray-800">{item.title}</td>
