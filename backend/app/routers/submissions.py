@@ -10,9 +10,11 @@ router = APIRouter()
 class SubmissionCreate(BaseModel):
     student_id: int
     title: str
-    content: str
+    content: str = ""
     submission_type: str
     date: str
+    file_url: str | None = None
+    file_name: str | None = None
 
 @router.post("/submissions")
 def create_submission(submission: SubmissionCreate, db: Session = Depends(get_db)):
@@ -27,7 +29,8 @@ def create_submission(submission: SubmissionCreate, db: Session = Depends(get_db
         title=submission.title,
         content=submission.content,
         submission_type=submission.submission_type,
-        date=submission.date
+        date=submission.date,
+        file_url=submission.file_url
     )
     db.add(new_submission)
     db.commit()
@@ -39,7 +42,8 @@ def create_submission(submission: SubmissionCreate, db: Session = Depends(get_db
         "title": new_submission.title,
         "content": new_submission.content,
         "submission_type": new_submission.submission_type,
-        "date": str(new_submission.date)
+        "date": str(new_submission.date),
+        "file_url": new_submission.file_url
     }
 
 @router.get("/submissions/{student_id}")
@@ -55,7 +59,8 @@ def get_student_submissions(student_id: int, db: Session = Depends(get_db)):
         "title": s.title,
         "content": s.content,
         "submission_type": s.submission_type,
-        "date": str(s.date)
+        "date": str(s.date),
+        "file_url": s.file_url
     } for s in submissions]
 
 @router.get("/submissions")
@@ -69,7 +74,8 @@ def get_all_submissions(db: Session = Depends(get_db)):
         "title": s.title,
         "content": s.content,
         "submission_type": s.submission_type,
-        "date": str(s.date)
+        "date": str(s.date),
+        "file_url": s.file_url
     } for s in submissions]
 
 @router.delete("/submissions/{submission_id}")

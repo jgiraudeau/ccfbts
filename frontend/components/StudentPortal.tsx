@@ -47,24 +47,23 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
     // Let's try to use the same pattern as the Dashboard to ensure we see the same things.
     const fetchSubmissions = async (id: number) => {
         try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`${API_URL}/api/tracking/submissions?student_id=${id}`, { // Assuming an optional filter query param exists or we filter client side
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-
-            // Fallback if specific filtering endpoint doesn't exist: fetch all and filter client side
+            // Récupérer via l'endpoint legacy (compatible avec le dépôt libre)
+            const res = await fetch(`${API_URL}/api/submissions/${id}`);
             if (res.ok) {
                 const data = await res.json();
-                // If the API returns all submissions, filter for this student
+                setSubmissions(data);
+                return;
+            }
+
+            // Fallback : endpoint tracking (soumissions liées aux deadlines)
+            const token = localStorage.getItem('token');
+            const trackingRes = await fetch(`${API_URL}/api/tracking/submissions?student_id=${id}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (trackingRes.ok) {
+                const data = await trackingRes.json();
                 if (Array.isArray(data)) {
                     setSubmissions(data.filter((s: any) => s.student_id === id));
-                }
-            } else {
-                // Fallback to old endpoint if tracking fails (compatibility)
-                const oldRes = await fetch(`${API_URL}/api/submissions/${id}`);
-                if (oldRes.ok) {
-                    const data = await oldRes.json();
-                    setSubmissions(data);
                 }
             }
         } catch (e) {
@@ -86,30 +85,42 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
 
         setIsSubmitting(true);
         try {
-            const formData = new FormData();
-            formData.append('student_id', selectedStudentId.toString());
-            formData.append('title', newSubmission.title);
-            formData.append('submission_type', newSubmission.type); // Enforce type
-            formData.append('file', newSubmission.file); // The file object
-            if (newSubmission.message) {
-                formData.append('feedback', newSubmission.message); // Using 'feedback' or 'comment' - let's try to map to what backend might expect. Usually 'description' or just implied. 
-                // Wait, TeacherDashboard uses 'feedback' for TEACHER feedback.
-                // Let's assume the backend might accept a 'message' or 'description' field, or we just rely on the file and title.
-                // Actually, the previous code sent 'content'. Let's keep sending 'content' as the notes.
-                formData.append('content', newSubmission.message);
-            }
-            // Add date just in case
-            formData.append('submitted_at', new Date().toISOString());
-
             const token = localStorage.getItem('token');
-            // Using /api/tracking/submissions for POST to align with Dashboard read
-            const res = await fetch(`${API_URL}/api/tracking/submissions`, {
+
+            // Étape 1 : Upload du fichier
+            const formData = new FormData();
+            formData.append('file', newSubmission.file);
+
+            const uploadRes = await fetch(`${API_URL}/api/tracking/submissions/upload`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` },
+                body: formData
+            });
+
+            if (!uploadRes.ok) {
+                console.error("Upload failed:", await uploadRes.text());
+                alert("Erreur lors de l'upload du fichier.");
+                return;
+            }
+
+            const uploadData = await uploadRes.json();
+
+            // Étape 2 : Créer la soumission avec l'URL du fichier
+            const res = await fetch(`${API_URL}/api/submissions`, {
                 method: 'POST',
                 headers: {
+                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
-                    // Content-Type is set automatically with FormData
                 },
-                body: formData
+                body: JSON.stringify({
+                    student_id: selectedStudentId,
+                    title: newSubmission.title,
+                    content: newSubmission.message || "",
+                    submission_type: newSubmission.type,
+                    date: new Date().toISOString().split('T')[0],
+                    file_url: uploadData.file_url,
+                    file_name: uploadData.file_name
+                })
             });
 
             if (res.ok) {
@@ -118,8 +129,8 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
                 setNewSubmission({ title: '', message: '', type: 'E4_SITUATION', file: null });
                 alert("Document déposé avec succès ! 📂");
             } else {
+                console.error("Submission failed:", await res.text());
                 alert("Erreur lors du dépôt du fichier.");
-                console.error(await res.text());
             }
         } catch (e) {
             console.error("Failed to submit", e);
