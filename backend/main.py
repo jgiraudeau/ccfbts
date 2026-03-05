@@ -192,6 +192,19 @@ def on_startup():
     except Exception as e:
         print(f"❌ Password migration failed: {e}")
 
+    # ONE-TIME: Reset admin password (à supprimer après déploiement)
+    try:
+        from app.auth import get_password_hash
+        db = next(get_db())
+        admin = db.query(User).filter(User.role == "admin").first()
+        if admin:
+            admin.hashed_password = get_password_hash("Scanner2025")
+            db.commit()
+            print(f"🔑 Admin password reset for: {admin.email}")
+        db.close()
+    except Exception as e:
+        print(f"❌ Admin reset failed: {e}")
+
     # Standard init
     try:
         db = next(get_db())
