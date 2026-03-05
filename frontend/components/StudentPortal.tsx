@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
-    User, FileText, Upload, Plus, Trash2, CheckCircle, Clock, ArrowLeft, Sparkles, X
+    User, FileText, Upload, Plus, Trash2, CheckCircle, Clock, ArrowLeft, Sparkles, X,
+    BarChart2, TrendingUp
 } from 'lucide-react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -29,12 +30,29 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
     });
     const [showForm, setShowForm] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [myEvaluations, setMyEvaluations] = useState<any[]>([]);
+
+    const fetchMyEvaluations = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${API_URL}/api/evaluations/my`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setMyEvaluations(data);
+            }
+        } catch (e) {
+            console.error("Failed to fetch evaluations", e);
+        }
+    };
 
     useEffect(() => {
         // Auto select current user
         if (currentUser && currentUser.id) {
             setSelectedStudentId(currentUser.id);
             fetchSubmissions(currentUser.id);
+            fetchMyEvaluations();
         }
     }, [currentUser]);
 
@@ -406,6 +424,75 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
                         )}
                     </div>
                 </section>
+
+                {/* Section Évaluations Préparatoires */}
+                {myEvaluations.length > 0 && (
+                    <section>
+                        <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2 mb-4">
+                            <BarChart2 className="text-emerald-600" />
+                            Mes Évaluations Préparatoires
+                        </h2>
+                        <div className="grid gap-4 md:grid-cols-2">
+                            {myEvaluations.map((ev: any) => {
+                                const DOMAIN_LABELS: Record<string, string> = {
+                                    E6_DISTRIBUTION: "Distributeur",
+                                    E6_PARTENARIAT: "Partenariat",
+                                    E6_VD: "Vente Directe",
+                                    E4_CIBLER_PROSPECTER: "Cibler & Prospecter",
+                                    E4_NEGOCIER: "Négociation",
+                                    E4_EVENEMENT: "Événementiel",
+                                    E4_INFO: "Information"
+                                };
+                                const RATING_VALUES: Record<string, number> = { TI: 5, I: 10, S: 15, TS: 20 };
+                                const RATING_COLORS: Record<string, string> = {
+                                    TI: "bg-red-100 text-red-700",
+                                    I: "bg-orange-100 text-orange-700",
+                                    S: "bg-emerald-100 text-emerald-700",
+                                    TS: "bg-blue-100 text-blue-700"
+                                };
+                                // Calculer la moyenne
+                                const values = Object.values(ev.ratings || {}).map((r: any) => RATING_VALUES[r] || 0);
+                                const avg = values.length > 0 ? (values.reduce((a: number, b: number) => a + b, 0) / values.length) : 0;
+                                const isE4 = ev.domainId?.startsWith('E4');
+
+                                return (
+                                    <div key={ev.id} className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:border-emerald-200 transition-colors">
+                                        <div className="flex justify-between items-start mb-3">
+                                            <div>
+                                                <h4 className="font-bold text-gray-800">
+                                                    {DOMAIN_LABELS[ev.domainId] || ev.domainId || 'Évaluation'}
+                                                </h4>
+                                                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${isE4 ? 'bg-orange-50 text-orange-600' : 'bg-indigo-50 text-indigo-600'}`}>
+                                                    {isE4 ? 'E4' : 'E6'}
+                                                </span>
+                                            </div>
+                                            <div className="text-right">
+                                                <span className={`text-lg font-bold ${avg >= 10 ? 'text-emerald-600' : 'text-red-600'}`}>
+                                                    {avg.toFixed(1)}/20
+                                                </span>
+                                                <p className="text-xs text-gray-400">
+                                                    {ev.date ? new Date(ev.date).toLocaleDateString() : ''}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-wrap gap-1.5 mt-2">
+                                            {Object.entries(ev.ratings || {}).map(([skillId, rating]: [string, any]) => (
+                                                <span key={skillId} className={`text-xs font-bold px-2 py-1 rounded ${RATING_COLORS[rating] || 'bg-gray-100 text-gray-600'}`}>
+                                                    {rating}
+                                                </span>
+                                            ))}
+                                        </div>
+                                        {ev.comment && (
+                                            <p className="text-xs text-gray-500 mt-3 italic border-t border-gray-50 pt-2">
+                                                {ev.comment}
+                                            </p>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </section>
+                )}
 
                 {/* Section Compte */}
                 <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">

@@ -186,22 +186,39 @@ export default function Home() {
         fetchData();
     }, [user]);
 
-    // --- Sync Logic (Background) ---
+    // --- Sync Logic (Background) — Sauvegarde en BDD pour que les élèves voient leurs notes ---
     useEffect(() => {
         if (!isDataLoaded) return;
         localStorage.setItem('ndrc_evaluations', JSON.stringify(evaluations));
         if (evaluations.length > 0) {
-            fetch(`${API_URL}/sync/evaluations`, {
+            const token = localStorage.getItem('token');
+            // Sync préparatoires vers la BDD
+            fetch(`${API_URL}/api/evaluations/sync?eval_type=continuous`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(evaluations)
-            }).catch(e => console.warn("Sync failed", e));
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+                },
+                body: JSON.stringify(evaluations.map(e => ({ ...e, id: String(e.id) })))
+            }).catch(e => console.warn("Eval sync failed", e));
         }
     }, [evaluations, isDataLoaded]);
 
     useEffect(() => {
         if (!isDataLoaded) return;
         localStorage.setItem('ndrc_final_evaluations', JSON.stringify(finalEvaluations));
+        if (finalEvaluations.length > 0) {
+            const token = localStorage.getItem('token');
+            // Sync CCF finals vers la BDD (pour archivage, pas visible par élèves)
+            fetch(`${API_URL}/api/evaluations/sync?eval_type=final`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+                },
+                body: JSON.stringify(finalEvaluations.map(e => ({ ...e, id: String(e.id) })))
+            }).catch(e => console.warn("Final eval sync failed", e));
+        }
     }, [finalEvaluations, isDataLoaded]);
 
     useEffect(() => {

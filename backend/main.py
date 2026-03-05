@@ -14,7 +14,7 @@ from app import models_tracking  # noqa - nécessaire pour que les tables tracki
 Base.metadata.create_all(bind=engine)
 
 from app.routers import generate, export, submissions, auth, scenario_export
-from app.routers import classes, deadlines, tracking_submissions, admin, students
+from app.routers import classes, deadlines, tracking_submissions, admin, students, evaluations
 from app.auth import get_current_user_optional
 
 app = FastAPI(title="ProfVirtuel V2 - E6 & CCF")
@@ -31,6 +31,7 @@ app.include_router(deadlines.router, tags=["Deadlines"])
 app.include_router(tracking_submissions.router, tags=["Tracking Submissions"])
 app.include_router(admin.router, tags=["Admin"])
 app.include_router(students.router, tags=["Students"])
+app.include_router(evaluations.router, tags=["Evaluations"])
 
 # --- Schemas Pydantic (Entrée/Sortie API) ---
 

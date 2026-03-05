@@ -56,6 +56,31 @@ class Submission(Base):
         return f"<Submission(id={self.id}, student_id={self.student_id}, deadline_id={self.deadline_id}, status='{self.status}')>"
 
 
+class StoredEvaluation(Base):
+    """Évaluations préparatoires/CCF stockées (format JSON du frontend)"""
+    __tablename__ = "stored_evaluations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    frontend_id = Column(String(50), nullable=False)  # ID généré par le frontend (Date.now())
+    student_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    teacher_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    domain_id = Column(String(50))  # 'E6_DISTRIBUTION', 'E4_NEGOCIER', etc.
+    eval_type = Column(String(20), nullable=False)  # 'continuous' ou 'final'
+    eval_date = Column(String(50))  # Date ISO de l'évaluation
+    ratings = Column(Text)  # JSON des notes {"1": "S", "2": "TS", ...}
+    comment = Column(Text, nullable=True)
+    exam_type = Column(String(10), nullable=True)  # 'E4' ou 'E6' (pour les finals)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    student = relationship("User", foreign_keys=[student_id])
+    teacher = relationship("User", foreign_keys=[teacher_id])
+
+    __table_args__ = (
+        UniqueConstraint('frontend_id', 'teacher_id', name='uix_frontend_id_teacher'),
+    )
+
+
 class UploadedFile(Base):
     """Fichiers uploadés stockés en base de données"""
     __tablename__ = "uploaded_files"
