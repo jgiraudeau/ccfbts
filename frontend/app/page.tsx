@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import {
     FileCheck, LayoutDashboard, Settings, Award, Plus, Sparkles,
-    TrendingUp, Users, UserX, BarChart2, FileText, GraduationCap, BookOpen
+    TrendingUp, Users, UserX, BarChart2, FileText, GraduationCap, BookOpen, LogOut
 } from "lucide-react";
 import {
     Chart as ChartJS,
@@ -519,45 +519,58 @@ export default function Home() {
     // --- Rendu Professeur ---
     return (
         <div className="min-h-screen bg-slate-50 pb-20 font-sans text-gray-800">
-            <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200 px-6 py-4 mb-8 print:hidden">
+            <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200 px-6 py-3 mb-8 print:hidden">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
+                    {/* Logo & titre */}
                     <div className="flex items-center gap-3 cursor-pointer group" onClick={() => { setView('dashboard'); setEditingItem(null); }}>
-                        <div className={`p-2 rounded-lg shadow-lg transition-transform ${selectedBlock === 'E4' ? 'bg-purple-600 shadow-purple-200' : 'bg-indigo-600 shadow-indigo-200'} group-hover:scale-105`}>
-                            <LayoutDashboard size={24} className="text-white" />
+                        <div className={`p-2.5 rounded-xl shadow-lg transition-transform ${selectedBlock === 'E4' ? 'bg-gradient-to-br from-purple-600 to-purple-700 shadow-purple-200' : 'bg-gradient-to-br from-indigo-600 to-indigo-700 shadow-indigo-200'} group-hover:scale-105`}>
+                            <LayoutDashboard size={22} className="text-white" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-bold tracking-tight text-gray-900 leading-none">
+                            <h1 className="text-lg font-bold tracking-tight text-gray-900 leading-none">
                                 Assistant CCF
                             </h1>
-                            <span className={`text-xs font-semibold uppercase tracking-widest ${selectedBlock === 'E4' ? 'text-purple-600' : 'text-indigo-600'}`}>
-                                BTS NDRC - Épreuve {selectedBlock}
+                            <span className={`text-[11px] font-semibold uppercase tracking-widest ${selectedBlock === 'E4' ? 'text-purple-600' : 'text-indigo-600'}`}>
+                                BTS NDRC
                             </span>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <div className="text-right mr-2 hidden md:block">
-                            <p className="text-sm font-bold text-gray-900">{user.name}</p>
-                        </div>
-                        <button onClick={() => setUser(null)} className="text-xs text-red-500 hover:text-red-700 font-bold border border-red-100 px-3 py-1 bg-red-50 rounded-lg">
-                            Déconnexion
+                    {/* Sélecteur épreuve (centre) */}
+                    <div className="hidden sm:flex bg-gray-100 p-1 rounded-xl font-medium text-sm">
+                        <button
+                            onClick={() => setSelectedBlock('E4')}
+                            className={`px-5 py-2 rounded-lg transition-all ${selectedBlock === 'E4' ? 'bg-white text-purple-700 shadow-sm font-bold' : 'text-gray-500 hover:text-gray-900'}`}
+                        >
+                            Épreuve E4
                         </button>
+                        <button
+                            onClick={() => setSelectedBlock('E6')}
+                            className={`px-5 py-2 rounded-lg transition-all ${selectedBlock === 'E6' ? 'bg-white text-indigo-700 shadow-sm font-bold' : 'text-gray-500 hover:text-gray-900'}`}
+                        >
+                            Épreuve E6
+                        </button>
+                    </div>
 
-
-                        <div className="bg-gray-100 p-1 rounded-xl flex font-medium text-sm">
-                            <button
-                                onClick={() => setSelectedBlock('E4')}
-                                className={`px-4 py-2 rounded-lg transition-all ${selectedBlock === 'E4' ? 'bg-white text-purple-700 shadow-sm font-bold' : 'text-gray-500 hover:text-gray-900'}`}
-                            >
-                                Épreuve E4
-                            </button>
-                            <button
-                                onClick={() => setSelectedBlock('E6')}
-                                className={`px-4 py-2 rounded-lg transition-all ${selectedBlock === 'E6' ? 'bg-white text-indigo-700 shadow-sm font-bold' : 'text-gray-500 hover:text-gray-900'}`}
-                            >
-                                Épreuve E6
-                            </button>
+                    {/* Utilisateur & déconnexion */}
+                    <div className="flex items-center gap-3">
+                        <div className="hidden md:flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xs shadow-md">
+                                {user.name?.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase() || 'P'}
+                            </div>
+                            <div className="text-right">
+                                <p className="text-sm font-semibold text-gray-900 leading-tight">{user.name}</p>
+                                <p className="text-[11px] text-gray-500">Professeur</p>
+                            </div>
                         </div>
+                        <div className="hidden md:block w-px h-8 bg-gray-200"></div>
+                        <button
+                            onClick={() => setUser(null)}
+                            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all border border-gray-200 hover:border-red-200"
+                        >
+                            <LogOut size={16} />
+                            <span className="hidden sm:inline">Déconnexion</span>
+                        </button>
                     </div>
                 </div>
             </nav>
@@ -857,6 +870,11 @@ export default function Home() {
                             onBack={() => setView('dashboard')}
                             onEdit={handleEdit}
                             onDelete={handleDeleteEval}
+                            onNewEvaluation={(type) => {
+                                setEditingItem({ studentId: activeStudentId });
+                                if (type === 'continuous') setView('evaluate');
+                                else setView('final_evaluate');
+                            }}
                         />}
 
                         {view === 'compare' && activeStudentId && <ComparisonView

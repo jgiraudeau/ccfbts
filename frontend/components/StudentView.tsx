@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import {
     ArrowLeft, GraduationCap, Activity, Crosshair, History, Pencil, Trash2,
-    Monitor, FileText, Printer
+    Monitor, FileText, Printer, Plus, ClipboardCheck
 } from "lucide-react";
 import { calculateGrade, Domain } from '../app/types';
 import { Line, Radar } from 'react-chartjs-2';
@@ -18,6 +18,7 @@ interface StudentViewProps {
     onBack: () => void;
     onEdit: (item: any, type: string) => void;
     onDelete: (id: number, type: string) => void;
+    onNewEvaluation?: (type: 'continuous' | 'final') => void;
     submissions?: any[];
 }
 
@@ -31,7 +32,7 @@ const getAvatarColor = (id: number) => {
     return colors[id % colors.length];
 };
 
-export default function StudentView({ student, evaluations, finalEvaluation, classAverages, selectedBlock = 'E6', onBack, onEdit, onDelete, submissions = [] }: StudentViewProps) {
+export default function StudentView({ student, evaluations, finalEvaluation, classAverages, selectedBlock = 'E6', onBack, onEdit, onDelete, onNewEvaluation, submissions = [] }: StudentViewProps) {
 
     // Filter domains based on selected block
     const DOMAINS = useMemo(() => {
@@ -151,13 +152,29 @@ export default function StudentView({ student, evaluations, finalEvaluation, cla
                         <p className="text-gray-500 flex items-center gap-2 mt-1">
                             <GraduationCap size={16} /> BTS NDRC 2ème année
                         </p>
-                        <div className="flex gap-2 mt-3">
+                        <div className="flex flex-wrap gap-2 mt-3">
+                            {onNewEvaluation && (
+                                <>
+                                    <button
+                                        onClick={() => onNewEvaluation('continuous')}
+                                        className="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg border border-blue-100 font-bold hover:bg-blue-100 flex items-center gap-1.5 transition-colors"
+                                    >
+                                        <Plus size={14} /> Éval. Préparatoire
+                                    </button>
+                                    <button
+                                        onClick={() => onNewEvaluation('final')}
+                                        className="text-xs bg-amber-50 text-amber-700 px-3 py-1.5 rounded-lg border border-amber-100 font-bold hover:bg-amber-100 flex items-center gap-1.5 transition-colors"
+                                    >
+                                        <ClipboardCheck size={14} /> CCF {selectedBlock}
+                                    </button>
+                                </>
+                            )}
                             {finalEvaluation ? (
                                 <button
                                     onClick={() => onEdit(finalEvaluation, 'final')}
-                                    className="text-xs bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg border border-indigo-100 font-bold hover:bg-indigo-100 flex items-center gap-1 transition-colors"
+                                    className="text-xs bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg border border-indigo-100 font-bold hover:bg-indigo-100 flex items-center gap-1.5 transition-colors"
                                 >
-                                    <Printer size={14} /> Imprimer Grille Officielle (A4)
+                                    <Printer size={14} /> Imprimer Grille Officielle
                                 </button>
                             ) : (
                                 <button
@@ -165,7 +182,7 @@ export default function StudentView({ student, evaluations, finalEvaluation, cla
                                     className="text-xs bg-gray-50 text-gray-400 px-3 py-1.5 rounded-lg border border-gray-100 font-bold flex items-center gap-1 cursor-not-allowed"
                                     title="Le CCF doit d'abord être évalué pour être imprimé."
                                 >
-                                    <Printer size={14} /> Grille en attente d'évaluation
+                                    <Printer size={14} /> Grille en attente
                                 </button>
                             )}
                         </div>

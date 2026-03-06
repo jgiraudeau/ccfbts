@@ -100,7 +100,7 @@ export default function ContinuousEvaluationForm({ students, onSave, onCancel, i
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden print:shadow-none print:border-none print:rounded-none">
                 <div className={`bg-gradient-to-r ${currentDomainData?.gradient || 'from-gray-500 to-gray-400'} p-8 text-white relative transition-colors duration-500 print:hidden`}>
                     <h2 className="text-2xl font-bold flex items-center gap-3">
-                        {initialData ? "Modifier l'évaluation" : "Nouvelle Évaluation Préparatoire au CCF"}
+                        {initialData?.id ? "Modifier l'évaluation" : "Nouvelle Évaluation Préparatoire au CCF"}
                         <span className="bg-white/20 px-2 py-1 rounded text-sm font-black tracking-wide">{selectedExam}</span>
                     </h2>
                     <p className="opacity-90">{currentDomainData?.title || 'Sélectionnez un domaine...'}</p>
@@ -119,14 +119,14 @@ export default function ContinuousEvaluationForm({ students, onSave, onCancel, i
                             <div className="flex bg-gray-100 p-1 rounded-xl">
                                 <button
                                     onClick={() => setSelectedExam('E6')}
-                                    disabled={!!initialData}
+                                    disabled={!!initialData?.id}
                                     className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${selectedExam === 'E6' ? 'bg-white shadow text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
                                 >
                                     E6 (Bloc 3)
                                 </button>
                                 <button
                                     onClick={() => setSelectedExam('E4')}
-                                    disabled={!!initialData}
+                                    disabled={!!initialData?.id}
                                     className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${selectedExam === 'E4' ? 'bg-white shadow text-orange-600' : 'text-gray-500 hover:text-gray-700'}`}
                                 >
                                     E4 (Bloc 2)
@@ -141,7 +141,7 @@ export default function ContinuousEvaluationForm({ students, onSave, onCancel, i
                                 className="w-full p-3 border rounded-xl bg-gray-50 disabled:bg-gray-100 disabled:text-gray-500 font-medium"
                                 value={selectedStudent}
                                 onChange={e => setSelectedStudent(e.target.value)}
-                                disabled={!!initialData}
+                                disabled={!!initialData?.id}
                             >
                                 <option value="">Choisir un étudiant...</option>
                                 {students.sort((a, b) => a.name.localeCompare(b.name)).map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -241,7 +241,7 @@ export default function ContinuousEvaluationForm({ students, onSave, onCancel, i
                                 comment
                             });
                         }} className={`px-6 py-2 text-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all font-bold ${selectedExam === 'E6' ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-orange-600 hover:bg-orange-700'}`}>
-                            {initialData ? "Mettre à jour" : "Enregistrer"}
+                            {initialData?.id ? "Mettre à jour" : "Enregistrer"}
                         </button>
                     </div>
 

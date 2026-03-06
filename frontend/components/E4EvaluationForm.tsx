@@ -148,7 +148,7 @@ export default function E4EvaluationForm({ students, onSave, onCancel, initialDa
                             globalComment
                         });
                     }} className="px-6 py-2 bg-gray-900 text-white rounded-xl shadow-lg hover:bg-black font-bold flex items-center gap-2">
-                        <Save size={18} /> {initialData ? "Mettre à jour" : "Valider"}
+                        <Save size={18} /> {initialData?.id ? "Mettre à jour" : "Valider"}
                     </button>
                 </div>
             </div>
@@ -191,7 +191,7 @@ export default function E4EvaluationForm({ students, onSave, onCancel, initialDa
                                 className="w-full p-3 border border-gray-200 rounded-lg bg-gray-50 font-medium text-gray-900 focus:ring-2 focus:ring-indigo-500 outline-none"
                                 value={selectedStudent}
                                 onChange={e => setSelectedStudent(e.target.value)}
-                                disabled={!!initialData}
+                                disabled={!!initialData?.id}
                             >
                                 <option value="">Choisir...</option>
                                 {students.sort((a, b) => a.name.localeCompare(b.name)).map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
