@@ -526,12 +526,12 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
                                     <div>
                                         <label className="block text-sm font-bold text-gray-700 mb-1">Fichier <span className="text-red-500">*</span></label>
                                         <div className="border-2 border-dashed border-indigo-200 rounded-xl p-6 text-center hover:bg-indigo-50 transition-colors cursor-pointer relative">
-                                            <input type="file" accept=".pdf,.doc,.docx" onChange={handleFileChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                                            <input type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.heic,.odt,.rtf,.txt,.xls,.xlsx,.pptx" onChange={handleFileChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                                             <Upload size={22} className="mx-auto mb-2 text-indigo-400" />
                                             {newSubmission.file
                                                 ? <p className="text-indigo-700 font-semibold text-sm">{newSubmission.file.name}</p>
                                                 : <p className="text-gray-500 text-sm">Cliquez pour sélectionner</p>}
-                                            <p className="text-xs text-gray-400 mt-1">PDF, DOC, DOCX acceptés</p>
+                                            <p className="text-xs text-gray-400 mt-1">PDF, Word, Images, Excel, PowerPoint acceptés</p>
                                         </div>
                                     </div>
                                     <div>
