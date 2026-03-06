@@ -18,7 +18,7 @@ interface StudentViewProps {
     onBack: () => void;
     onEdit: (item: any, type: string) => void;
     onDelete: (id: number, type: string) => void;
-    onNewEvaluation?: (type: 'continuous' | 'final') => void;
+    onNewEvaluation?: (type: 'continuous' | 'final' | 'final_E4' | 'final_E6') => void;
     submissions?: any[];
 }
 
@@ -141,64 +141,70 @@ export default function StudentView({ student, evaluations, finalEvaluation, cla
             </button>
 
             {/* Header */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-2 h-full bg-indigo-500"></div>
-                <div className="flex items-center gap-6 z-10">
-                    <div className={`w-20 h-20 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg ${getAvatarColor(student.id)}`}>
-                        {getInitials(student.name)}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-indigo-500 to-purple-500"></div>
+                {/* Infos élève + stats */}
+                <div className="p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div className="flex items-center gap-6 z-10">
+                        <div className={`w-20 h-20 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg ${getAvatarColor(student.id)}`}>
+                            {getInitials(student.name)}
+                        </div>
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-900">{student.name}</h1>
+                            <p className="text-gray-500 flex items-center gap-2 mt-1">
+                                <GraduationCap size={16} /> BTS NDRC 2ème année
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <h1 className="text-3xl font-bold text-gray-900">{student.name}</h1>
-                        <p className="text-gray-500 flex items-center gap-2 mt-1">
-                            <GraduationCap size={16} /> BTS NDRC 2ème année
-                        </p>
-                        <div className="flex flex-wrap gap-2 mt-3">
-                            {onNewEvaluation && (
-                                <>
-                                    <button
-                                        onClick={() => onNewEvaluation('continuous')}
-                                        className="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg border border-blue-100 font-bold hover:bg-blue-100 flex items-center gap-1.5 transition-colors"
-                                    >
-                                        <Plus size={14} /> Éval. Préparatoire
-                                    </button>
-                                    <button
-                                        onClick={() => onNewEvaluation('final')}
-                                        className="text-xs bg-amber-50 text-amber-700 px-3 py-1.5 rounded-lg border border-amber-100 font-bold hover:bg-amber-100 flex items-center gap-1.5 transition-colors"
-                                    >
-                                        <ClipboardCheck size={14} /> CCF {selectedBlock}
-                                    </button>
-                                </>
-                            )}
-                            {finalEvaluation ? (
-                                <button
-                                    onClick={() => onEdit(finalEvaluation, 'final')}
-                                    className="text-xs bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg border border-indigo-100 font-bold hover:bg-indigo-100 flex items-center gap-1.5 transition-colors"
-                                >
-                                    <Printer size={14} /> Imprimer Grille Officielle
-                                </button>
-                            ) : (
-                                <button
-                                    disabled
-                                    className="text-xs bg-gray-50 text-gray-400 px-3 py-1.5 rounded-lg border border-gray-100 font-bold flex items-center gap-1 cursor-not-allowed"
-                                    title="Le CCF doit d'abord être évalué pour être imprimé."
-                                >
-                                    <Printer size={14} /> Grille en attente
-                                </button>
-                            )}
+                    <div className="flex items-center gap-8 z-10">
+                        <div className="text-center">
+                            <p className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Moyenne</p>
+                            <div className="text-4xl font-bold text-gray-800">{studentAverage || "--"}<span className="text-lg text-gray-400 font-normal">/20</span></div>
+                        </div>
+                        <div className="w-px h-12 bg-gray-200"></div>
+                        <div className="text-center">
+                            <p className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Fiches</p>
+                            <div className="text-4xl font-bold text-indigo-600">{submissions.length}</div>
                         </div>
                     </div>
                 </div>
-                <div className="flex items-center gap-8 z-10">
-                    <div className="text-center">
-                        <p className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Moyenne</p>
-                        <div className="text-4xl font-bold text-gray-800">{studentAverage || "--"}<span className="text-lg text-gray-400 font-normal">/20</span></div>
+                {/* Actions d'évaluation */}
+                {onNewEvaluation && (
+                    <div className="border-t border-gray-100 bg-gray-50/50 px-8 py-4">
+                        <div className="flex flex-wrap items-center gap-3">
+                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mr-1">Évaluer</span>
+                            <button
+                                onClick={() => onNewEvaluation('continuous')}
+                                className="flex items-center gap-2 px-5 py-2.5 bg-white text-blue-700 rounded-xl border-2 border-blue-200 font-bold text-sm hover:bg-blue-50 hover:border-blue-300 hover:shadow-md transition-all"
+                            >
+                                <Plus size={18} /> Éval. Préparatoire
+                            </button>
+                            <button
+                                onClick={() => onNewEvaluation('final_E4')}
+                                className="flex items-center gap-2 px-5 py-2.5 bg-white text-purple-700 rounded-xl border-2 border-purple-200 font-bold text-sm hover:bg-purple-50 hover:border-purple-300 hover:shadow-md transition-all"
+                            >
+                                <ClipboardCheck size={18} /> CCF E4
+                            </button>
+                            <button
+                                onClick={() => onNewEvaluation('final_E6')}
+                                className="flex items-center gap-2 px-5 py-2.5 bg-white text-indigo-700 rounded-xl border-2 border-indigo-200 font-bold text-sm hover:bg-indigo-50 hover:border-indigo-300 hover:shadow-md transition-all"
+                            >
+                                <ClipboardCheck size={18} /> CCF E6
+                            </button>
+                            {finalEvaluation && (
+                                <>
+                                    <div className="w-px h-8 bg-gray-300 mx-1"></div>
+                                    <button
+                                        onClick={() => onEdit(finalEvaluation, 'final')}
+                                        className="flex items-center gap-2 px-5 py-2.5 bg-white text-gray-700 rounded-xl border-2 border-gray-200 font-bold text-sm hover:bg-gray-50 hover:border-gray-300 hover:shadow-md transition-all"
+                                    >
+                                        <Printer size={18} /> Imprimer Grille Officielle
+                                    </button>
+                                </>
+                            )}
+                        </div>
                     </div>
-                    <div className="w-px h-12 bg-gray-200"></div>
-                    <div className="text-center">
-                        <p className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-1">Fiches</p>
-                        <div className="text-4xl font-bold text-indigo-600">{submissions.length}</div>
-                    </div>
-                </div>
+                )}
             </div>
 
             {/* Graphiques */}

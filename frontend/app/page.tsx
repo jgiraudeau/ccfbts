@@ -872,8 +872,17 @@ export default function Home() {
                             onDelete={handleDeleteEval}
                             onNewEvaluation={(type) => {
                                 setEditingItem({ studentId: activeStudentId });
-                                if (type === 'continuous') setView('evaluate');
-                                else setView('final_evaluate');
+                                if (type === 'continuous') {
+                                    setView('evaluate');
+                                } else if (type === 'final_E4') {
+                                    setSelectedBlock('E4');
+                                    setView('final_evaluate');
+                                } else if (type === 'final_E6') {
+                                    setSelectedBlock('E6');
+                                    setView('final_evaluate');
+                                } else {
+                                    setView('final_evaluate');
+                                }
                             }}
                         />}
 
