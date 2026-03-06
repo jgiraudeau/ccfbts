@@ -3,7 +3,7 @@ from fastapi.responses import Response
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 from ..database import get_db
 from ..models import User, StudentSubmission
 from ..models_tracking import Deadline, Submission, UploadedFile
@@ -230,7 +230,7 @@ def _list_submissions_impl(deadline_id, student_id, status_filter, db, current_u
                 deadline_id=None,
                 file_url=ls.file_url,
                 file_name=ls.title,
-                submitted_at=datetime.combine(ls.date, datetime.min.time()) if ls.date else datetime.now(),
+                submitted_at=datetime.combine(ls.date, datetime.min.time(), tzinfo=timezone.utc) if ls.date else datetime.now(timezone.utc),
                 status='pending',
                 grade=None,
                 feedback=None,
@@ -245,8 +245,13 @@ def _list_submissions_impl(deadline_id, student_id, status_filter, db, current_u
         print(f"⚠️ Legacy submissions query failed (table may not exist): {e}")
         db.rollback()
 
-    # Trier par date décroissante
-    result.sort(key=lambda x: x.submitted_at, reverse=True)
+    # Trier par date décroissante (normaliser en UTC pour éviter naive vs aware)
+    def _sort_key(x):
+        dt = x.submitted_at
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt
+    result.sort(key=_sort_key, reverse=True)
 
     return result
 
