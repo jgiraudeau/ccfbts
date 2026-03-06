@@ -2,8 +2,12 @@ import React from 'react';
 import './globals.css';
 
 export const metadata = {
-    title: 'Assistant CCF - Gestion & Suivi BTS NDRC',
+    title: 'ProfVirtuel — Gestion & Suivi BTS NDRC',
     description: 'Assistant pour la gestion des CCF et le suivi de compétences pour le BTS NDRC.',
+    icons: {
+        icon: '/favicon.png',
+        apple: '/favicon.png',
+    },
 };
 
 export default function RootLayout({

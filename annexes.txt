@@ -1,0 +1,1993 @@
+LISTE DES ANNEXES
+
+Annexe N°
+Titre Annexe
+Page(s) N°
+Annexe I
+Calendrier des épreuves
+23
+Annexe II
+Regroupements interacadémiques
+24
+Annexe III
+Modèle de livret scolaire (fichier numérique annexe)
+Fichier Excel
+Annexe III-1
+Mode d’emploi du livret scolaire
+25-28
+Annexe III-2
+Attestation de stage - Modèle unique d’attestation de stage
+(Attestation de stage commune aux unités E4 & E6)
+29
+E2 : Communication en Langue vivante étrangère 1 & Enseignement facultatif en Langue vivante étrangère 2
+Annexe IV-1
+Grille d’évaluation - Communication en langue vivante étrangère 1
+30
+Annexe IV-2 
+Grille d’évaluation - Épreuve facultative – Communication en langue vivante étrangère 2
+31
+E4 : Relation client et négociation-vente
+Annexe III-2
+Attestation de stage - Modèle unique d’attestation de stage
+29
+Annexe V-1
+Fiche descriptive d’activité professionnelle
+32-33
+Annexe V-2
+Fiche sujet Candidat
+34
+Annexe V-3
+Fiche sujet Jury
+35
+Annexe V-4
+Grille d’aide à l’évaluation - CCF
+36
+Annexe V-5
+Fiche d’évaluation - CCF
+37
+Annexe V-6
+Grille d’aide à l’évaluation - Forme ponctuelle
+38
+Annexe V-7
+Fiche d’évaluation - Forme ponctuelle
+39
+Annexe V-8
+Notification de non-conformité du dossier
+40
+E5 : Relation client à distance et digitalisation
+Annexe VI-1
+Caractéristiques des sujets de l’épreuve de l’épreuve E5 A - Relation client à distance et digitalisation - Première partie - Épreuve ponctuelle écrite - Session 2025
+41-42
+Annexe VI-2
+Présentation du contexte, des sujets et des versions CMS 2023 de l’épreuve E5 B - Relation client à distance et digitalisation - Deuxième partie - Épreuve ponctuelle pratique - Session 2025
+43
+Annexe VI-3
+Principales fonctionnalités mobilisables sur WordPress et PrestaShop lors de l’épreuve E5 B- Relation client à distance et digitalisation - Deuxième partie - Épreuve ponctuelle pratique - Session 2025
+44-45
+Annexe VI-4
+Fiche d’évaluation 
+46
+E6 : Relation client et animation de réseaux 
+Annexe III-2
+Attestation de stage - Modèle unique d’attestation de stage
+29
+Annexe VII-1
+Fiche descriptive d’activité professionnelle
+47-48
+Annexe VII-2
+Grille d’aide à l’évaluation - CCF
+49
+Annexe VII-3
+Fiche d’évaluation - CCF
+50
+Annexe VII-4
+Grille d’aide à l’évaluation - Forme ponctuelle
+51
+Annexe VII-5
+Fiche d’évaluation - Forme ponctuelle
+52
+Annexe VII-6
+Notification de non-conformité du dossier
+53
+Annexe VIII-1
+Formulaire de demande de reconnaissance de l’engagement étudiant
+54-55
+Annexe VIII-2
+Fiche d’évaluation – CCF et Forme ponctuelle
+56
+Annexe VIII-3
+Grille d’aide à l’évaluation – CCF et Forme ponctuelle
+57-58
+
+
+
+ANNEXE I
+CALENDRIER DES EPREUVES - Session 2025
+BTS NÉGOCIATION ET DIGITALISATION DE LA RELATION CLIENT
+	•	ÉPREUVES ÉCRITES
+
+Épreuves / unités
+Durée
+Dates
+Métropole
+Antilles
+Guyane 
+La Réunion
+Mayotte
+Polynésie française
+E1 - Culture générale et expression
+3h00
+Jeudi 15 mai 2025
+14h30 - 17h30 (pas de sortie avant la fin de la 2e heure) 
+10h30 - 13h30
+11h30 – 14h30
+16h30 - 19h30 (pas de sortie avant la fin de la 2e heure)
+15h30 - 18h30 (pas de sortie avant la fin de la 2e heure)
+14h00 - 17h00
+(sujet spécifique)
+E3 - Culture économique, juridique et managériale
+4h00
+Vendredi 16 mai 2025
+14h00 - 18h00
+8h00 - 12h00
+9h00 – 13h00
+16h00 - 20h00
+15h00 - 19h00
+08h30 - 12h30
+(sujet spécifique)
+E5-A - Relation client à distance et digitalisation
+(1ère partie – partie écrite)
+3h00
+Lundi 19 mai 2025
+15h00 - 18h00 (aucune sortie avant la fin de l'épreuve)
+9h00 - 12h00 (aucune sortie avant la fin de l'épreuve)
+10h00 – 13h00 (aucune sortie avant la fin de l'épreuve)
+17h00 - 20h00 (aucune sortie avant la fin de l'épreuve)
+16h00 - 19h00 (aucune sortie avant la fin de l'épreuve)
+6h00 – 9h00
+
+
+
+	•	ÉPREUVES ORALES ET PRATIQUES
+
+	•	E5 B – 2ème partie – partie pratique :  Du mercredi 21 au vendredi 23 mai, du lundi 26 au mercredi 28 mai et du lundi 2 au jeudi 5 juin 2025.
+
+	•	Autres épreuves orales (E2, E4, E6, EF1 ET EF2): les dates des épreuves orales sont laissées à l’initiative de Mesdames et Messieurs les recteurs.
+
+RÉUNION D’ENTENTE NATIONALE
+
+La réunion d’entente nationale de l'épreuve E5 A 1ère partie - partie écrite - se réunira à distance :  
+le mardi 20 mai 2025 à partir de 13h30
+
+Merci de communiquer à ce.dec3sujets@ac-clermont.fr avant le 2 mai et après consultation de l’IA-IPR concerné les coordonnées et adresse mél professionnelle du professeur qui représentera votre académie.
+Les liens de connexion et les modalités de déroulement seront communiqués à cet enseignant ainsi qu’aux IA-IPR en charge du BTS NDRC
+
+La date du jury de délibération sera fixée par le recteur de l’académie pilote de chaque groupement ou par le recteur des académies autonomes.
+
+
+
+
+ANNEXE II
+
+
+
+REGROUPEMENTS INTERACADÉMIQUES
+
+BTS NÉGOCIATION ET DIGITALISATION DE LA RELATION CLIENT – SESSION 2025
+
+
+
+ACADÉMIES PILOTES
+ACADÉMIES RATTACHÉES
+CLERMONT-FERRAND
+POLYNÉSIE FRANÇAISE,
+NOUVELLE-CALÉDONIE
+MARTINIQUE
+GUADELOUPE, GUYANE
+
+
+
+ACADÉMIES AUTONOMES :
+
+AIX-MARSEILLE, AMIENS, BESANÇON, BORDEAUX, CORSE, DIJON, GRENOBLE, LA RÉUNION, LILLE, LIMOGES, LYON, MAYOTTE, MONTPELLIER, NANCY-METZ, NANTES, NICE, NORMANDIE, ORLÉANS-TOURS, POITIERS, REIMS, RENNES, SIEC, STRASBOURG, TOULOUSE.
+
+
+
+
+
+ANNEXE III-1	LIVRET SCOLAIRE INFORMATIQUE AUTOMATISE POUR LES BTS
+
+
+Objectif
+Le renseignement des livrets scolaires de BTS est une tâche réglementairement obligatoire pouvant parfois être réalisée de manière irrégulière ou soumise à des aléas (erreurs d’information, mauvais format du livret…).
+
+Ce fichier Excel a été produit et testé lors de la session d’examens 2020 à l’initiative de l’académie de Reims en lien avec plusieurs établissements et inspecteurs pilotes d’examen de BTS, de différentes académies. Il vise à simplifier le recueil des informations par les professeurs enseignant en BTS (notes, moyennes, appréciations…) et automatise le renseignement et la mise en page des livrets scolaires des BTS.
+
+L’utilisation de ce fichier permet un gain de temps, évite les saisies répétitives, limite les erreurs de recopie, centralise les informations sur un seul fichier, assure au président du jury un format identique pour tous les candidats (permet des analyses avant ou après les jurys, etc…). Le fichier est préconfiguré pour être utilisable pour plusieurs BTS.
+
+Composition du fichier
+
+Deux onglets seulement sont à remplir.
+	•	L’onglet 1, permet aux établissements de choisir le BTS concerné, l’année de la session, d’inscrire la liste des candidats au BTS, les coordonnées de l’établissement de formation, les statistiques du conseil de classe. Seules les cases vertes et les données en police rouge sont à modifier.
+	•	L’onglet 2, recopie automatiquement la liste des candidats et permet aux enseignants de noter pour chaque candidat et pour chaque discipline ou épreuve présente sur le livret :
+	•	l’avis final du conseil de classe (TF, P, DFSP) et les observations du dernier conseil de classe ;
+	•	les moyennes des trimestres ou semestres de 1ère et seconde année et les appréciations sur les candidats.
+	•	Le fichier Excel produit ensuite automatiquement (jusqu’à 40 candidats par promotion) :
+	•	la recopie des informations administratives, des notes, appréciations, dans toutes les cases du livret scolaire de chaque candidat ;
+	•	le calcul des moyennes de la classe demandées sur les livrets ;
+	•	le tracé des courbes sur les livrets
+
+
+Figure 1: présentation de l'onglet « 1-Informations administratives, à compléter par l’établissement ou le professeur principal »
+
+
+
+
+Figure 2 : présentation de l'onglet "2- Saisie des notes, à compléter par chaque professeur"
+
+
+
+
+Figure 3 : le recto du livret est renseigné par recopie et calcul automatiques
+
+
+
+
+Tracé de la courbe de profil du candidat pour la délibération
+
+Le verso du livret trace la courbe de profil du candidat, représentant l’écart du candidat par rapport à la moyenne de sa classe, pour chaque discipline. La courbe représentant les moyennes de la classe pour chaque discipline, n’est volontairement pas tracée afin de maintenir l’anonymat pendant la délibération du jury (l’absence de courbe permet de ne pas reconnaitre le centre de formation du candidat)
+
+
+
+Figure 4: : le verso du livret est renseigné par recopie et calcul automatiques
+
+
+
+Certification PIX (nouveauté de la session 2022)
+
+Pour le dernier conseil de classe avant le jury final, l’équipe pédagogique renseigne le livret pour certifier si chaque candidat a obtenu ou non son certificat de compétences numériques PIX.
+Le livret numérique complète automatiquement les verso de chaque candidat C01, C02, etc.
+
+
+
+
+
+Adaptation du fichier pour différents BTS
+
+Le fichier est paramétré pour s’adapter à plusieurs BTS, il suffit de choisir le BTS concerné et le fichier se met à jour avec les intitulés des épreuves BTS choisi.
+
+
+Figure 5: le livret est déjà paramétré pour de nombreux BTS
+
+Exemple de procédure proposée pour utiliser le Livret BTS automatique
+
+	•	déposer le fichier Excel sur un espace partagé aux professeurs afin qu’ils puissent le compléter
+	•	compléter l’onglet 1 avec les informations administratives de l’établissement
+	•	le professeur responsable de la formation, renseigne pour chaque candidat l’avis du dernier conseil de classe et ses observations (colonnes D et E)
+	•	chaque enseignant complète sur l’onglet 2, le groupe des colonnes de la discipline dont il est chargé :
+	•	moyennes du candidat aux 2 semestres ou 3 trimestres de 1ère et seconde année
+	•	appréciation du professeur de la discipline enseignée
+	•	tous les livrets sont instantanément renseignés avec les informations, calculs, courbes
+	•	imprimer sur papier A4 chaque livret pour y déposer la signature et le cachet de l’établissement
+	•	transmettre au président du jury le fichier source au format Excel et les livrets imprimés et signés sur papier
+
+
+
+ANNEXE III-2
+
+Cas des candidats relevant de la formation initiale : joindre autant d'attestations que de lieux et périodes de stage différents
+
+Cachet de l’organisme d’accueil
+
+ATTESTATION DE STAGE
+BTS Négociation et Digitalisation de la Relation Client (NDRC)
+à remettre au stagiaire à l’issue du stage
+
+ORGANISME D’ACCUEIL
+Nom ou dénomination sociale : ………………………………………………………………………………………………………………..
+Secteur d’activité : ………………………………………………………………………………………………………………………………
+Adresse : …………………………………………………………………………………………………………………………………….…...
+Code postal : ………………………… Ville : ……………………………..………………………
+☎ : …………………………………… Mél : ………………………………..…………………….
+Certifie que
+LE OU LA STAGIAIRE
+Nom : ……………………………… Prénom : ……………………………… Sexe : F □ M □     Né(e) le : …… ./ ……. / ……. 
+Adresse : …………………………………………………………………………………………………………………………………………………
+Code postal : ………………………… Ville : ………………………….…………………………
+☎ ………………………………………………. Mél : ……………………………………………
+ETUDIANT(E) en : 
+BTS Négociation et Digitalisation de la Relation Client (NDRC)
+Au sein (nom de l’établissement d’enseignement supérieur ou de l’organisme de formation) :
+…………………………………………………………………………………………………………………………………………………. …………
+ACTIVITÉS de l’ÉTUDIANT :
+……………………………………………………………………………………………………………………………………………………………
+……………………………………………………………………………………………………………………………………………………………
+……………………………………………………………………………………………………………………………………………………………
+……………………………………………………………………………………………………………………………………………………………
+……………………………………………………………………………………………………………………………………………………………
+……………………………………………………………………………………………………………………………………………………………
+……………………………………………………………………………………………………………………………………………………………
+……………………………………………………………………………………………………………………………………………………………
+
+
+a effectué un stage prévu dans le cadre de ses études
+DURÉE DU STAGE
+Dates de début et de fin de stage : Du ………………………………………. au ……………………………………………………
+
+Représentant une durée totale de ……………………………………nombre de semaines / de mois (rayer la mention inutile).
+
+
+La durée totale du stage est appréciée en tenant compte de la présence effective du stagiaire dans l’organisme, sous réserve des droits et congés et autorisations d’absence prévus à l’article L.124-13 du code de l’éducation (art. L. 124-18 du code de l’éducation). Chaque période au moins égale à 7 heures de présence consécutives ou non est considérée comme équivalente à un jour de stage et chaque période au moins égale à 22 jours de présence consécutifs ou non est considérée comme équivalente à un mois.
+
+MONTANT DE LA GRATIFICATION VERSEE AU STAGIAIRE
+Le stagiaire a perçu une gratification de stage pour un montant total de ………………………………….. €
+L’attestation de stage est indispensable pour pouvoir, sous réserve du versement d’une cotisation, faire prendre en compte le stage dans les droits à la retraite. La législation sur les retraites (loi n°2014-40 du 20 janvier 2014) ouvre aux étudiants dont le stage a été gratifié la possibilité de faire valider celui-ci dans la limite de deux trimestres, sous réserve du versement d’une cotisation. La demande est à faire par l’étudiant dans les deux années suivant la fin du stage et sur présentation obligatoire de l’attestation de stage mentionnant la durée totale du stage et le montant total de la gratification perçue. Les informations précises sur la cotisation à verser et sur la procédure à suivre sont à demander auprès de la Sécurité sociale (code de la Sécurité sociale art. L351-17 / code de l’éducation art. D. 124-9).
+
+FAIT À …………………………..  LE ………………………………
+
+
+
+
+
+Nom, fonction et signature du représentant de l’organisme d’accueil
+
+
+
+Pour les candidats se présentant au titre de leur activité professionnelle, cette attestation sera remplacée par des certificats de travail ou contrats de travail.
+
+ANNEXE IV-1
+
+BTS NÉgociation et Digitalisation de la Relation Client
+Session 2025 
+GRILLE D’ÉVALUATION
+E2 – Communication en langue vivante ÉtrangÈre 1
+NOM du candidat :
+
+Prénom du candidat :
+
+N° Candidat :
+
+LANGUE : 	
+Date :
+Commission N° : 
+Document N°:
+Epreuve orale obligatoire : préparation 30 minutes – épreuve 30 minutes Attention, blocs de points non sécables
+Épreuve orale en deux parties : 
+- restitution en français d’un texte en langue étrangère abordant une problématique commerciale (10 minutes maximum) 
+- entretien en langue étrangère à partir d’une situation et d’un questionnement à contenu professionnel (20 minutes maximum)
+ 
+Degré 1
+Degré 2
+Degré 3
+Degré 4
+Points
+Partie 1
+
+Compréhension de l’écrit 
+Repère des informations courantes et élémentaires, sans pouvoir établir de corrélations entre elles. 
+Comprend suffisamment pour permettre une restitution globale mais incomplète du document.
+Comprend des informations relativement complexes et décode la plupart des réseaux de sens du texte.
+Peut identifier la cohérence globale du document, l’implicite et peut distinguer le point de vue de l’exposé des faits. 
+
+
+2 pts
+4 pts
+6 pts
+8 pts
+
+Partie 2
+
+
+
+Interaction
+Est capable d’échanges simples en utilisant des répétitions et des reformulations. 
+Peut participer à un échange simple avec l’aide de son interlocuteur.
+Entretient les échanges avec peu de relance et réagit de façon généralement appropriée. 
+Participe à la conversation, présente et défend ses opinions. Réagit de façon généralement pertinente.
+Prend des initiatives dans l’échange, argumente, cherche à convaincre et réagit avec pertinence.  
+
+
+1 pt
+2 pts
+3 pts
+4 pts
+
+Pertinence et cohérence du discours
+S’exprime avec des énoncés courts et des hésitations. Répète l’information et donne son avis de manière simple.
+
+	•	S’exprime assez facilement malgré quelques hésitations. Les contributions sont globalement pertinentes. 
+Se montre capable de fournir des explications et de donner des détails. Adapte son discours à la situation et articule son discours (relations de causalité, comparaison, etc.). 
+Développe méthodiquement une argumentation claire en mettant en évidence les points significatifs et explique son point de vue.
+
+
+1 pt
+2 pts
+3 pts
+4 pts
+
+Étendue linguistique générale
+Recourt le plus souvent à des formes grammaticales simples et à un répertoire lexical restreint mais la langue est globalement intelligible. La prononciation n’est pas bien maîtrisée, ce   qui impose un effort de compréhension de l’interlocuteur. 
+Peut s’exprimer avec des formes simples et quelques formes complexes. Dispose d’un répertoire lexical suffisant pour s’exprimer sur le sujet. La maîtrise de la prononciation est suffisante pour être globalement compris (mots et énoncés).
+La maîtrise grammaticale est globalement correcte malgré quelques erreurs occasionnelles qui ne nuisent pas à l’intelligibilité. Utilise un répertoire lexical approprié. Prononciation globalement correcte. 
+Utilise une gamme assez étendue de langue pour exprimer finement un point de vue et développer une argumentation en utilisant des phrases complexes et en variant les formulations. Prononciation le plus souvent correcte.
+
+
+1 pt
+2 pts
+3 pts 
+4 pts
+
+Bonus (2 pts)
+Le bonus sera attribué aux candidats faisant preuve d’une aptitude particulière à communiquer et à valoriser leur culture professionnelle et/ou générale. Toute prise de risque pertinente pourra également être bonifiée.
+
+Appréciation
+
+
+             
+TOTAL 
+
+/ 20
+Nom et signature de l’interrogateur :
+
+
+ANNEXE IV-2
+
+BTS NÉgociation et Digitalisation de la Relation Client
+Session 2025
+GRILLE D’ÉVALUATION
+ÉPREUVE FACULTATIVE – COMMUNICATION EN LANGUE VIVANTE ÉTRANGÈRE 2
+NOM du candidat :
+
+Prénom du candidat :
+
+N° Candidat :
+
+LANGUE : 	
+Date :
+Commission N° : 
+Document N°:
+Epreuve orale facultative : préparation 20 minutes – épreuve 20 minutes - Attention, blocs de points non sécables
+Entretien en langue étrangère à partir d’une situation et d’un questionnement à contenu professionnel 
+(20 minutes maximum)
+ 
+Degré 1
+Degré 2
+Degré 3
+Degré 4
+Points
+Interaction
+Soutient difficilement une conversation simple, qui nécessite de nombreuses aides et relances. 
+Est capable d’échanges simples en utilisant des répétitions et des reformulations. 
+Peut participer à un échange simple avec l’aide de son interlocuteur.
+Entretient les échanges avec peu de relance et réagit de façon généralement appropriée. 
+Participe à la conversation, présente et défend ses opinions. Réagit de façon généralement pertinente.
+
+
+1 pt
+3 pts
+5 pts
+7 pts
+
+Pertinence et cohérence du discours
+S’exprime avec des mots isolés et des hésitations fréquentes. Éprouve des difficultés à se faire comprendre. Discours pas toujours intelligible.
+S’exprime avec des énoncés courts et des hésitations. Répète l’information et donne son avis de manière simple.
+
+S’exprime assez facilement malgré quelques hésitations. Les contributions sont globalement pertinentes. 
+Se montre capable de fournir des explications et de donner des détails. Adapte son discours à la situation et articule son discours (relations de causalité, comparaison, etc.). 
+
+
+1 pt
+3 pts
+5 pts
+6 pts
+
+Étendue linguistique générale
+Maîtrise assez limitée des formes grammaticales et de la prononciation, ce qui rend le discours souvent difficile à comprendre. 
+
+Recourt le plus souvent à des formes grammaticales simples et à un répertoire lexical restreint mais la langue est globalement intelligible. La prononciation n’est pas bien maîtrisée, ce qui impose un effort de compréhension de l’interlocuteur. 
+Peut s’exprimer avec des formes simples et quelques formes complexes. Dispose d’un répertoire lexical suffisant pour s’exprimer sur le sujet. La maîtrise de la prononciation est suffisante pour être globalement compris (mots et énoncés).
+La maîtrise grammaticale est globalement correcte malgré quelques erreurs occasionnelles qui ne nuisent pas à l’intelligibilité. Utilise un répertoire lexical approprié. Prononciation globalement correcte. 
+
+
+1 pt
+3 pts
+5 pts 
+7 pts
+
+Bonus (2 pts)
+Le bonus sera attribué aux candidats faisant preuve d’une aptitude particulière à communiquer et à valoriser leur culture professionnelle et/ou générale. Toute prise de risque pertinente pourra être bonifiée.
+
+Appréciation
+
+
+             
+TOTAL 
+
+/ 20
+Nom et signature de l’interrogateur :
+
+ANNEXE V–1
+
+BTS NÉgociation et Digitalisation de la Relation Client
+Session 2025
+FICHE DESCRIPTIVE d’ACTIVITÉ PROFESSIONNELLE
+E4 – Relation Client et NÉgociation Vente
+N° :
+ Négociation Vente et Accompagnement de la Relation Client
+ Organisation et Animation d’un Evènement commercial 
+TITRE :
+Nom :
+Prénom : 
+N° Candidat :
+Cadre de l’activitÉ
+Nom de l’organisation 
+
+
+Adresse/Code postal/Ville
+
+Type de Structure
+
+
+Offre commerciale1
+
+
+Type(s) de client(s)
+
+
+Méthodes de Vente
+
+
+Analyse de l’activitÉ 
+Date(s) : 
+
+Lieu de l’activité :
+Historique/Problématique de l’activité
+
+
+
+
+Acteurs concernés (Statuts/Rôles/Motivations)
+
+
+
+Objectifs opérationnels
+
+DÉroulement de l’activitÉ
+Phases
+Outils mobilisés
+
+
+
+
+
+
+
+
+
+
+
+
+Résultats
+
+
+
+Difficultés rencontrées
+
+
+
+1 Annexe à joindre obligatoirement à la fiche (1 feuille recto verso de 2 pages)
+Ciblage et Prospection 
+Démarche
+
+
+Objectifs fixés 
+
+
+
+Activités réalisées
+Outils mobilisés
+
+
+
+
+
+
+
+
+
+
+
+Résultats obtenus
+
+
+
+Bilan réflexif
+Atouts et points d’appui
+Solutions mises en œuvre
+Propositions d’amélioration
+
+
+
+
+
+
+
+
+
+Exploitation et mutualisation de l’information commerciale
+Informations sur le marché, les clients, le secteur, etc.
+
+
+
+
+
+
+Objectifs fixés 
+
+
+Démarche de veille
+Sources utilisées
+Outils mobilisés
+
+
+
+
+
+
+Contribution à l’expertise commerciale de l’organisation
+
+
+
+
+ANNEXE V–2
+BTS Négociation et Digitalisation de la Relation Client
+Session 2025
+E4 – RELATION CLIENT et NEGOCIATION VENTE
+
+FICHE SUJET - CANDIDAT
+
+NOM du CANDIDAT : …………………………………………………………………………………Prénom du candidat : …………………………………………….………………………… 
+FICHE D’activité N° : ………………………………………………………………….             TITRE : ……………………………………………………………………………………………………………
+N° Candidat :  ………………………………………………………………………                    N° COMMISSION : ……….……
+Date: …………………………………………………….
+ Négociation Vente et Accompagnement de la Relation Client 
+ Organisation et Animation d’un Évènement commercial 
+paramÈtres À prendre en compte par le candidat pour la simulation
+Objet de l’activité
+
+
+
+Date(s) et durée
+
+Lieu 
+
+
+Délimitation de Séquence(s)
+
+
+Historique de la relation
+Relation à l’entreprise
+Objectif  Définir à quel moment de cette relation vous intervenez et le travail que vous devez encore fournir (convaincre, fidéliser, etc.).
+
+
+Objectifs de la communication
+
+Informations à exploiter
+
+
+
+Contrainte(s)
+
+
+Acteur(s) concernés
+(statut/rôle)
+VOUS :
+
+
+JURY :
+
+ANNEXE V–3
+BTS Négociation et Digitalisation de la Relation Client
+Session 2025
+E4 – RELATION CLIENT et NEGOCIATION VENTE
+
+FICHE SUJET – JURY (facultative)
+NOM du CANDIDAT : …………………………………………………………………………………Prénom du candidat : …………………………………………….…………………………… 
+FICHE D’activité N° : …………                                                   TITRE : ………………………………………………………………………
+N° Candidat :  ………………………………………………………………………                    N° COMMISSION : ……..………
+Date: …………………………………………………….
+ Négociation Vente et Accompagnement de la Relation Client 
+ Organisation et Animation d’un Évènement commercial 
+paramÈtres À prendre en compte par le JURY pour la simulation
+Objet de l’activité
+
+
+Identité
+Objectif  Définir et personnaliser le profil
+
+Relation à l’entreprise
+
+Date de la rencontre
+
+Lieu 
+
+Historique de la relation
+ObjectifDéfinir le moment, le lieu, le moyen de contact avec l’entreprise
+
+
+Objectifs de la communication
+
+
+Délimitation de Séquence(s)
+
+
+Motivations
+Objectif Définir le ou les bénéfices de l’offre / de l’événement
+
+Freins
+Objectif Rechercher les raisons de non achat / refus de l’opération
+
+Contrainte(s)
+
+
+Objections
+
+
+
+ANNEXE V–4
+BTS Négociation et Digitalisation de la Relation Client
+E4 – RELATION CLIENT et NEGOCIATION VENTE
+
+		Évaluation en CCF - Coefficient 5
+
+Grille d’aide À L’ÉVALUATION - Session 2025
+
+NOM du CANDIDAT : ……………………………………………………………………………………………….        Prénom du candidat : ……………………………………………………………………………… 
+
+  Cibler et prospecter la clientèle
+CRITÈRES D’ÉVALUATION et COMPÉTENCES
+TI
+I
+S
+TS
+1 - Analyser un portefeuille client  (Pertinence de l’analyse du portefeuille clients, qualification pertinente des prospects)
+
+
+
+
+2 - Identifier des cibles de clientèle
+				(Cohérence entre ciblage et démarche de prospection)	
+
+
+
+
+3 - Mettre en œuvre et évaluer une démarche de prospection  (Efficacité des choix opérés)
+
+
+
+
+4 - Développer des réseaux professionnels
+(Activation pertinente des réseaux professionnels)
+
+
+
+
+
+  Négocier et accompagner la relation-client
+ Organiser et animer un évènement commercial
+CRITÈRES d’ÉVALUATION et COMPÉTENCES
+TI
+I
+S
+TS
+CRITÈRES d’ÉVALUATION et COMPÉTENCES
+TI
+I
+S
+TS
+1 – Négocier et vendre une solution adaptée au client
+(Maîtrise de la relation interpersonnelle, efficacité de la négociation commerciale, pertinence de la solution proposée)
+
+
+
+
+1 – Organiser un évènement commercial
+(Pertinence du choix de l’événement commercial, efficacité de l’organisation au regard des contraintes logistiques, financières, commerciales)
+
+
+
+
+2 – Créer et maintenir une relation client durable
+(Personnalisation de la relation client, qualité du diagnostic et de l’accompagnement client, respect des engagements, évolutivité et enrichissement de la relation client)
+
+
+
+
+2 – Animer un évènement commercial (Qualité et efficacité de l’animation)
+
+
+
+
+
+
+
+
+
+3 – Exploiter un évènement commercial
+(Précision du bilan quantitatif et qualitatif de l’événement commercial, rigueur dans le suivi des contacts et des opportunités d’affaires)
+
+
+
+
+
+
+
+
+
+  Exploiter et mutualiser l’information commerciale
+CRITÈRES d’ÉVALUATION et COMPÉTENCES
+TI
+I
+S
+TS
+1 – Remonter, valoriser et partager l’information commerciale
+(Pertinence et qualité des informations collectées, sélection et hiérarchisation de l’information diffusée)
+
+
+
+
+2 – Collaborer à l’interne en vue de développer l’expertise commerciale
+(Qualité des analyses commerciales et des propositions)
+
+
+
+
+TI : Très Insuffisant / I : Insuffisant / S : Satisfaisant /TS : Très satisfaisant            
+
+NOTE sur 20
+
+
+
+Ce document d’aide à l’évaluation est à usage exclusif de la commission d’interrogation, 
+il ne doit pas être communiqué au candidat.
+
+ANNEXE V–5
+BTS Négociation et Digitalisation de la Relation Client
+E4 – RELATION CLIENT et NEGOCIATION VENTE
+		
+Évaluation en CCF - Coefficient 5
+
+FICHE D’ÉVALUATION - Session 2025
+
+NOM du CANDIDAT : …………………………………………………………	                  Prénom du candidat : …………………………………………………………………….
+Situation A 
+Ciblage et prospection de clientèle – Exploitation et mutualisation de l’information commerciale
+Date : …………………………………………………….
+Appréciation de la commission
+
+
+
+
+
+
+
+
+
+
+Nom et signature des membres de la commission :
+-
+-
+Situation B – Durée 15 minutes
+Simulation 
+Date : ……………………………………………………
+
+ Négociation Vente et Accompagnement de la Relation Client     Organisation et Animation d’un Évènement commercial
+FICHE D’activité N° : …………                            TITRE : ……………………………………………………………………………………………………………………………………………………………………
+Appréciation de la commission
+
+
+
+
+
+
+
+
+
+
+
+Nom et signature des membres de la commission :
+-
+-
+NOTE sur 20 
+
+
+
+Ce document d’évaluation peut être communiqué au candidat, à sa demande, après délibération du jury.
+
+ANNEXE V–6
+BTS Négociation et Digitalisation de la Relation Client
+E4 – RELATION CLIENT et NEGOCIATION VENTE
+
+Évaluation en Forme ponctuelle - Durée 40 minutes - Coefficient 5
+
+Grille d’aide À L’ÉVALUATION - Session  2025
+
+NOM du CANDIDAT : ………………………………………………………………………………….Prénom du candidat : …………………………………………….…………………………………… 
+FICHE D’activité N° : …………                            TITRE :……………………………………………………………………………………………………………………………………………………………………
+N° Candidat :  ………………………………………………………………………              N° COMMISSION : …………
+Date : …………………………………………………….
+  Cibler et prospecter la clientèle
+CRITÈRES D’ÉVALUATION et COMPÉTENCES
+TI
+I
+S
+TS
+1 - Analyser un portefeuille client  (Pertinence de l’analyse du portefeuille clients, qualification pertinente des prospects)
+
+
+
+
+2 - Identifier des cibles de clientèle 
+(Cohérence entre le ciblage et la démarche de prospection)
+
+
+
+
+3 - Mettre en œuvre et évaluer une démarche de prospection  (Efficacité des choix opérés)
+
+
+
+
+4 - Développer des réseaux professionnels 
+(Activation pertinente des réseaux professionnels)
+
+
+
+
+
+ Négocier et accompagner la relation-client
+ Organiser et animer un évènement commercial
+CRITÈRES d’ÉVALUATION et COMPÉTENCES
+TI
+I
+S
+TS
+CRITÈRES d’ÉVALUATION et COMPÉTENCES
+TI
+I
+S
+TS
+1 – Négocier et vendre une solution adaptée au client
+(Maîtrise de la relation interpersonnelle, efficacité de la négociation commerciale, pertinence de la solution proposée)
+
+
+
+
+1 – Organiser un évènement commercial
+(Pertinence du choix de l’événement commercial, efficacité de l’organisation au regard des contraintes logistiques, financières, commerciales)
+
+
+
+
+2 – Créer et maintenir une relation client durable 
+(Personnalisation de la relation client, qualité du diagnostic et de l’accompagnement client, respect des engagements, évolutivité et enrichissement de la relation client)
+
+
+
+
+2 – Animer un évènement commercial (Qualité et efficacité de l’animation)
+
+
+
+
+
+
+
+
+
+3 – Exploiter un évènement commercial
+(Précision du bilan quantitatif et qualitatif de l’événement commercial, rigueur dans le suivi des contacts et des opportunités d’affaires)
+
+
+
+
+
+
+
+
+
+ Exploiter et mutualiser l’information commerciale
+CRITÈRES d’ÉVALUATION et COMPÉTENCES
+TI
+I
+S
+TS
+1 – Remonter, valoriser et partager l’information commerciale
+(Pertinence et qualité des informations collectées, sélection et hiérarchisation de l’information diffusée)
+
+
+
+
+2 – Collaborer à l’interne en vue de développer l’expertise commerciale
+(Qualité des analyses commerciales et des propositions)
+
+
+
+
+TI : Très Insuffisant / I : Insuffisant / S : Satisfaisant /TS : Très satisfaisant
+
+Nom et signature des membres de la commission :					NOTE sur 20 
+-
+-
+Ce document d’aide à l’évaluation est à usage exclusif de la commission d’interrogation, 
+il ne doit pas être communiqué au candidat.
+
+ANNEXE V–7
+BTS Négociation et Digitalisation de la Relation Client
+E4 – RELATION CLIENT et NEGOCIATION VENTE
+	
+Évaluation en Forme ponctuelle - Durée 40 minutes - Coefficient 5
+
+FICHE D’ÉVALUATION - Session 2025
+
+NOM du CANDIDAT : ………………………………………………………	              Prénom du candidat : …………………………………………………………………….
+N° Candidat :  …………………………………………………………………………                             N° COMMISSION : …………
+Date : …………………………………………………….
+FICHE D’activitÉ N° : …………                           TITRE : ……………………………………………………………………………………………………………………………………………………………………
+
+
+Appréciation de la commission
+1.  Exposé et entretien relatifs au ciblage et à la prospection de clientèle (10 minutes au maximum)
+
+
+
+
+
+
+
+
+
+
+2.  Simulation (15 minutes au maximum)
+
+
+
+
+
+
+
+
+
+3.  Présentation et entretien relatifs à l’exploitation et la mutualisation de l’information commerciale ( 15 minutes au maximum)
+
+
+
+
+
+
+
+
+
+
+
+ Nom et signature des membres de la commission :
+-
+-
+NOTE sur 20 
+
+Ce document d’évaluation peut être communiqué au candidat, à sa demande, après délibération du jury.
+
+ANNEXE V–8
+
+BTS Négociation et Digitalisation de la Relation Client – Session 2025
+Épreuve E4 : Relation Client et Négociation-Vente
+BTS Négociation et Digitalisation de la Relation Client – Session 2025
+Épreuve E4 : Relation Client et Négociation-Vente
+
+
+
+Contrôle de conformité 
+
+
+
+Nom : ………………………………………………	Prénom : ………………………….............
+
+N° de candidat : …………………………………………
+
+En application de l'arrêté du 22 juillet 2008, et après vérification de votre dossier par la commission de contrôle, votre candidature ne peut être retenue pour les motifs ci-dessous :
+
+	•	Absence de dépôt de dossier à la date fixée par l’autorité académique
+	•	Dépôt du dossier au-delà de la date fixée par l’autorité académique
+	•	Durée de stage ou d’expérience professionnelle inférieure à celle requise par la réglementation de l’examen
+	•	Absence d’attestation de stage ou de certificat de travail
+	•	Documents constituant le dossier non visés ou non signés par les personnes habilitées à cet effet 
+
+
+En l’absence de conformité de votre dossier, vous ne pouvez pas être interrogé(e) à l’épreuve. Vous obtiendrez la mention non valide (NV) à cette épreuve. Vous ne pourrez donc pas obtenir le diplôme à cette session. 
+
+
+
+
+Date du contrôle :									Visa :
+
+
+
+
+
+
+
+
+
+
+ANNEXE VI–1
+Caractéristiques des sujets de l’épreuve E5 - Relation client à distance et digitalisation -
+Première partie - Épreuve ponctuelle écrite - Session 2025
+Durée 3 heures – Coefficient 2
+L’épreuve revêt la forme d’une étude de cas reposant sur un contexte réel d’organisation. 
+Consignes pour la rédaction d’un sujet d’épreuve écrite RCDD E5 - bts nDrc 2025
+
+CARACTÉRISTIQUES DU SUJET
+
+LE SUJET : 
+	•	prend appui sur un contexte réel d’organisation développant des activités de relation client à distance (pas d’utilisation d'entreprise fictive) et des documents authentiques adaptés. Le sujet privilégie une entreprise mobilisant des outils digitaux, engagée dans une stratégie de communication unifiée et ce, dans le cadre d’un contact omnicanal.
+	•	traite de problématique(s) professionnelle(s) réelle(s),
+	•	est totalement inédit (il n'a fait l'objet d'aucune publication - sujets précédents, manuels, ressources publiées, etc.),
+	•	ne comporte aucune question de strict contrôle de connaissances. Toutes les questions sont contextualisées.
+COMPÉTENCES ÉVALUÉES (cf. Référentiel)
+Maîtriser la relation client omnicanale : Créer et entretenir la relation client à distance, Apprécier la performance commerciale à partir d’indicateurs d’activité, Encadrer et animer une équipe de téléacteurs. 
+Animer la relation client digitale : Produire, publier et assurer la visibilité des contenus digitaux, Impulser, entretenir et réguler une dynamique e-relationnelle.
+Développer la relation client en e-commerce : Dynamiser un site de e-commerce, Faciliter et sécuriser la relation commerciale, Diagnostiquer l’activité de e-commerce.
+SAVOIRS ASSOCIÉS MOBILISÉS (cf référentiel Bloc 2)
+Savoirs technologiques/web, Communication/négociation, Marketing, Pilotage des activités commerciales digitales, Management d’équipe, Savoirs rédactionnels, Statistiques/représentations graphiques, Gestion commerciale, Savoirs juridiques
+STRUCTURE DU SUJET
+Le sujet est structuré autour d’activités professionnelles visant le développement d’une relation client omnicanale et nécessitant la mobilisation d’outils digitaux. Selon les activités à réaliser, il pourra être exigé du candidat de mobiliser des éléments de culture économique, juridique et managériale appliquée ainsi que de développer une réflexion commerciale structurée.
+Sur le fond
+ Le sujet respecte les principes habituels d’élaboration :
+	•	unicité (un problème, une question),
+	•	indépendance (les questions ne doivent pas, dans la mesure du possible, être liées).
+ Le niveau de questionnement est :
+	•	suffisamment général pour ne pas réduire le cas à un ensemble de tâches d'exécution,
+	•	suffisamment précis pour faire apparaître une démarche décisionnelle
+	•	centré sur la problématique commerciale et digitale (ex: analyse des performances d’un site web, d’une équipe de téléacteurs, etc.).
+ Le questionnement doit amener le candidat à apporter des réponses pouvant faire appel à :
+   -     une production rédactionnelle,
+   -     une analyse qualitative et/ou quantitative,
+   -     la mobilisation d’outils de gestion et de communication commerciale à distance et/ou digitale,
+   -     opérer des choix argumentés. 
+ La réflexion commerciale devra :
+	•	être structurée (tout type de structure est accepté),
+	•	ne pas excéder une trentaine de lignes,
+	•	l’évaluation prendra en compte la capacité des candidats à 
+	•	organiser un nombre suffisant d’idées avec une logique d’ensemble
+	•	mobiliser des savoirs 
+	•	réinvestir le sujet dans la construction des idées
+	•	prendre de la distance par rapport au sujet
+	•	exprimer, justifier, illustrer les idées
+
+Sur la forme
+Le sujet est structuré en dossiers. Chaque dossier vise à résoudre une problématique commerciale et comprend :
+	•	un court descriptif du thème et de la mise en situation,
+	•	les questions apparaissent clairement dans le sujet et ne sont pas incluses dans la mise en situation ou dans les  données nécessaires pour les traiter ; elles  sont formulées à l'aide de verbes à l'infinitif,
+	•	les informations utiles au traitement des questions sont présentées sous forme d'annexes (documents, tableaux, explications littérales, extraits de textes légaux, etc.). Ces annexes sont regroupées par dossier.
+
+Le sujet comprend également une question de réflexion commerciale qui sera courte et formulée simplement. Partant du contexte du sujet, elle vise à élargir le champ de réflexion et engager le candidat à développer des raisonnements structurés.
+Exemples :
+	•	« À partir du cas de l’entreprise XXX, montrer en quoi les TPE et PME ont intérêt à développer une stratégie multicanale » 
+	•	« Le choix de l’entreprise XXX du tout digital, peut-il présenter des inconvénients en termes de fidélisation de clientèle ? »
+	•	« Peut-on reproduire les choix digitaux faits par l’entreprise XXX à une administration ou une association ? »
+PRÉSENTATION
+Temps de lecture
+La lecture de l'ensemble du sujet, annexes comprises, ne doit pas excéder 20 minutes.
+Annexes 
+Aucune annexe n’est « à rendre avec la copie ».
+Chaque annexe est impérativement :
+	•	référencée (date et source),
+	•	de source récente (≥ 2020),
+	•	d’un format et d’une qualité permettant sa reproduction.
+Tous les textes issus de sources externes sont intégralement saisis avec mention précise de la source (date, auteur, publication). Les textes issus de la presse professionnelle seront en nombre limité, relus, corrigés et coupés si nécessaire.
+ÉVALUATION
+L’épreuve écrite RCDD E5 est notée sur 40 points.
+La réflexion commerciale peut représenter jusqu’à un quart des points.
+La forme (orthographe, syntaxe, présentation, etc.) est évaluée au sein de chaque question. Il n’existe pas de barème à part.
+Un bonus de 2 points permet de valoriser les copies conformes aux exigences professionnelles. 
+
+
+ANNEXE VI-2
+Présentation du contexte, des sujets et des versions CMS de l’épreuve  
+E5 B - Relation client à distance et digitalisation - 
+Deuxième partie - Épreuve ponctuelle pratique- Session 2025
+CONTEXTE DIGITAL 2025
+
+SUJETS 2025
+Les deux CMS WordPress et PrestaShop pour l'épreuve E5-B sont construits à partir du même contexte d’entreprise. 
+Chaque sujet comprend 5 questions indépendantes dont la première concerne une création d’article ou de page (sur Wordpress) ou une création de produit (sur PrestaShop). 
+Des annexes peuvent venir compléter les contextes digitaux. 
+L’accès à Internet sera limité au site web du sujet d’examen. Toute consultation d’un autre site web sera assimilée à une fraude. 
+Le contexte part de données réelles modifiées pour des raisons pédagogiques.
+ 
+
+VERSION CMS SESSION 2025
+	•	WordPress 6.6.2 - Thème Astra
+	•	Extension Yoast installée et non activée 
+	•	Extension Spectra installée et activée
+ 
+	•	PrestaShop 1.7.8.9 - Thème Classic 1.0.0 
+  	
+VERSION CMS SESSION 2026
+	•	WordPress version au 1er septembre 2025 - Thème Astra
+	•	Extension Yoast installée et non activée 
+	•	Extension Spectra installée et activée
+
+	•	PrestaShop version au 1er septembre 2025 
+
+ANNEXE VI-3
+Principales fonctionnalités mobilisables sur WordPress et PrestaShop lors de l’épreuve 
+E5B - Relation client à distance et digitalisation - Deuxième partie - Épreuve ponctuelle pratique -  
+Session 2025
+
+ 	 WORDPRESS 
+En gras, les nouvelles fonctionnalités 
+Apparence 
+	● 	Créer ou modifier l’identité du site (slogan, icône, logo) 
+	● 	Modifier l’en tête (texte, photo et vidéo) 
+	•	Modifier l’emplacement du menu principal
+	● 	Activer les réseaux sociaux 
+	● 	Gérer les widgets en pied de page et en colonne latérale de blog 
+	•	Personnaliser la structure des pages ou des articles avec une colonne latérale
+Contenu 
+	● 	Créer, modifier, publier et supprimer un article, une page et une catégorie 
+●    Utiliser les blocs : titre, paragraphe, bouton, bannière, image, galerie, tableau, flux rss, calendrier, audio, fichier
+	•	 Utiliser  des  blocs spécifiques Spectra sans prendre en compte les fonctionnalités avancées : slider, formulaire (form), FAQ, Témoignages (testimonials), équipe (Team), Google Map, Countdown
+	● 	Ajouter un média (photo, vidéo, audio)  
+	● 	Insérer et modifier une galerie 
+	● 	Créer et insérer des liens internes et externes 
+	● 	   Créer un pop up via Spectra Pop Up Builder (Constructeur de fenêtre surgissante)
+	● 	Epingler un article 
+	● 	Modérer et répondre à un commentaire   
+	● 	Générer et compléter une page de politique de confidentialité 
+Image et vidéo 
+	● 	Utiliser une bibliothèque média 
+	● 	Ajuster et positionner un média 
+	● 	Renseigner les textes alternatifs, le titre, la légende et la description d’une image  
+Menu 
+	● 	Créer ou modifier les menus et sous-menus 
+	•	Créer un menu hors champ
+	•	Ajouter un élément à un menu (catégorie, page, lien personnalisé)
+Navigation 
+	● 	Utiliser les onglets backoffice et frontoffice 
+	● 	Paramétrer la page d’accueil (page statique ou affichage des derniers articles) 
+	● 	Modifier les réglages de lecture et de commentaires 
+	•	Insérer un fil d’Ariane
+Référencement naturel (SEO) 
+	● 	Structurer le texte (titres, sous-titres) 
+	● 	Utiliser des mots clés 
+	● 	Utiliser des liens internes et externes 
+	● 	Renseigner les étiquettes, balises et les descriptions 
+	● 	Activer et utiliser l’extension Yoast SEO (requête cible, méta description) 
+Utilisateurs 
+	● 	Créer, modifier ou supprimer un compte 
+	● 	Attribuer un rôle  
+	● 	Changer l’auteur d’un article ou d’une page 
+ 
+PRESTASHOP 
+En gras, les nouvelles fonctionnalités 
+Apparence 
+	● 	Modifier la position d’affichage des blocs sur la page d’accueil 
+	● 	Modifier la position d’affichage des produits populaires 
+	● 	Configurer la durée d’affichage des nouveaux produits 
+	● 	Gérer la liste de liens (link widgets) du pied de page 
+Contenu 
+	●    	Créer et gérer un produit
+	•	Gérer la personnalisation du produit par le client
+	● 	Créer une catégorie et une sous-catégorie 
+	● 	Rattacher un produit à une catégorie 
+	● 	Créer les déclinaisons d’un produit  
+	•	Gérer les impacts prix TTC/HT
+	● 	Créer et modifier un attribut/une caractéristique et leurs valeurs 
+	•	Créer un pack de produits
+	● 	Associer deux produits 
+	● 	Mettre en ligne un produit 
+	● 	Créer une marque 
+	● 	Créer et gérer un client et un groupe de clients 
+	● 	Créer et gérer un transporteur 
+	● 	Gérer les stocks 
+	● 	Traiter les messages, les réclamations, les commandes 
+	● 	Rédiger des messages prédéfinis dans le SAV 
+	● 	Créer et insérer des liens 
+Commandes et promotions 
+	● 	Créer et gérer une commande 
+	● 	Gérer les retours et les avoirs (remboursement total et partiel) 
+	● 	Paramétrer les conditions de retour produits 
+	● 	Créer des promotions catalogue, panier et prix spécifique 
+Image  
+	● 	Modifier la légende et la description 
+	● 	Modifier l’image de couverture d’un produit 
+Module 
+	● 	Activer/désactiver et configurer les produits phares 
+	● 	Activer/désactiver et configurer le module Carrousel 
+	● 	Activer/désactiver et configurer le module Menu Principal 
+	● 	Activer/désactiver et configurer le module Bloc Texte 
+	● 	Activer/désactiver et configurer le module Réassurance 
+	● 	Activer/désactiver et configurer le module Bouton de partage des réseaux sociaux 
+	● 	Activer/désactiver et configurer le module Commentaires Produits 
+	● 	Activer/désactiver et configurer le module Chèque 
+Navigation 
+	● 	Utiliser les onglets backoffice et frontoffice 
+	● 	Créer des alias 
+Référencement naturel (SEO)  
+	● 	Renseigner un mot-clé, une méta-description et une balise titre  
+Utilisateurs 
+	● 	Créer un nouveau collaborateur 
+	● 	Attribuer les permissions 
+	● 	Affecter un profil à un employé 
+	● 	Modifier un profil existant 
+
+
+ANNEXE VI-4
+BTS Négociation et Digitalisation de la Relation Client
+E5 B – RELATION CLIENT À DISTANCE ET DIGITALISATION – Partie pratique
+Durée 40 mn - Coefficient 2
+
+FICHE D’ÉVALUATION - Session 2025
+
+NOM du CANDIDAT : ………………………………………………………	Prénom du candidat : …………………………………………………………………….
+N° Candidat :  …………………………………………………………………………N° COMMISSION : …………
+Date : …………………………………………………….
+Sujet CMS : Wordpress  …………  PrestaShop …………
+(Préciser la lettre du sujet)
+Appréciation globale de la commission
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Nom et signature des examinateurs :
+
+-
+
+-
+NOTE sur 20 
+
+Ce document d’évaluation peut être communiqué au candidat, à sa demande, après délibération du jury.
+
+ANNEXE VII–1
+
+BTS NÉgociation et Digitalisation de la Relation Client
+Session 2025
+FICHE DESCRIPTIVE D’ACTIVITÉ PROFESSIONNELLE
+E6 – Relation Client et animation de rÉseaux
+N° :
+ Animation de réseau de distributeurs
+ Animation de réseau de partenaires
+ Animation de réseau de vente directe
+TITRE :
+Activité(s) réelle(s) vécue(s) :     OUI     NON 
+Nom :                                            
+Prénom :
+N° Candidat :
+Cadre de l’activitÉ rÉseau
+Nom de l’organisation 
+
+Adresse/Code postal/Ville
+
+Type de Structure
+
+
+Offre commerciale
+
+
+Acteurs du réseau (y compris les clients) 
+
+
+Analyse de l’activitÉ rÉalisÉe au sein du rÉseau
+Périodes
+
+Présentation générale du réseau 
+
+
+
+
+Contexte
+
+
+
+
+
+
+
+
+Diagnostic du réseau
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Animation(s) du réseau
+
+Méthodologie(s)
+d’animation 
+
+(Démarche)
+
+Résultats
+
+
+
+Préconisations
+
+Liste de ressources et supports
+
+
+
+ANNEXE VII–2
+BTS Négociation et Digitalisation de la Relation Client
+E6 – RELATION CLIENT ET ANIMATION DE RÉSEAUX
+
+Évaluation en CCF - Durée 30 MINUTES - Coefficient 3
+
+Grille d’aide À l’Évaluation – Session 2025
+NOM du CANDIDAT : …………………………………………………………………………………	Prénom du candidat : ………………………………………………………………………………
+Dates : 		 Situation A :  ……………………………………….                 Situation B :  ……………………………………….
+CRITÈRES d’ÉVALUATION et COMPÉTENCES
+TI
+I
+S
+TS
+Implanter et promouvoir l’offre chez les distributeurs
+1 – Valoriser l’offre sur le lieu de vente
+(Rigueur dans le suivi de l’application des accords de référencement, utilisation pertinente des techniques d’implantation et de valorisation des produits)
+
+
+
+
+
+2 – Développer la présence dans le réseau de distributeurs 
+(Repérage des opportunités de référencement, qualité du diagnostic rayon, réseau et zone de prospection, pertinence des propositions et des actions pour développer la présence de la marque/produit)
+
+
+
+
+
+Développer et piloter un réseau de partenaires
+1 – Participer au développement d’un réseau de partenaires
+(Pertinence de la sélection de partenaires)
+
+
+
+
+
+2 – Mobiliser un réseau de partenaires et évaluer les performances
+(Efficience et rentabilité des actions de dynamisation du réseau)
+
+
+
+
+
+Créer et animer un réseau de vente directe
+1 – Prospecter, organiser des rencontres et vendre en réunion
+(Développement du fichier des conseillers, professionnalisme et efficacité commerciale lors des ventes en réunion)
+
+
+
+
+
+2 – Recruter et former des vendeurs à domicile
+(Pertinence et efficacité des actions de recrutement et de formation)
+
+
+
+
+
+3 – Impulser une dynamique de réseau
+(Cohérence de l’animation réseau avec les orientations commerciales, respect de la réglementation et de l’éthique)
+
+
+
+
+
+TI : Très Insuffisant / I : Insuffisant / S : Satisfaisant /TS : Très satisfaisant
+
+NOTE sur 20 
+
+
+
+
+
+
+Ce document d’aide à l’évaluation est à usage exclusif de la commission d’interrogation, 
+il ne doit pas être communiqué au candidat
+
+ANNEXE VII–3
+BTS Négociation et Digitalisation de la Relation Client
+E6 – RELATION CLIENT ET ANIMATION DE RÉSEAUX 
+Session 2025
+
+Évaluation en CCF – Durée 30 minutes – Coefficient 3
+
+FICHE D’Évaluation
+NOM du CANDIDAT : ………………………………………………………………………………Prénom du candidat : ………………………………………………………………………………
+Situation A : Durée 15 minutes
+Exposé et entretien relatif à une expérience réelle vécue 	
+Date : …………………………………………………….								Fiche n° : …………
+ Animation de Réseau de distributeurs 	 Animation de Réseau de partenaires  Animation de Réseau de vente directe
+(Cocher la case correspondante)
+Appréciation du Jury
+
+
+
+Nom et signature du membre de la commission :
+-
+
+
+Situation B : Durée 15 minutes
+Exposé et entretien relatif aux autres expériences réseau 
+Date : ……………………………………………………. 								Fiches n° : ……/……
+ Animation de Réseau de distributeurs 	 Animation de Réseau de partenaires  Animation de Réseau de vente directe
+ (Cocher les cases correspondantes)
+Appréciation du Jury
+
+
+
+
+
+Nom et signature du membre de la commission :
+-
+
+NOTE sur 20 
+Ce document d’évaluation peut être communiqué au candidat, à sa demande, après délibération du jury.
+
+ANNEXE VII–4
+
+BTS Négociation et Digitalisation de la Relation Client
+E6 – RELATION CLIENT ET ANIMATION DE RÉSEAUX
+
+Épreuve ponctuelle - Durée 30 MINUTES - Coefficient 3
+Grille d’aide À l’Évaluation – Session 2025
+NOM du CANDIDAT : …………………………………………………………………………………          Prénom du candidat : ………………………………………………………………………………
+N° Candidat :  ………………………………………………….                                               N° COMMISSION : …………
+Date : ………………………………		
+CRITÈRES d’ÉVALUATION et COMPÉTENCES
+TI
+I
+S
+TS
+Implanter et promouvoir l’offre chez les distributeurs
+1 – Valoriser l’offre sur le lieu de vente
+(Rigueur dans le suivi de l’application des accords de référencement, utilisation pertinente des techniques d’implantation et de valorisation des produits)
+
+
+
+
+
+2 – Développer la présence dans le réseau de distributeurs 
+(Repérage des opportunités de référencement, qualité du diagnostic rayon, réseau et zone de prospection, pertinence des propositions et des actions pour développer la présence de la marque/produit)
+
+
+
+
+
+Développer et piloter un réseau de partenaires
+1 – Participer au développement d’un réseau de partenaires
+(Pertinence de la sélection de partenaires)
+
+
+
+
+
+2 – Mobiliser un réseau de partenaires et évaluer les performances
+(Efficience et rentabilité des actions de dynamisation du réseau)
+
+
+
+
+
+Créer et animer un réseau de vente directe
+1 – Prospecter, organiser des rencontres et vendre en réunion
+(Développement du fichier des conseillers, professionnalisme et efficacité commerciale lors des ventes en réunion)
+
+
+
+
+
+2 – Recruter et former des vendeurs à domicile
+(Pertinence et efficacité des actions de recrutement et de formation)
+
+
+
+
+
+3 – Impulser une dynamique de réseau
+(Cohérence de l’animation réseau avec les orientations commerciales, respect de la réglementation et de l’éthique)
+
+
+
+
+
+TI : Très Insuffisant / I : Insuffisant / S : Satisfaisant /TS : Très satisfaisant
+NOTE sur 20 
+
+
+
+Ce document d’aide à l’évaluation est à usage exclusif de la commission d’interrogation, 
+il ne doit pas être communiqué au candidat
+
+ANNEXE VII–5
+BTS Négociation et Digitalisation de la Relation Client – Session 2025
+E6 – RELATION CLIENT ET ANIMATION DE RÉSEAUX
+Épreuve ponctuelle - Durée 30 minutes – Coefficient 3
+FICHE D’Évaluation
+
+NOM du CANDIDAT : ………………………………………………………………………………                         Prénom du candidat : ………………………………………………………………………………
+N° Candidat : ………………………………………………….                                                    N° COMMISSION: …………………………………
+Date : ………………………………………………….    
+Phase 1 : Durée 15 minutes 
+Exposé et entretien relatif à une expérience réelle vécue 					Fiche n° : …………
+ Animation de Réseau de distributeurs 	 Animation de Réseau de partenaires  Animation de Réseau de vente directe
+ (Cocher la case correspondante)
+Appréciation du Jury
+
+
+
+
+Phase 2 : Durée 15 minutes
+Exposé et entretien relatif aux autres expériences réseau		Fiches n° : ……/……
+ Animation de Réseau de distributeurs 	 Animation de Réseau de partenaires  Animation de Réseau de vente directe
+ (Cocher les cases correspondantes)
+
+Appréciation du Jury
+
+
+
+
+ 
+NOTE sur 20
+Nom et signature du membre de la commission :
+-
+-
+NOTE sur 20
+Ce document d’évaluation peut être communiqué au candidat, à sa demande, après délibération du jury.
+
+ANNEXE VII-6
+BTS Négociation et Digitalisation de la Relation Client – Session 2025
+Épreuve E6 : Relation client et animation de réseaux
+BTS Négociation et Digitalisation de la Relation Client – Session 2025
+Épreuve E6 : Relation client et animation de réseaux
+
+
+
+
+Contrôle de conformité
+
+
+
+NOM du Candidat :…………………………… Prénom du Candidat :………………………….............
+
+N° de candidat :…………………………………………
+
+En application de l'arrêté du 22 juillet 2008, et après vérification de votre dossier par la commission de contrôle, votre candidature ne peut être retenue pour les motifs ci-dessous :
+
+	•	Absence de dépôt de dossier à la date fixée par les autorités académiques
+	•	Dépôt du dossier au-delà de la date fixée par la circulaire d’organisation de l’examen ou de l’autorité académique
+	•	Durée de stage ou d’expérience professionnelle inférieure à celle requise par la réglementation de l’examen
+	•	Absence d’attestation de stage ou de certificat de travail
+	•	Documents constituant le dossier non visés ou non signés par les personnes habilitées à cet effet 
+
+En l’absence de conformité de votre dossier, vous ne pouvez pas être interrogé(e) à l’épreuve. Vous obtiendrez la mention non valide (NV) à cette épreuve. Vous ne pourrez donc pas obtenir le diplôme à cette session. 
+
+
+
+
+
+
+
+Date du contrôle :									Visa :
+
+
+
+
+
+ANNEXE VIII-1
+
+Formulaire de demande de reconnaissance de l'engagement étudiant
+en application de l’article D643-15-1 du code de l’éducation*1
+
+Candidat au brevet de technicien supérieur
+Négociation et Digitalisation de la Relation Client
+
+Session 2025
+
+Intitulé de l’épreuve obligatoire à la suite de laquelle le candidat présente à titre facultatif l’unité « engagement étudiant » : E6 - Relation client et animation de réseaux
+
+
+Nom et prénom du candidat : ………………………………………………………………………..
+
+Numéro d’inscription : ………………………………………………………………………………
+
+Nature de l’engagement justifiant la demande (bénévolat, activité professionnelle, service civique, etc.) :
+………………………………………………………………………………………………………..
+………………………………………………………………………………………………………..
+
+
+Organisme d’accueil (association, entreprise, etc.) :
+
+Nom de l’organisme :
+
+
+Adresse postale :
+
+
+
+Personne référente (prénom, nom, fonction, téléphone et adresse e-mail) :
+
+
+
+Période de l’engagement : du …/…/… au …/…/…
+
+Durée de l’engagement (précisez le nombre d’heures par semaine ou par mois) :
+
+
+Description de votre projet dans le cadre de votre engagement :
+
+Intitulé de la mission :
+
+
+
+Votre statut/ fonction (votre rôle) :
+
+
+
+
+
+Quelles sont vos activités/vos tâches :
+
+
+
+
+
+
+
+Quelles sont les compétences que vous pensez avoir développées dans le cadre de votre mission, en lien notamment avec votre formation :
+
+
+
+
+Précisez en quelques lignes le rapport que vous établissez entre les acquis de votre expérience professionnelle ou bénévole et les compétences, connaissances et aptitudes à acquérir dans le cadre de votre formation conduisant au brevet de technicien supérieur :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Je soussigné (e)
+M./ Mme
+atteste sur l’honneur de l’authenticité des éléments rapportés dans ce formulaire.
+
+
+
+*1 - D643-15-1 du code de l’éducation :
+« Les compétences, connaissances et aptitudes que le candidat a acquises dans l’exercice des activités mentionnées à l'article L. 611-9 et qui relèvent de celles prévues par le référentiel d’évaluation de chaque spécialité de brevet de technicien supérieur sont validées à l’examen, à la demande du candidat.
+La demande de validation est formulée par le candidat au plus tard à la date limite d’inscription à l’examen.
+La validation prend la forme d’une unité que le candidat présente à titre facultatif à la suite de l’épreuve obligatoire mentionnée par le référentiel d’évaluation de chaque spécialité du diplôme.
+Les mêmes activités ne peuvent donner lieu qu'à une seule validation des compétences, connaissances et aptitudes acquises. »
+ANNEXE VIII-2
+BTS NÉgociation et Digitalisation de la Relation Client
+Session 2025
+
+fiche D’ÉVALUATION
+
+ÉPREUVE FACULTATIVE – ENGAGEMENT ETUDIANT
+Durée : 20 minutes
+NOM du candidat :
+
+Prénom du candidat :
+
+N° Candidat :
+
+Date :	
+Commission N° : 
+
+Analyse de l’engagement associatif, social ou professionnel
+Organisation lieu de l’engagement:
+
+
+Activités réalisées :
+
+
+
+
+Questions posées :
+
+
+
+
+
+
+Appréciation globale :
+
+Noms et signatures des évaluateurs :
+NOTE :
+/20
+
+
+
+Ce document d’évaluation peut être communiqué au candidat, à sa demande, après délibération du jury.
+
+
+
+ANNEXE VIII-3 (recto)
+BTS Négociation et Digitalisation de la Relation Client
+EF2 – Engagement étudiant
+
+Épreuve facultative - Durée 20 MINUTES 
+Grille d’aide À l’Évaluation – Session 2025
+NOM du CANDIDAT : …………………………………………………………………………………	Prénom du candidat : ………………………………………………………………………………
+N° Candidat :  ………………………………………………….………………………………	Date : ………………………………………………………….	N° COMMISSION : …………
+		
+CRITÈRES D’ÉVALUATION
+TI
+I
+S
+TS
+1 – Qualité de la présentation du contexte de l’engagement
+
+
+
+
+2 – Précision de la présentation des actions conduites dans le cadre de l’engagement
+
+
+
+
+3 – Réflexivité sur les acquis issus de cet engagement
+
+
+
+
+4 – Capacité à démontrer une persévérance, une capacité d’engagement
+
+
+
+
+5 – Capacité à faire preuve d’engagement vis-à-vis des autres (empathie, adaptabilité interculturelle, intelligence sociale, …)
+
+
+
+
+6 – Capacité d’adaptation à des situations variées, à faire sens
+
+
+
+
+7 – Capacité à s’engager dans un collectif
+
+
+
+
+8 - Qualité de l’argumentation
+
+
+
+
+9 – Qualité de la communication écrite et orale
+
+
+
+
+
+ANNEXE VIII-3 (verso)
+ÉVALUATION DES COMPÉTENCES
+DEGRÉ DE MAÎTRISE DES COMPÉTENCES
+TI
+I
+S
+TS
+Subit
+Exécute
+Maîtrise
+Est expert
+1 - Qualité de la présentation du contexte de l’engagement
+Présente une description succincte partielle ou non structurée
+Présente une situation structurée mais sans analyse du rôle de l’organisation dans laquelle l’engagement est effectif
+Analyse du contexte en présentant les principales caractéristiques et les missions
+Est capable de transférer l’analyse du contexte à d’autres (entreprises, …) 
+2 – Précision de la présentation des actions conduites dans le cadre de l’engagement
+Se limite à une activité très restreinte du processus et ne comprend pas les enjeux associés
+Appréhende l’ensemble de l’activité, mais sans en comprendre réellement les enjeux associés
+Porte un degré d’analyse sur les activités dans le cadre de son engagement en identifiant les contraintes et les enjeux
+
+Présente une analyse les activités effectuées dans le cadre de son engagement en intégrant l’identification des contraintes, des enjeux et les limites des choix. Le candidat est en mesure de formuler des propositions argumentées d’amélioration face à des demandes
+3 – Réflexivité sur les acquis issus de cet engagement
+Ne présente pas d’analyse et ne prend pas de distance par rapport aux activités réalisées.
+Présente une analyse étroite, peu autonome et limitée à une série d’activités 
+Sait expliquer en quoi une activité réalisée dans le cadre de son engagement a permis la construction de compétences
+Montre le lien entre les activités réalisées dans le cadre de son engagement et développement de ses compétences 
+	•	Capacité à apprendre de son expérience à faire lien avec les activités du référentiel du diplôme
+4 – Capacité à démontrer une persévérance, une capacité d’engagement
+Fait preuve de peu de persévérance, dans des activités peu complexes et routinières.
+A su dépasser les difficultés rencontrées et les aléas.
+A su dépasser les difficultés rencontrées dans des situations complexes ou déstabilisantes.
+Propose des solutions pour améliorer des démarches.
+	•	capacité à résoudre des problèmes
+5 – Capacité à faire preuve d’engagement vis-à-vis des autres (empathie, adaptabilité interculturelle, intelligence sociale, …)
+Ne démontre pas un engagement dans des activités variées
+Démontre une capacité à présenter les différences culturelles
+
+Démontre une capacité à intégrer les différences culturelles dans ses principes d’action 
+Démontre une intelligence sociale
+ 
+
+6 – Capacité d’adaptation à des situations variées, à faire sens
+Ne présente pas de capacité à prendre en compte ces aspects 
+Démontre une capacité d’adaptation  face à des situations différentes
+Sait expliquer en quoi une situation professionnelle a permis la construction de cette compétence
+Montre le lien entre situations rencontrées et développement de ses compétences d’adaptabilité. Sait faire sens dans l’analyse de ces différentes activités
+
+7 - Capacité à s’engager dans un collectif
+Ne démontre pas de capacité à s’engager dans un collectif
+Démontre de capacités à interagir selon des procédures établies
+Démontre une capacité à s’impliquer dans un collectif. 
+Démontre une capacité à trouver des modes d’action fondés sur un collectif.
+	•	 Capacité à travailler en équipe
+8– Qualité de l’argumentation 
+N’argumente pas.
+Reste sur les aspects descriptifs de ses travaux
+Limite son argumentation aux travaux prescrits
+Sait mobiliser les arguments de référence (contraintes, ressources, techniques usuelles, méthodes, …)
+9 – Qualité de la communication écrite et orale 
+Ne communique pas
+ Fait un compte rendu partiel
+Explique et fait comprendre
+Fait adhérer par des qualités de conviction
+Ce document d’aide à l’évaluation est à usage exclusif de la commission d’interrogation, 
+il ne doit pas être communiqué au candidat.
