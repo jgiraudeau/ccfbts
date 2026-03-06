@@ -14,6 +14,27 @@ from pathlib import Path
 
 router = APIRouter(prefix="/api/tracking/submissions", tags=["tracking_submissions"])
 
+
+def submission_to_response(submission, student_name=None, deadline_title=None):
+    """Convertir un objet Submission ORM en SubmissionResponse sans from_orm"""
+    return SubmissionResponse(
+        id=submission.id,
+        student_id=submission.student_id,
+        deadline_id=submission.deadline_id,
+        file_url=submission.file_url,
+        file_name=submission.file_name,
+        submitted_at=submission.submitted_at,
+        status=submission.status or 'pending',
+        grade=float(submission.grade) if submission.grade else None,
+        feedback=submission.feedback,
+        reviewed_at=submission.reviewed_at,
+        reviewed_by=submission.reviewed_by,
+        submission_type=None,
+        student_name=student_name,
+        deadline_title=deadline_title,
+    )
+
+
 # Dossier fallback local (dev uniquement)
 UPLOAD_DIR = Path("uploads/submissions")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
@@ -65,10 +86,7 @@ def create_submission(
     
     deadline = db.query(Deadline).filter(Deadline.id == submission_data.deadline_id).first()
     
-    response = SubmissionResponse.from_orm(new_submission)
-    response.student_name = current_user.name
-    response.deadline_title = deadline.title if deadline else None
-    return response
+    return submission_to_response(new_submission, current_user.name, deadline.title if deadline else None)
 
 
 @router.post("/upload", status_code=status.HTTP_201_CREATED)
@@ -157,9 +175,22 @@ def list_submissions(
         student = db.query(User).filter(User.id == submission.student_id).first()
         deadline = db.query(Deadline).filter(Deadline.id == submission.deadline_id).first()
 
-        submission_response = SubmissionResponse.from_orm(submission)
-        submission_response.student_name = student.name if student else None
-        submission_response.deadline_title = deadline.title if deadline else None
+        submission_response = SubmissionResponse(
+            id=submission.id,
+            student_id=submission.student_id,
+            deadline_id=submission.deadline_id,
+            file_url=submission.file_url,
+            file_name=submission.file_name,
+            submitted_at=submission.submitted_at,
+            status=submission.status or 'pending',
+            grade=float(submission.grade) if submission.grade else None,
+            feedback=submission.feedback,
+            reviewed_at=submission.reviewed_at,
+            reviewed_by=submission.reviewed_by,
+            submission_type=None,
+            student_name=student.name if student else None,
+            deadline_title=deadline.title if deadline else None,
+        )
         result.append(submission_response)
 
     # Inclure aussi les soumissions legacy (table student_submissions)
@@ -230,12 +261,8 @@ def get_submission(
     
     student = db.query(User).filter(User.id == submission.student_id).first()
     deadline = db.query(Deadline).filter(Deadline.id == submission.deadline_id).first()
-    
-    submission_response = SubmissionResponse.from_orm(submission)
-    submission_response.student_name = student.name if student else None
-    submission_response.deadline_title = deadline.title if deadline else None
-    
-    return submission_response
+
+    return submission_to_response(submission, student.name if student else None, deadline.title if deadline else None)
 
 
 @router.put("/{submission_id}/review", response_model=SubmissionResponse)
@@ -272,11 +299,7 @@ def review_submission(
     
     deadline = db.query(Deadline).filter(Deadline.id == submission.deadline_id).first()
     
-    submission_response = SubmissionResponse.from_orm(submission)
-    submission_response.student_name = student.name
-    submission_response.deadline_title = deadline.title if deadline else None
-    
-    return submission_response
+    return submission_to_response(submission, student.name if student else None, deadline.title if deadline else None)
 
 
 @router.delete("/{submission_id}", status_code=status.HTTP_204_NO_CONTENT)
