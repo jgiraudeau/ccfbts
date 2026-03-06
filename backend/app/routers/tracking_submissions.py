@@ -130,6 +130,16 @@ def list_submissions(
     current_user: User = Depends(get_current_user)
 ):
     """Lister les soumissions"""
+    import traceback
+    try:
+        return _list_submissions_impl(deadline_id, student_id, status_filter, db, current_user)
+    except Exception as e:
+        print(f"❌ list_submissions CRASH: {e}")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Erreur serveur: {str(e)}")
+
+
+def _list_submissions_impl(deadline_id, student_id, status_filter, db, current_user):
     query = db.query(Submission)
     
     # Pour les élèves, ne voir que leurs propres soumissions
@@ -193,44 +203,47 @@ def list_submissions(
         )
         result.append(submission_response)
 
-    # Inclure aussi les soumissions legacy (table student_submissions)
-    legacy_query = db.query(StudentSubmission)
-    if current_user.role == "student":
-        legacy_query = legacy_query.filter(StudentSubmission.student_id == current_user.id)
-    elif current_user.role == "teacher":
-        student_ids_res = db.query(User.id).filter(User.teacher_id == current_user.id).all()
-        student_ids = [s[0] for s in student_ids_res]
-        if student_ids:
-            legacy_query = legacy_query.filter(StudentSubmission.student_id.in_(student_ids))
-        else:
-            legacy_query = legacy_query.filter(StudentSubmission.id == -1)
+    # Inclure aussi les soumissions legacy (table student_submissions) - avec try/except
+    # car la table peut ne pas exister en production
+    try:
+        legacy_query = db.query(StudentSubmission)
+        if current_user.role == "student":
+            legacy_query = legacy_query.filter(StudentSubmission.student_id == current_user.id)
+        elif current_user.role == "teacher":
+            student_ids_res = db.query(User.id).filter(User.teacher_id == current_user.id).all()
+            student_ids = [s[0] for s in student_ids_res]
+            if student_ids:
+                legacy_query = legacy_query.filter(StudentSubmission.student_id.in_(student_ids))
+            else:
+                legacy_query = legacy_query.filter(StudentSubmission.id == -1)
 
-    if student_id and current_user.role in ["teacher", "admin"]:
-        legacy_query = legacy_query.filter(StudentSubmission.student_id == student_id)
+        if student_id and current_user.role in ["teacher", "admin"]:
+            legacy_query = legacy_query.filter(StudentSubmission.student_id == student_id)
 
-    legacy_submissions = legacy_query.all()
+        legacy_submissions = legacy_query.all()
 
-    # Convertir les soumissions legacy au même format
-    tracking_ids = {s.id for s in submissions}
-    for ls in legacy_submissions:
-        student = db.query(User).filter(User.id == ls.student_id).first()
-        legacy_response = SubmissionResponse(
-            id=ls.id + 100000,  # Offset pour éviter les conflits d'ID
-            student_id=ls.student_id,
-            deadline_id=None,
-            file_url=ls.file_url,
-            file_name=ls.title,
-            submitted_at=datetime.combine(ls.date, datetime.min.time()) if ls.date else datetime.now(),
-            status='pending',
-            grade=None,
-            feedback=None,
-            reviewed_at=None,
-            reviewed_by=None,
-            submission_type=ls.submission_type,
-            student_name=student.name if student else None,
-            deadline_title=ls.title
-        )
-        result.append(legacy_response)
+        for ls in legacy_submissions:
+            student = db.query(User).filter(User.id == ls.student_id).first()
+            legacy_response = SubmissionResponse(
+                id=ls.id + 100000,
+                student_id=ls.student_id,
+                deadline_id=None,
+                file_url=ls.file_url,
+                file_name=ls.title,
+                submitted_at=datetime.combine(ls.date, datetime.min.time()) if ls.date else datetime.now(),
+                status='pending',
+                grade=None,
+                feedback=None,
+                reviewed_at=None,
+                reviewed_by=None,
+                submission_type=ls.submission_type,
+                student_name=student.name if student else None,
+                deadline_title=ls.title
+            )
+            result.append(legacy_response)
+    except Exception as e:
+        print(f"⚠️ Legacy submissions query failed (table may not exist): {e}")
+        db.rollback()
 
     # Trier par date décroissante
     result.sort(key=lambda x: x.submitted_at, reverse=True)
