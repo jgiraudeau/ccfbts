@@ -120,8 +120,9 @@ export default function StudentDeadlines() {
             if (submitResponse.ok) {
                 setSelectedFile(null);
                 setUploadingFor(null);
-                fetchDeadlines();
-                fetchSubmissions();
+                await fetchSubmissions();
+                await fetchDeadlines();
+                setActiveTab('submitted');
                 alert('Document soumis avec succès !');
             } else {
                 const errData = await submitResponse.json().catch(() => ({}));
