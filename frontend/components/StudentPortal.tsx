@@ -99,7 +99,11 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
             const uploadRes = await fetch(`${API_URL}/api/tracking/submissions/upload`, {
                 method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: formData,
             });
-            if (!uploadRes.ok) { alert("Erreur lors de l'upload."); return; }
+            if (!uploadRes.ok) {
+                const errData = await uploadRes.json().catch(() => ({}));
+                alert(`Erreur upload : ${errData.detail || uploadRes.statusText}`);
+                return;
+            }
             const uploadData = await uploadRes.json();
 
             const res = await fetch(`${API_URL}/api/submissions`, {
@@ -119,12 +123,13 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
                 fetchAll();
                 setShowUploadForm(false);
                 setNewSubmission({ title: '', message: '', type: 'E4_SITUATION', file: null });
-                alert("Document déposé avec succès ! 📂");
+                alert("Document déposé avec succès !");
             } else {
-                alert("Erreur lors du dépôt.");
+                const errData = await res.json().catch(() => ({}));
+                alert(`Erreur : ${errData.detail || 'Le dépôt a échoué.'}`);
             }
         } catch (e) {
-            alert("Erreur technique.");
+            alert("Erreur réseau. Vérifiez votre connexion et réessayez.");
         } finally {
             setIsSubmitting(false);
         }

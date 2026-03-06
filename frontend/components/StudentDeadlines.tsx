@@ -96,7 +96,9 @@ export default function StudentDeadlines() {
             });
 
             if (!uploadResponse.ok) {
-                throw new Error('Upload failed');
+                const errData = await uploadResponse.json().catch(() => ({}));
+                alert(`Erreur upload : ${errData.detail || uploadResponse.statusText}`);
+                return;
             }
 
             const uploadData = await uploadResponse.json();
@@ -120,11 +122,14 @@ export default function StudentDeadlines() {
                 setUploadingFor(null);
                 fetchDeadlines();
                 fetchSubmissions();
-                alert('Document soumis avec succès ! ✅');
+                alert('Document soumis avec succès !');
+            } else {
+                const errData = await submitResponse.json().catch(() => ({}));
+                alert(`Erreur : ${errData.detail || 'La soumission a échoué.'}`);
             }
         } catch (error) {
             console.error('Error submitting document:', error);
-            alert('Erreur lors de la soumission. Veuillez réessayer.');
+            alert('Erreur réseau. Vérifiez votre connexion et réessayez.');
         } finally {
             setLoading(false);
         }
@@ -279,6 +284,7 @@ export default function StudentDeadlines() {
                                             <input
                                                 type="file"
                                                 id={`file-${deadline.id}`}
+                                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.heic,.odt,.rtf,.txt,.xls,.xlsx,.pptx"
                                                 onChange={(e) => handleFileSelect(e, deadline.id)}
                                                 className="hidden"
                                             />
