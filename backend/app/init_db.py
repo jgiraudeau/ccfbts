@@ -39,8 +39,36 @@ def load_ref(db: Session, filename: str, block_enum: ExamBlock):
     
     db.commit()
 
+def create_default_admin(db: Session):
+    from .models import User
+    from .auth import get_password_hash
+    
+    admin_email = "jacques.giraudeau@gmail.com"
+    admin = db.query(User).filter(User.email == admin_email).first()
+    if not admin:
+        try:
+            new_admin = User(
+                name="Jacques Giraudeau",
+                email=admin_email,
+                hashed_password=get_password_hash("chfcarantec2025$"),
+                role="admin",
+                is_active=True
+            )
+            db.add(new_admin)
+            db.commit()
+            print(f"✅ Admin par défaut créé : {admin_email}")
+        except Exception as e:
+            print(f"❌ Erreur lors de la création de l'admin : {e}")
+            db.rollback()
+    else:
+        # Reset password to known value if already exists to solve login issues
+        admin.role = "admin"
+        admin.is_active = True
+        admin.hashed_password = get_password_hash("chfcarantec2025$")
+        db.commit()
+        print(f"✅ Compte {admin_email} mis à jour et mot de passe réinitialisé.")
+
 def init_db(db: Session):
     load_ref(db, "referentiel_e6.json", ExamBlock.E6)
     load_ref(db, "referentiel_e4.json", ExamBlock.E4)
-
-    # Les profs sont créés par l'admin via le panneau d'administration
+    create_default_admin(db)
