@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import StudentSubmission, User
+from typing import Optional
 from pydantic import BaseModel
 from datetime import date
 
@@ -13,8 +14,8 @@ class SubmissionCreate(BaseModel):
     content: str = ""
     submission_type: str
     date: str
-    file_url: str | None = None
-    file_name: str | None = None
+    file_url: Optional[str] = None
+    file_name: Optional[str] = None
 
 @router.post("/submissions")
 def create_submission(submission: SubmissionCreate, db: Session = Depends(get_db)):

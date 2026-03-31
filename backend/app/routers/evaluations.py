@@ -36,7 +36,7 @@ class EvaluationResponse(BaseModel):
 @router.post("/sync")
 def sync_evaluations(
     evaluations: List[EvaluationSync],
-    eval_type: str = "continuous",  # "continuous" ou "final"
+    eval_type: str = "formative",  # "formative" ou "ccf"
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -67,6 +67,7 @@ def sync_evaluations(
             existing.eval_date = ev.date
             existing.domain_id = ev.domainId
             existing.exam_type = ev.type
+            # On ne change pas l'eval_type d'une évaluation existante ici pour garder la cohérence
             updated += 1
         else:
             new_eval = StoredEvaluation(
@@ -112,15 +113,16 @@ def get_my_evaluations(
     current_user: User = Depends(get_current_user)
 ):
     """
-    Endpoint élève : récupérer MES évaluations PRÉPARATOIRES uniquement.
-    Les CCF (finals) ne sont PAS visibles par l'élève.
+    Endpoint élève : récupérer MES évaluations FORMATIVES uniquement.
+    Les CCF ne sont PAS visibles par l'élève.
     """
     if current_user.role != "student":
         raise HTTPException(status_code=403, detail="Endpoint réservé aux élèves")
 
+    # On récupère les évaluations formatives (inclut aussi les anciennes 'continuous' pour la compatibilité)
     evals = db.query(StoredEvaluation).filter(
         StoredEvaluation.student_id == current_user.id,
-        StoredEvaluation.eval_type == "continuous"  # Pas de CCF !
+        StoredEvaluation.eval_type.in_(["formative", "continuous"])  # Compatibilité ascendante
     ).order_by(StoredEvaluation.eval_date.desc()).all()
 
     result = []

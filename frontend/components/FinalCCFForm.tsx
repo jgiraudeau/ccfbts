@@ -127,7 +127,7 @@ export default function FinalCCFForm({ students, onSave, onCancel, initialData }
 
             <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden print:shadow-none print:border-none print:rounded-none">
                 <div className="bg-gray-900 text-white p-8 relative print:hidden">
-                    <h2 className="text-2xl font-bold flex items-center gap-3"><Award /> {initialData?.id ? "Modifier CCF Final" : "Évaluation CCF Final 2026"}</h2>
+                    <h2 className="text-2xl font-bold flex items-center gap-3"><Award /> {initialData?.id ? "Modifier l'Évaluation de CCF" : "Évaluation de CCF - Session 2026"}</h2>
                     <p className="text-gray-400 mt-1">Grille officielle consolidée (Distribution, Partenariat, VD)</p>
                     <div className="absolute top-8 right-8 bg-white/10 backdrop-blur rounded-lg p-3 text-center border border-white/20">
                         <div className="text-4xl font-bold text-yellow-400">{currentGrade || '--'}</div>
@@ -247,7 +247,7 @@ export default function FinalCCFForm({ students, onSave, onCancel, initialData }
                                 globalComment
                             });
                         }} className="px-8 py-3 bg-gray-900 text-white rounded-xl shadow-lg hover:bg-black font-bold flex items-center gap-2">
-                            <Save size={18} /> {initialData?.id ? "Mettre à jour CCF" : "Valider le CCF"}
+                            <Save size={18} /> {initialData?.id ? "Mettre à jour le CCF" : "Valider le CCF"}
                         </button>
                     </div>
 

@@ -69,7 +69,7 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
             if (res.ok) setSubmissions(await res.json());
         } catch (e) { console.error(e); }
 
-        // Évaluations prépa (sans CCF)
+        // Évaluations formatives (sans CCF)
         try {
             const res = await fetch(`${API_URL}/api/evaluations/my`, { headers });
             if (res.ok) setMyEvaluations(await res.json());
@@ -281,7 +281,7 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
                             <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
                                 <div className="flex items-center gap-2 text-indigo-600 mb-2">
                                     <BarChart2 size={18} />
-                                    <span className="text-xs font-bold uppercase tracking-wide">Moy. Évals</span>
+                                    <span className="text-xs font-bold uppercase tracking-wide">Moy. Formative</span>
                                 </div>
                                 <div className={`text-3xl font-bold ${evalAvg && evalAvg >= 10 ? 'text-emerald-600' : evalAvg ? 'text-red-600' : 'text-gray-300'}`}>
                                     {evalAvg ? `${evalAvg.toFixed(1)}` : '--'}
@@ -370,7 +370,7 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
                                             <li key={ev.id} className="px-5 py-4 flex justify-between items-center">
                                                 <div>
                                                     <p className="font-semibold text-gray-800 text-sm">{DOMAIN_LABELS[ev.domainId] || ev.domainId}</p>
-                                                    <p className="text-xs text-gray-400">{ev.date ? new Date(ev.date).toLocaleDateString('fr-FR') : ''}</p>
+                                                    <p className="text-xs text-gray-400">{ev.date ? new Date(ev.date).toLocaleDateString('fr-FR') : ''} • Formative</p>
                                                 </div>
                                                 <span className={`font-bold text-lg ${avg >= 10 ? 'text-emerald-600' : 'text-red-500'}`}>
                                                     {avg.toFixed(1)}<span className="text-xs text-gray-400 font-normal">/20</span>
@@ -408,16 +408,16 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
                 {activeTab === 'evaluations' && (
                     <div className="space-y-4 animate-fade-in">
                         <div className="bg-indigo-600 text-white rounded-2xl p-5 shadow-lg">
-                            <p className="text-indigo-200 text-xs font-bold uppercase tracking-wide mb-1">Moyenne générale évaluations prépa</p>
+                            <p className="text-indigo-200 text-xs font-bold uppercase tracking-wide mb-1">Moyenne générale évaluations formatives</p>
                             <div className="text-4xl font-bold">{evalAvg ? `${evalAvg.toFixed(1)}/20` : '--/20'}</div>
-                            <p className="text-indigo-200 text-xs mt-1">{myEvaluations.length} évaluation{myEvaluations.length > 1 ? 's' : ''} enregistrée{myEvaluations.length > 1 ? 's' : ''} · Notes CCF non incluses</p>
+                            <p className="text-indigo-200 text-xs mt-1">{myEvaluations.length} évaluation{myEvaluations.length > 1 ? 's' : ''} enregistrée{myEvaluations.length > 1 ? 's' : ''} · Notes de CCF non incluses (confidentielles)</p>
                         </div>
 
                         {myEvaluations.length === 0 ? (
                             <div className="bg-white rounded-2xl p-10 text-center shadow-sm border border-gray-100 text-gray-400">
                                 <BarChart2 size={40} className="mx-auto mb-3 text-gray-200" />
-                                <p className="font-semibold">Aucune évaluation enregistrée</p>
-                                <p className="text-sm mt-1">Vos évaluations préparatoires apparaîtront ici une fois saisies par votre professeur.</p>
+                                <p className="font-semibold">Aucune évaluation formative</p>
+                                <p className="text-sm mt-1">Vos évaluations formatives apparaîtront ici. Les notes de CCF ne sont pas affichées pour des raisons réglementaires.</p>
                             </div>
                         ) : (
                             myEvaluations.map((ev: any) => {
@@ -689,7 +689,7 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
                                     <p className="font-bold text-gray-900 text-lg">{submissions.length}</p>
                                 </div>
                                 <div className="bg-gray-50 rounded-xl p-3">
-                                    <p className="text-gray-400 text-xs mb-0.5">Évals prépa</p>
+                                    <p className="text-gray-400 text-xs mb-0.5">Évals formatives</p>
                                     <p className="font-bold text-gray-900 text-lg">{myEvaluations.length}</p>
                                 </div>
                             </div>

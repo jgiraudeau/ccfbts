@@ -148,7 +148,7 @@ export default function E4EvaluationForm({ students, onSave, onCancel, initialDa
                             globalComment
                         });
                     }} className="px-6 py-2 bg-gray-900 text-white rounded-xl shadow-lg hover:bg-black font-bold flex items-center gap-2">
-                        <Save size={18} /> {initialData?.id ? "Mettre à jour" : "Valider"}
+                        <Save size={18} /> {initialData?.id ? "Mettre à jour le CCF" : "Valider le CCF"}
                     </button>
                 </div>
             </div>
@@ -333,7 +333,7 @@ export default function E4EvaluationForm({ students, onSave, onCancel, initialDa
                                     globalComment
                                 });
                             }} className="px-8 py-3 bg-indigo-600 text-white rounded-xl shadow-lg hover:bg-indigo-700 font-bold flex items-center gap-2 transform hover:translate-y-px transition-all">
-                                <Save size={18} /> Valider l'évaluation E4
+                                <Save size={18} /> Valider le CCF E4
                             </button>
                         </div>
                     </div>

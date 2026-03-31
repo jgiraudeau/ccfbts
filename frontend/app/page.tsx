@@ -192,8 +192,8 @@ export default function Home() {
         localStorage.setItem('ndrc_evaluations', JSON.stringify(evaluations));
         if (evaluations.length > 0) {
             const token = localStorage.getItem('token');
-            // Sync préparatoires vers la BDD
-            fetch(`${API_URL}/api/evaluations/sync?eval_type=continuous`, {
+            // Sync formatives vers la BDD
+            fetch(`${API_URL}/api/evaluations/sync?eval_type=formative`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -209,8 +209,8 @@ export default function Home() {
         localStorage.setItem('ndrc_final_evaluations', JSON.stringify(finalEvaluations));
         if (finalEvaluations.length > 0) {
             const token = localStorage.getItem('token');
-            // Sync CCF finals vers la BDD (pour archivage, pas visible par élèves)
-            fetch(`${API_URL}/api/evaluations/sync?eval_type=final`, {
+            // Sync CCF vers la BDD (pour archivage, pas visible par élèves)
+            fetch(`${API_URL}/api/evaluations/sync?eval_type=ccf`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -651,7 +651,7 @@ export default function Home() {
                                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow duration-300 group">
                                         <div className="flex justify-between items-start">
                                             <div>
-                                                <p className="text-sm font-medium text-gray-500">Moyenne Prépa.</p>
+                                                <p className="text-sm font-medium text-gray-500">Moyenne Formative</p>
                                                 <h3 className="text-3xl font-bold text-gray-800 mt-2">{classAverages.global || "--"}<span className="text-lg text-gray-400 font-normal">/20</span></h3>
                                             </div>
                                             <div className="p-3 bg-indigo-50 rounded-xl text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
@@ -662,7 +662,7 @@ export default function Home() {
                                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow duration-300 group">
                                         <div className="flex justify-between items-start">
                                             <div>
-                                                <p className="text-sm font-medium text-gray-500">Évaluations Préparatoires</p>
+                                                <p className="text-sm font-medium text-gray-500">Évaluations Formatives</p>
                                                 <h3 className="text-3xl font-bold text-gray-800 mt-2">{evaluations.length}</h3>
                                             </div>
                                             <div className="p-3 bg-blue-50 rounded-xl text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
@@ -700,7 +700,7 @@ export default function Home() {
                                                 <FileText size={16} /> Documents Déposés
                                             </button>
                                             <button onClick={() => setView('evaluate')} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl shadow-md transition-all flex items-center gap-2 font-medium text-sm">
-                                                <Plus size={16} /> Évaluation Préparatoire
+                                                <Plus size={16} /> Évaluation Formative
                                             </button>
                                             {selectedBlock === 'E4' && (
                                                 <button onClick={() => setView('scenario')} className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl shadow-md transition-all flex items-center gap-2 font-medium text-sm animate-fade-in">
@@ -715,8 +715,8 @@ export default function Home() {
                                                 <tr>
                                                     <th className="px-6 py-4 font-semibold">Étudiant</th>
                                                     <th className="px-6 py-4 font-semibold text-center">Fiches remises</th>
-                                                    <th className="px-6 py-4 font-semibold text-center">Moy. Prépa.</th>
-                                                    <th className="px-6 py-4 font-semibold text-center">Note {selectedBlock}</th>
+                                                    <th className="px-6 py-4 font-semibold text-center">Moy. Formative</th>
+                                                    <th className="px-6 py-4 font-semibold text-center">Note CCF {selectedBlock}</th>
                                                     <th className="px-6 py-4 font-semibold text-right">Comparatif</th>
                                                 </tr>
                                             </thead>

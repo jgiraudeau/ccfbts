@@ -100,7 +100,7 @@ export default function ContinuousEvaluationForm({ students, onSave, onCancel, i
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden print:shadow-none print:border-none print:rounded-none">
                 <div className={`bg-gradient-to-r ${currentDomainData?.gradient || 'from-gray-500 to-gray-400'} p-8 text-white relative transition-colors duration-500 print:hidden`}>
                     <h2 className="text-2xl font-bold flex items-center gap-3">
-                        {initialData?.id ? "Modifier l'évaluation" : "Nouvelle Évaluation Préparatoire au CCF"}
+                        {initialData?.id ? "Modifier l'évaluation formative" : "Nouvelle Évaluation Formative"}
                         <span className="bg-white/20 px-2 py-1 rounded text-sm font-black tracking-wide">{selectedExam}</span>
                     </h2>
                     <p className="opacity-90">{currentDomainData?.title || 'Sélectionnez un domaine...'}</p>
