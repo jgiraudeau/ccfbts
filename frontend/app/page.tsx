@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import Link from "next/link";
 import {
     FileCheck, LayoutDashboard, Settings, Award, Plus, Sparkles,
-    TrendingUp, Users, UserX, BarChart2, FileText, GraduationCap, BookOpen, LogOut
+    TrendingUp, Users, UserX, BarChart2, FileText, GraduationCap, BookOpen, LogOut, Shield, Info, CheckCircle
 } from "lucide-react";
 import {
     Chart as ChartJS,
@@ -56,6 +57,55 @@ const getInitials = (name: string) => {
 const getAvatarColor = (index: number) => {
     const colors = ['bg-blue-500', 'bg-purple-500', 'bg-pink-500', 'bg-indigo-500', 'bg-teal-500', 'bg-orange-500'];
     return colors[index % colors.length];
+};
+
+const CookieConsent = () => {
+    const [isVisible, setIsVisible] = useState(false);
+    
+    useEffect(() => {
+        const consent = localStorage.getItem('cookie-consent');
+        if (!consent) setIsVisible(true);
+    }, []);
+
+    const accept = () => {
+        localStorage.setItem('cookie-consent', 'true');
+        setIsVisible(false);
+    };
+
+    if (!isVisible) return null;
+
+    return (
+        <div className="fixed bottom-6 left-6 right-6 md:left-auto md:right-8 md:max-w-md z-[100] animate-slide-up">
+            <div className="bg-white/90 backdrop-blur-xl border border-gray-200 p-6 rounded-3xl shadow-2xl shadow-indigo-200/50">
+                <div className="flex gap-4">
+                    <div className="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center shrink-0">
+                        <Shield className="text-indigo-600" size={24} />
+                    </div>
+                    <div>
+                        <h4 className="font-bold text-gray-900 mb-1">Cookies & Confidentialité</h4>
+                        <p className="text-xs text-gray-500 leading-relaxed">
+                            Nous utilisons uniquement des cookies techniques nécessaires au bon fonctionnement et à la sécurité de l'application. 
+                            Consultez notre <Link href="/privacy" className="text-indigo-600 hover:underline font-bold">politique de confidentialité</Link>.
+                        </p>
+                        <div className="flex gap-3 mt-4">
+                            <button 
+                                onClick={accept}
+                                className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-indigo-100"
+                            >
+                                Accepter
+                            </button>
+                            <Link 
+                                href="/privacy"
+                                className="bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-bold px-5 py-2.5 rounded-xl transition-all"
+                            >
+                                En savoir plus
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default function Home() {
@@ -911,6 +961,20 @@ export default function Home() {
                     {/* This main is used when sidebar is not showing */}
                 </main>
             )}
+            <footer className="mt-auto py-8 border-t border-gray-200 text-center text-sm text-gray-400 font-medium print:hidden bg-white/50 backdrop-blur-sm">
+                <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-center items-center gap-6">
+                    <span className="opacity-70">© {new Date().getFullYear()} Assistant CCF BTS NDRC</span>
+                    <div className="flex items-center gap-6">
+                        <Link href="/privacy" className="hover:text-indigo-600 hover:underline transition-colors uppercase tracking-widest text-[10px] font-bold">
+                            Politique de Confidentialité
+                        </Link>
+                        <Link href="/legal" className="hover:text-indigo-600 hover:underline transition-colors uppercase tracking-widest text-[10px] font-bold">
+                            Mentions Légales
+                        </Link>
+                    </div>
+                </div>
+            </footer>
+            <CookieConsent />
         </div>
     );
 }

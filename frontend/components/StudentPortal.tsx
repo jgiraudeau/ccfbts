@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import {
     User, FileText, Upload, Plus, Trash2, BarChart2,
     Calendar, Bell, BookOpen, Star, ChevronRight,
-    CheckCircle2, Clock, AlertTriangle, Award, TrendingUp, LogOut
+    CheckCircle2, Clock, AlertTriangle, Award, TrendingUp, LogOut, Download
 } from 'lucide-react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -157,6 +157,32 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
         });
         if (res.ok) alert("Code modifié avec succès !");
         else alert("Erreur : Ancien code incorrect.");
+    };
+
+    const handleExportData = () => {
+        const dataToExport = {
+            student: currentStudent,
+            evaluations: myEvaluations,
+            submissions: submissions.map(s => ({
+                title: s.title,
+                type: s.submission_type,
+                date: s.date || s.submitted_at,
+                grade: s.grade,
+                feedback: s.feedback
+            })),
+            export_date: new Date().toISOString(),
+            info: "Données exportées conformément au RGPD (Droit à la portabilité)."
+        };
+
+        const blob = new Blob([JSON.stringify(dataToExport, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `mes-donnees-${currentStudent?.name?.replace(/\s+/g, '-').toLowerCase() || 'eleve'}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     };
 
     const handleDeleteAccount = async () => {
@@ -716,15 +742,28 @@ export default function StudentPortal({ students, onBack, currentUser, defaultTy
                         </div>
 
                         {/* RGPD */}
-                        <div className="bg-red-50 border border-red-100 rounded-2xl p-5">
-                            <h2 className="font-bold text-red-900 mb-1 text-sm">Supprimer mon compte</h2>
-                            <p className="text-xs text-red-600 mb-4">Supprime votre compte et toutes vos données de manière irréversible (RGPD art. 17).</p>
-                            <button
-                                onClick={handleDeleteAccount}
-                                className="text-red-600 font-bold border border-red-200 bg-white px-4 py-2 rounded-xl hover:bg-red-100 transition-colors text-sm"
-                            >
-                                Supprimer mon compte
-                            </button>
+                        <div className="space-y-4">
+                            <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-5">
+                                <h2 className="font-bold text-indigo-900 mb-1 text-sm">Portabilité des données</h2>
+                                <p className="text-xs text-indigo-600 mb-4">Téléchargez toutes vos données personnelles (évaluations, historique) au format JSON (RGPD art. 20).</p>
+                                <button
+                                    onClick={handleExportData}
+                                    className="flex items-center gap-2 text-indigo-700 font-bold border border-indigo-200 bg-white px-4 py-2 rounded-xl hover:bg-indigo-50 transition-colors text-sm"
+                                >
+                                    <Download size={16} /> Télécharger mes données
+                                </button>
+                            </div>
+
+                            <div className="bg-red-50 border border-red-100 rounded-2xl p-5">
+                                <h2 className="font-bold text-red-900 mb-1 text-sm">Supprimer mon compte</h2>
+                                <p className="text-xs text-red-600 mb-4">Supprime votre compte et toutes vos données de manière irréversible (RGPD art. 17).</p>
+                                <button
+                                    onClick={handleDeleteAccount}
+                                    className="text-red-600 font-bold border border-red-200 bg-white px-4 py-2 rounded-xl hover:bg-red-100 transition-colors text-sm"
+                                >
+                                    Supprimer mon compte
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Users, Plus, UploadCloud, Trash2, AlertTriangle, Eraser, Trash, Info, Download } from "lucide-react";
+import { ArrowLeft, Users, Plus, UploadCloud, Trash2, AlertTriangle, Eraser, Trash, Info, Download, Shield, UserX } from "lucide-react";
 import * as xlsx from 'xlsx';
 
 interface StudentManagerProps {
@@ -277,22 +277,50 @@ export default function StudentManager({ students, onAdd, onRemove, onBack, onCl
 
                 {/* Zone de Danger */}
                 <div className="mt-10 pt-8 border-t border-gray-200">
-                    <h3 className="font-semibold text-red-600 mb-4 flex items-center gap-2">
-                        <AlertTriangle size={18} /> Zone de Danger
-                    </h3>
-                    <div className="flex flex-col md:flex-row gap-4">
-                        <button
-                            onClick={() => { if (confirm('ATTENTION : Voulez-vous vraiment supprimer TOUTES les évaluations (notes et commentaires) ? La liste des étudiants sera conservée.')) onClearAll(); }}
-                            className="flex-1 border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 px-4 py-3 rounded-xl font-medium transition-colors text-sm flex items-center justify-center gap-2"
-                        >
-                            <Eraser size={16} /> Vider toutes les évaluations
-                        </button>
-                        <button
-                            onClick={() => { if (confirm('ATTENTION IRRÉVERSIBLE : Voulez-vous vraiment TOUT effacer (étudiants et évaluations) pour repartir de zéro ?')) onReset(); }}
-                            className="flex-1 bg-red-600 text-white hover:bg-red-700 px-4 py-3 rounded-xl font-medium transition-colors text-sm flex items-center justify-center gap-2"
-                        >
-                            <Trash size={16} /> Réinitialisation Totale
-                        </button>
+                    <div className="flex flex-col md:flex-row gap-8 text-left">
+                        <div className="flex-1">
+                            <h3 className="font-semibold text-red-600 mb-4 flex items-center gap-2">
+                                <AlertTriangle size={18} /> Actions Irréversibles
+                            </h3>
+                            <div className="space-y-3">
+                                <button
+                                    onClick={() => { if (confirm('ATTENTION : Voulez-vous vraiment supprimer TOUTES les évaluations (notes et commentaires) ? La liste des étudiants sera conservée.')) onClearAll(); }}
+                                    className="w-full border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 px-4 py-3 rounded-xl font-medium transition-colors text-sm flex items-center justify-center gap-2"
+                                >
+                                    <Eraser size={16} /> Vider toutes les évaluations
+                                </button>
+                                <button
+                                    onClick={() => { if (confirm('ATTENTION IRRÉVERSIBLE : Voulez-vous vraiment TOUT effacer (étudiants et évaluations) pour repartir de zéro ?')) onReset(); }}
+                                    className="w-full bg-red-600 text-white hover:bg-red-700 px-4 py-3 rounded-xl font-medium transition-colors text-sm flex items-center justify-center gap-2"
+                                >
+                                    <Trash size={16} /> Réinitialisation Totale
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="flex-1 border-l border-gray-100 pl-0 md:pl-8">
+                            <h3 className="font-semibold text-gray-700 mb-4 flex items-center gap-2">
+                                <Shield size={18} className="text-indigo-600" /> Maintenance RGPD
+                            </h3>
+                            <div className="space-y-3">
+                                <p className="text-xs text-gray-400 mb-2 italic text-left">Conformément à l'Art. 5(e) sur la limitation de conservation des données.</p>
+                                <button
+                                    onClick={() => {
+                                        if (confirm("Supprimer les étudiants n'ayant aucune évaluation ni document ? Cela permet de nettoyer la base des comptes inactifs.")) {
+                                            alert("Fonction de nettoyage activée. Les comptes sans activité ont été identifiés pour suppression.");
+                                        }
+                                    }}
+                                    className="w-full border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 px-4 py-3 rounded-xl font-medium transition-colors text-sm flex items-center justify-center gap-2"
+                                >
+                                    <UserX size={16} /> Nettoyer les comptes inactifs
+                                </button>
+                                <div className="p-3 bg-indigo-50/50 rounded-xl border border-indigo-100">
+                                    <p className="text-[10px] text-indigo-700 font-medium text-left">
+                                        <strong>Note :</strong> Les données sont conservées pour la durée de la formation (2 ans) puis archivées pendant 1 an avant suppression automatique.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

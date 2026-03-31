@@ -1,5 +1,8 @@
+"use client";
+
 import React, { useState } from 'react';
 import { User, Lock, Users, School, Shield, Sparkles } from 'lucide-react';
+import Link from 'next/link';
 
 interface LoginPageProps {
     onTeacherLogin: (user: any) => void;
@@ -70,6 +73,11 @@ export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageP
 
     const handleStudentLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!sConsent) {
+            alert("Veuillez accepter la politique de confidentialité pour continuer.");
+            return;
+        }
+
         try {
             const res = await fetch(`${API_URL}/api/auth/student`, {
                 method: 'POST',
@@ -88,7 +96,7 @@ export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageP
                 onStudentLogin(userData);
             } else {
                 const errData = await res.json();
-                alert(errData.detail || "Identifiants incorrects");
+                alert(errData.detail || "Identifiant ou code incorrect");
             }
         } catch (err) { alert("Erreur d'authentification"); }
     };
@@ -242,7 +250,7 @@ export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageP
                                         </div>
                                     </div>
 
-                                    <button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-red-200 hover:shadow-xl hover:shadow-red-200/50 hover:-translate-y-0.5 mt-4">
+                                    <button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-red-200 hover:shadow-xl shadow-red-200/50 hover:-translate-y-0.5 mt-4">
                                         Ouvrir le panneau d'administration
                                     </button>
                                 </form>
@@ -285,7 +293,7 @@ export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageP
                                         </div>
                                     </div>
 
-                                    <button type="submit" className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-purple-200 hover:shadow-xl hover:shadow-purple-200/50 hover:-translate-y-0.5 mt-4">
+                                    <button type="submit" className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-purple-200 hover:shadow-xl shadow-purple-200/50 hover:-translate-y-0.5 mt-4">
                                         Accéder à mon espace
                                     </button>
                                 </form>
@@ -340,9 +348,9 @@ export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageP
                                         />
                                         <span className="text-xs text-gray-500 leading-relaxed">
                                             J&apos;ai lu et j&apos;accepte la{" "}
-                                            <a href="/privacy" target="_blank" className="text-indigo-600 hover:underline font-medium">
+                                            <Link href="/privacy" className="text-indigo-600 hover:underline font-medium">
                                                 politique de confidentialité
-                                            </a>{" "}
+                                            </Link>{" "}
                                             et le traitement de mes données personnelles.
                                         </span>
                                     </label>
@@ -350,7 +358,7 @@ export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageP
                                     <button
                                         type="submit"
                                         disabled={!sConsent}
-                                        className={`w-full font-bold py-4 rounded-2xl transition-all mt-4 ${sConsent ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 hover:shadow-xl hover:shadow-indigo-200/50 hover:-translate-y-0.5' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+                                        className={`w-full font-bold py-4 rounded-2xl transition-all mt-4 ${sConsent ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 hover:shadow-xl shadow-indigo-200/50 hover:-translate-y-0.5' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
                                     >
                                         Me connecter
                                     </button>
@@ -359,11 +367,15 @@ export default function LoginPage({ onTeacherLogin, onStudentLogin }: LoginPageP
                         </div>
                     </div>
 
-                    <div className="text-center mt-8 text-sm text-gray-400 font-medium">
+                    <div className="text-center mt-8 text-xs sm:text-sm text-gray-400 font-medium">
                         © {new Date().getFullYear()} CCF BTS NDRC •{" "}
-                        <a href="/privacy" className="hover:text-indigo-600 hover:underline transition-colors">
-                            Politique de confidentialité
-                        </a>
+                        <Link href="/privacy" className="hover:text-indigo-600 hover:underline transition-colors">
+                            Confidentialité
+                        </Link>{" "}
+                        •{" "}
+                        <Link href="/legal" className="hover:text-indigo-600 hover:underline transition-colors">
+                            Mentions Légales
+                        </Link>
                     </div>
                 </div>
             </div>
