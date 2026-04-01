@@ -31,12 +31,12 @@ export default function LegalNotice() {
                             <h2 className="text-xl font-bold m-0">1. Éditeur du site</h2>
                         </div>
                         <div className="text-gray-600 space-y-2 leading-relaxed">
-                            <p className="font-bold">Responsable : [Votre Nom / Établissement]</p>
-                            <p>Adresse : [Adresse de l'établissement]</p>
-                            <p>Téléphone : [Numéro de téléphone]</p>
+                            <p className="font-bold">Responsable : Assistant Pédagogique BTS NDRC</p>
+                            <p>Plateforme d'accompagnement numérique BTS NDRC</p>
+                            <p>Contact : Adressez-vous à votre formateur référent</p>
                             <div className="flex items-center gap-2 text-indigo-600">
                                 <Mail size={16} />
-                                <a href="mailto:[votre-email@etablissement.fr]" className="hover:underline">[votre-email@etablissement.fr]</a>
+                                <span className="italic">support-ndrc@votre-ecole.fr</span>
                             </div>
                         </div>
                     </section>

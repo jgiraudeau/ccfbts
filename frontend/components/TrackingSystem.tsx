@@ -3,6 +3,7 @@ import {
     LayoutDashboard, Users, Calendar, FileText, Settings,
     Shield, LogOut, BookOpen, GraduationCap, ClipboardCheck, Sparkles
 } from 'lucide-react';
+import Link from 'next/link';
 
 // Import tracking system components
 import ClassManager from './ClassManager';
@@ -220,8 +221,23 @@ export default function TrackingSystem({ user, onLogout, onSwitchMode, appMode =
                 </aside>
 
                 {/* Main Content - Add margin to account for fixed sidebar */}
-                <main className="flex-1 ml-64">
-                    {renderContent()}
+                <main className="flex-1 ml-64 min-h-screen flex flex-col">
+                    <div className="flex-1">
+                        {renderContent()}
+                    </div>
+                    <footer className="py-8 border-t border-gray-200 text-center text-sm text-gray-400 font-medium print:hidden bg-white/50 backdrop-blur-sm">
+                        <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-center items-center gap-6">
+                            <span className="opacity-70">© {new Date().getFullYear()} Assistant CCF BTS NDRC</span>
+                            <div className="flex items-center gap-6">
+                                <Link href="/privacy" className="hover:text-indigo-600 hover:underline transition-colors uppercase tracking-widest text-[10px] font-bold">
+                                    Politique de Confidentialité
+                                </Link>
+                                <Link href="/legal" className="hover:text-indigo-600 hover:underline transition-colors uppercase tracking-widest text-[10px] font-bold">
+                                    Mentions Légales
+                                </Link>
+                            </div>
+                        </div>
+                    </footer>
                 </main>
             </div>
         </div>
